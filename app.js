@@ -24,11 +24,11 @@ const checkUserRole = (roles) => {
   // console.log('hi i am from checksuerole')
   //console.log(role);
   return (req, res, next) => {
-    console.log("hi");
-    console.log(roles);
-    console.log(req.user);
-    console.log(req.user.roles);
-    if (!roles.includes(req.user.roles)) {
+    // console.log("hi");
+    // console.log(roles);
+    // // console.log(req.user);
+    // console.log(req.user.role);
+    if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
         message: "Access denied",
@@ -54,7 +54,6 @@ const authenticateRequest = passport.authenticate("jwt", { session: false });
 //------------------------------------------------------------------------------------------//
 
 //schoolregister -> can only be made by software head that is super admin
-
 app.post(
   "/schoolRegister",
   authenticateRequest,
@@ -70,8 +69,17 @@ app.post(
       role: "school",
     });
 
+    // {
+    //   "username": "bbps",
+    //   "password": "bbps",
+    //   "role": "school",
+    //   "school": {
+    //     "name": "Bal Bharati Public school Rohini"
+    //   }
+    // }
+
     const school = new SchoolModel({
-      name: req.body.nameofschool,
+      name: req.body.school.name, //earlier req.body.name
       //branches[]
       //metadata
     });
@@ -173,8 +181,8 @@ app.post(
   authenticateRequest,
   checkUserRole(["school"]), //One who is trying to register the user, in our case it's a school
   (req, res) => {
-    const schoolUsername = req.body.name; // get the school name from the request body
-    console.log(schoolUsername);
+    ///const schoolUsername = req.body.name; // get the school name from the request body
+    //console.log(schoolUsername + "185");
 
     const user = new UserModel({
       username: req.body.username,
@@ -186,19 +194,19 @@ app.post(
       .save()
       .then((user) => {
         const branch = new BranchModel({
-          location: req.body.location,
+          location: req.body.branch.location,
           // coordinators: [],
         });
 
         branch.save().then((branch) => {
           // update the school's branches array
-          console.log(schoolUsername);
+          //console.log(schoolUsername + "204");
           SchoolModel.findOne({
             role: "school",
-            username: req.user.username,
+            name: req.user.name,
           })
             .then((school) => {
-              console.log(school);
+              console.log(school + "210");
               if (!school.branches) school.branches = [];
               school.branches.push(branch); //embedding (no id as no referncing data)
               school.save();
@@ -645,6 +653,7 @@ app.put(
 
 //login for super-admin, school , school-branch and student to their respective pages
 //login for super-admin, admin , user and redirecting to their respective pages
+
 app.post("/login", (req, res) => {
   console.log("Login post request");
   console.log(req.body.username);
@@ -663,6 +672,7 @@ app.post("/login", (req, res) => {
     //Incorrect passowrd
     console.log(req.body.password + " I am req.body.password");
     console.log(user.password + " I am user.password");
+
     if (!compareSync(req.body.password, user.password)) {
       return res.status(401).send({
         success: false,
@@ -684,6 +694,7 @@ app.post("/login", (req, res) => {
     });
   });
 });
+
 //reset password for super admin when he or she log in for the first time
 app.put("/resetpassword", authenticateRequest, async (req, res) => {
   const username = req.body.username;

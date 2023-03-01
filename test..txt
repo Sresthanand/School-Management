@@ -319,3 +319,46 @@ passport.deserializeUser(function (id, done) {
     done(err, user);
   });
 });
+
+
+
+app.post("/register", (req, res) => {
+  const { username, password, role } = req.body;
+  // Check if the user already exists
+  UserModel.findOne({ username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send({ message: "User already exists" });
+      }
+
+      // Create the user
+      const newUser = new UserModel({
+        username,
+        password: hashSync(password, 10),
+        role,
+      });
+
+      // Save the user
+      newUser
+        .save()
+        .then((savedUser) => {
+          res.send({
+            success: true,
+            message: "User created successfully",
+            user: {
+              id: savedUser._id,
+              username: savedUser.username,
+              role: savedUser.role,
+            },
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(500).send({ message: "Something went wrong" });
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send({ message: "Something went wrong" });
+    });
+});

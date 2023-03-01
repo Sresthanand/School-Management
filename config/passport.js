@@ -1,7 +1,6 @@
 const { compareSync } = require("bcrypt");
 const passport = require("passport");
 
-
 const JwtStrategy = require("passport-jwt").Strategy,
   ExtractJwt = require("passport-jwt").ExtractJwt;
 const opts = {};
@@ -16,8 +15,7 @@ passport.use(
       if (err) {
         return done(err, false);
       }
-
-      if (user) {
+      if (user) {    
         return done(null, user);
       } else {
         return done(null, false);
