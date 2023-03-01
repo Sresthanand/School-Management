@@ -1,0 +1,321 @@
+const express = require("express");
+const app = express();
+const cors = require("cors");
+const { hashSync, compareSync } = require("bcrypt");
+const UserModel = require("./config/database");
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors()); //cross origin
+app.use(passport.initialize());
+
+require("./config/passport");
+
+// Middleware to check user role
+const checkUserRole = (roles) => {
+  // console.log('hi i am from checksuerole')
+  //console.log(role);
+  return (req, res, next) => {
+    console.log("hi");
+    console.log(roles);
+    console.log(req.user.roles);
+    if (!roles.includes(req.user.roles)) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
+    }
+    console.log("hi2");
+    next();
+  };
+};
+
+// Middleware to authenticate requests using passport -> only for protected routes -> to verify token and reuests
+const authenticateRequest = passport.authenticate("jwt", { session: false });
+
+//API'S
+//admin register(super admin can make admin)
+app.post(
+  "/adminRegister",
+  // authenticateRequest,
+  //  checkUserRole(["super-admin"]),
+  (req, res) => {
+    //data will come in body
+
+    console.log("Hi i am from admin register!");
+    const user = new UserModel({
+      username: req.body.username,
+      password: hashSync(req.body.password, 10),
+      roles: "admin",
+      // adminUsername: req.body.adminUsername,
+      //  mymembers:[],
+    });
+
+    user
+      .save()
+      .then((user) => {
+        res.send({
+          success: true,
+          message: "admin created Succesfully",
+          user: {
+            id: user._id,
+            username: user.username,
+          },
+        });
+      })
+      .catch((err) => {
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      });
+  }
+);
+
+//admin delete(super - admin can delete admin)
+app.delete(
+  "/adminDelete/:id",
+  // authenticateRequest,
+  // checkUserRole(["super-admin"]),
+  async (req, res) => {
+    const id = req.params.id;
+    console.log(id);
+
+    try {
+      // Find the user by ID and remove it
+      console.log("hi!!!!!!!!!!!!!!!!!!!");
+      const deletedUser = await UserModel.findByIdAndRemove(id);
+      console.log(deletedUser);
+
+      if (!deletedUser) {
+        return res.status(404).send();
+      }
+      res.send(deletedUser);
+    } catch (error) {
+      res.status(500).send(error);
+      console.log("hii from error");
+    }
+  }
+);
+
+//user register(admin can make user)
+app.post(
+  "/userRegister",
+  //   authenticateRequest,
+  //  checkUserRole(["admin"]), //One who is trying to register the user , in our case its admin
+  (req, res) => {
+    const adminUsername = req.body.adminUsername; // get the admin username from the request body
+    console.log(adminUsername);
+    //data will come in body
+    const user = new UserModel({
+      username: req.body.username,
+      password: hashSync(req.body.password, 10),
+      roles: "user",
+      adminUsername: adminUsername, // set the admin username
+      //  mymembers:[],
+    });
+
+    user
+      .save()
+      .then((user) => {
+        // update the admin's mymembers array
+        console.log(adminUsername);
+        UserModel.findOne({ roles: "admin", username: adminUsername }).then(
+          (admin) => {
+            console.log(admin);
+            admin.mymembers.push(user._id);
+            admin.save();
+          }
+        );
+
+        res.send({
+          success: true,
+          message: "user created Succesfully",
+          user: {
+            id: user._id,
+            username: user.username,
+          },
+        });
+      })
+      .catch((err) => {
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      });
+  }
+);
+
+//user delete(admin can delete user)
+app.delete(
+  "/userDelete/:id",
+  // authenticateRequest,
+  // checkUserRole(["admin"]),
+  async (req, res) => {
+    const id = req.params.id;
+    console.log(id);
+
+    try {
+      // Find the user by ID and remove it
+      console.log("hi!!!!!!!!!!!!!!!!!!!");
+      const deletedUser = await UserModel.findByIdAndRemove(id);
+      console.log(deletedUser);
+
+      if (!deletedUser) {
+        return res.status(404).send();
+      }
+      res.send(deletedUser);
+    } catch (error) {
+      res.status(500).send(error);
+      console.log("hii from error");
+    }
+  }
+);
+
+//reset password for super admin when he or she log in for the first time
+app.put(
+  "/resetpassword",
+  //  authenticateRequest,
+  async (req, res) => {
+    const username = req.body.username;
+    const newPassword = req.body.newPassword;
+    console.log("hi0");
+    try {
+      console.log("hi1");
+      const user = await UserModel.findOne({ username: username });
+      console.log(user);
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+
+      const hashedPassword = hashSync(newPassword, 10);
+
+      user.password = hashedPassword;
+      await user.save();
+
+      res.send("Password reset successfully");
+
+      console.log("hi2");
+    } catch (error) {
+      console.log("hi3");
+      res.status(500).send(error);
+    }
+  }
+);
+
+//login for super-admin, admin , user and redirecting to their respective pages
+app.post("/login", (req, res) => {
+  console.log("Login post request");
+
+  UserModel.findOne({ username: req.body.username }).then((user) => {
+    console.log("Hi1111");
+    //No user Found
+    if (!user) {
+      return res.status(401).send({
+        success: false,
+        message: "Could not find the user.",
+      });
+    }
+
+    //Incorrect passowrd
+    if (!compareSync(req.body.password, user.password)) {
+      return res.status(401).send({
+        success: false,
+        message: "Incorrect password",
+      });
+    }
+
+    const payLoad = {
+      username: user.username,
+      id: user._id,
+    };
+
+    const token = jwt.sign(payLoad, "Random string", { expiresIn: "1d" });
+
+    return res.status(200).send({
+      success: true,
+      message: "Logged in successfully!!",
+      token: "Bearer " + token,
+    });
+  });
+});
+
+app.listen(5000, () => console.log("Listening to port 5000"));
+
+
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", true);
+mongoose
+  .connect("mongodb://localhost:27017/posist-project", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch((error) => {
+    console.log("MongoDB connection failed", error);
+  });
+  
+
+
+const userSchema = mongoose.Schema({
+  username: String,
+  password: String,
+  roles: {
+    type: String,
+    enum: ["super-admin", "admin", "user"],
+  },
+  mymembers: [],
+  adminUsername: String,
+});
+
+const UserModel = mongoose.model("User", userSchema);
+
+module.exports = UserModel;
+
+
+const { compareSync } = require("bcrypt");
+const passport = require("passport");
+// const LocalStrategy = require("passport-local").Strategy;
+
+const JwtStrategy = require("passport-jwt").Strategy,
+  ExtractJwt = require("passport-jwt").ExtractJwt;
+const opts = {};
+const UserModel = require("./database");
+
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = "Random string";
+
+passport.use(
+  new JwtStrategy(opts, function (jwt_payload, done) {
+    UserModel.findOne({ _id: jwt_payload.id }, function (err, user) {
+      if (err) {
+        return done(err, false);
+      }
+
+      if (user) {
+        return done(null, user);
+      } else {
+        return done(null, false);
+        // or you could create a new account
+      }
+    });
+  })
+);
+
+//Persists user data inside session
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+
+//Fetches session details using session id
+passport.deserializeUser(function (id, done) {
+  UserModel.findById(id, function (err, user) {
+    done(err, user);
+  });
+});
