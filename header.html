@@ -1,0 +1,24 @@
+<script>
+  let isLoggedIn = localStorage.getItem("isLoggedIn");
+  localStorage.setItem("isLoggedIn", "false");
+  console.log("HIIIIIIIIIIIII");
+</script>
+<header>
+  <div id="row">
+    <div id="brand">
+      <h1 class="posist">𝑷𝒐𝒔𝒊𝒔𝒕 𝑻𝒆𝒄𝒉𝒏𝒐𝒍𝒈𝒊𝒆𝒔-𝑴𝒂𝒌𝒊𝒏𝒈 𝑹𝒆𝒔𝒕𝒂𝒖𝒓𝒂𝒏𝒕𝒔 𝑷𝒓𝒐𝒔𝒑𝒆𝒓𝒐𝒖𝒔</h1>
+    </div>
+    <div id="menu">
+      <ul>
+        <!-- <li><a href="#/!home" class="active">Home</a></li> -->
+        <li><a href="#!/contact">Contact</a></li>
+        <li><a href="https://www.posist.com/">About</a></li>
+        <li>
+          <a ng-click="Handle()" href="#!/login">
+            <img src="img/account.svg" />
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

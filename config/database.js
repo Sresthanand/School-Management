@@ -13,19 +13,6 @@ mongoose
     console.log("MongoDB connection failed", error);
   });
 
-//super admin -> school details null
-//in super admin , only username, password and role
-
-// admin(school) -> school details
-//in admin(School) -> username ,password, role, school details, (no link with superadmin, just superadmin can register) and its
-//coordinators array will be updated while registering for coordinators
-
-//coordinator ->
-// school details null
-//teacher details will have value,  username , password, roles, nameofcoordinators, gender, students under it(which will be updated when registering student)
-
-//student -> student details and username pass + add ons
-
 const userSchema = mongoose.Schema({
   username: String,
   password: String,
@@ -36,12 +23,11 @@ const userSchema = mongoose.Schema({
 });
 
 const schoolSchema = mongoose.Schema({
+  userId: {
+    id: mongoose.Schema.Types.ObjectId,
+    username: String,
+  },
   name: String,
-  branches: [
-    {
-      type: String,
-    },
-  ],
   createdAt: {
     type: Date,
     default: Date.now,
@@ -54,11 +40,14 @@ const schoolSchema = mongoose.Schema({
 
 const branchSchema = mongoose.Schema({
   location: String,
-  coordinators: [
-    {
-      type: String,
-    },
-  ],
+  userId: {
+    id: mongoose.Schema.Types.ObjectId,
+    username: String,
+  },
+  school: {
+    id: mongoose.Schema.Types.ObjectId,
+    name: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -71,11 +60,18 @@ const branchSchema = mongoose.Schema({
 
 const coordinatorSchema = mongoose.Schema({
   name: String,
-  students: [
-    {
-      type: String,
-    },
-  ],
+  userId: {
+    id: mongoose.Schema.Types.ObjectId,
+    username: String,
+  },
+  school: {
+    id: mongoose.Schema.Types.ObjectId,
+    name: String,
+  },
+  branch: {
+    id: mongoose.Schema.Types.ObjectId,
+    name: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -91,6 +87,22 @@ const studentSchema = mongoose.Schema({
   class: String,
   gender: String,
   enrollmentNumber: Number,
+  userId: {
+    id: mongoose.Schema.Types.ObjectId,
+    username: String,
+  },
+  school: {
+    id: mongoose.Schema.Types.ObjectId,
+    name: String,
+  },
+  branch: {
+    id: mongoose.Schema.Types.ObjectId,
+    name: String,
+  },
+  coordinator: {
+    id: mongoose.Schema.Types.ObjectId,
+    name: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

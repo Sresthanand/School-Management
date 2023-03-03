@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html lang="en" ng-app="mySchoolApp">
+  <head>
+    <title>Posist</title>
+
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <!-- Angular cdn -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.0/angular.min.js"
+      integrity="sha512-M7xRXhk9w4nRi4DAb7uORHxVdPxDJojQiUVx48fiXXaUS+ceQNLo4/EUoxHHPw7qV3M1Uz/zh9JpgXxzU2v/Kg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"
+      integrity="sha512-HdDqpFK+5KwK5gZTuViiNt6aw/dBc3d0pUArax73z0fYN8UXiSozGNTo3MFx4pwbBPldf5gaMUq/EqposBQyWQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    
+    <script
+      type="text/javascript"
+      src="https://cdn.rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js"
+    ></script>
+
+    <script src="app/app.js"></script>
+    <script src="controllers/coordinatorDashboardController.js"></script>
+    <script src="controllers/loginController.js"></script>
+    <script src="controllers/schoolBranchDashboardController.js"></script>
+    <script src="controllers/schoolDashboardController.js"></script>
+    <script src="controllers/superAdminDashboardController.js"></script>
+  </head>
+  <body>
+    <div>
+      <header></header>
+      <!-- view>-> to show pages -->
+      <ui-view></ui-view>
+    </div>
+    <script>
+      window.location.href = "/#!/login";
+    </script>
+  </body>
+</html>
