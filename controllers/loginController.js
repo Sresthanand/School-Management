@@ -18,6 +18,8 @@ mySchoolApp.controller(
           console.log($scope.password);
 
           var decodedToken = jwtHelper.decodeToken(token);
+          
+          console.log(decodedToken);
 
           localStorage.setItem("token", token);
           console.log(decodedToken.role);
