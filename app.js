@@ -100,6 +100,8 @@ app.post(
 
 //schoolUpdate -> can only be done via software head that is super admin in our case
 
+//schoolget -> can only be done via software head that is super admin in our case
+
 //------------------------------------------------------------------------------------------//
 
 //Branchregister ->can only be done via that respective school(admin)
@@ -172,82 +174,12 @@ app.post(
 );
 
 //BranchDelete ->can only be done via that respective school(admin)
-
 //BranchUpdate ->can only be done via that respective school(admin)
+//Branchget ->can only be done via that respective school(admin)
 
 //------------------------------------------------------------------------------------------//
 
 //coordinator register -> can only be done by tha particular school branch and simulataneoulsy its(school branch)
-// app.post(
-//   "/coordinatorRegister",
-//   authenticateRequest,
-//   checkUserRole(["branch"]), // Only a branch can register a coordinator
-//   (req, res) => {
-//     const branchId = req.user.id; // Get the branch ID from the authenticated user
-//     console.log(branchId);
-
-//     // Check if the branch exists
-//     BranchModel.findById(branchId)
-//       .then((branch) => {
-//         if (!branch) {
-//           return res.status(404).send({ message: "Branch not found" });
-//         }
-
-//         // Create the coordinator user
-//         const user = new UserModel({
-//           username: req.body.username,
-//           password: hashSync(req.body.password, 10),
-//           role: "coordinator",
-//         });
-
-//         const coordinator = new CoordinatorModel({
-//           name: req.body.name,
-//           // students: [],
-//         });
-
-//         // Save the user and coordinator
-//         user
-//           .save()
-//           .then((savedUser) => {
-//             coordinator
-//               .save()
-//               .then((savedCoordinator) => {
-//                 // Update the branch's coordinators array
-//                 if (!branch.coordinators) branch.coordinators = [];
-//                 branch.coordinators.push(savedCoordinator); //no id as no referencing only embedding
-//                 branch
-//                   .save()
-//                   .then(() => {
-//                     res.send({
-//                       success: true,
-//                       message: "Coordinator created successfully",
-//                       user: {
-//                         id: savedUser._id,
-//                         username: savedUser.username,
-//                       },
-//                     });
-//                   })
-//                   .catch((error) => {
-//                     console.log(error);
-//                     res.status(500).send({ message: "Something went wrong" });
-//                   });
-//               })
-//               .catch((error) => {
-//                 console.log(error);
-//                 res.status(500).send({ message: "Something went wrong" });
-//               });
-//           })
-//           .catch((error) => {
-//             console.log(error);
-//             res.status(500).send({ message: "Something went wrong" });
-//           });
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//         res.status(500).send({ message: "Something went wrong" });
-//       });
-//   }
-// );
 
 //correct ->
 app.post(
@@ -337,6 +269,8 @@ app.post(
 //coordinator delete -> can only be done by tha particular school branch and simulataneoulsy its(school branch)
 
 //coordinator update -> can only be done by tha particular school branch and simulataneoulsy its(school branch)
+
+//coordinator get can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
 
 //------------------------------------------------------------------------------------------//
 //student register -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
@@ -450,55 +384,13 @@ app.post(
 
 //student update -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
 
+//student get -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
+
 //------------------------------------------------------------------------------------------//
 
 //login for super-admin, school , school-branch ,coordinator and student to their respective pages
-// app.post("/login", (req, res) => {
-//   console.log("Login post request");
-//   console.log(req.body.username);
-//   console.log(req.body.password);
-
-//   UserModel.findOne({ username: req.body.username }).then((user) => {
-//     console.log("Hi1111", user);
-//     //No user Found
-//     if (!user) {
-//       return res.status(401).send({
-//         success: false,
-//         message: "Could not find the user.",
-//       });
-//     }
-
-//     //Incorrect passowrd
-//     console.log(req.body.password + " I am req.body.password");
-//     console.log(user.password + " I am user.password");
-
-//     if (!compareSync(req.body.password, user.password)) {
-//       return res.status(401).send({
-//         success: false,
-//         message: "Incorrect password",
-//       });
-//     }
-
-//     const payLoad = {
-//       username: user.username,
-//       id: user._id,
-//     };
-
-//     const token = jwt.sign(payLoad, "Random string", { expiresIn: "1d" });
-
-//     return res.status(200).send({
-//       success: true,
-//       message: "Logged in successfully!!",
-//       token: "Bearer " + token,
-//     });
-//   });
-// });
 
 app.post("/login", (req, res) => {
-  // console.log("Login post request");
-  // console.log(req.body.username);
-  // console.log(req.body.password);
-
   UserModel.findOne({ username: req.body.username }).then((user) => {
     // console.log("Hi1111", user);
     //No user Found
@@ -508,10 +400,6 @@ app.post("/login", (req, res) => {
         message: "Could not find the user.",
       });
     }
-
-    //Incorrect passowrd
-    // console.log(req.body.password + " I am req.body.password");
-    // console.log(user.password + " I am user.password");
 
     if (!compareSync(req.body.password, user.password)) {
       return res.status(401).send({

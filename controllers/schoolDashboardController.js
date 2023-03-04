@@ -47,4 +47,4 @@ mySchoolApp.controller(
   }
 );
 
-const authenticateRequest = passport.authenticate("jwt", { session: false });
+// const authenticateRequest = passport.authenticate("jwt", { session: false });

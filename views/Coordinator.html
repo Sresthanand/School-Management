@@ -3,7 +3,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="index2.css" />
+    <!-- <link rel="stylesheet" href="index2.css" /> -->
     <link
       href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
       rel="stylesheet"
@@ -82,6 +82,8 @@
                     name="your name"
                     class="input"
                     id="yourname"
+                    ng-model="name"
+                    required
                   />
                 </div>
               </div>
@@ -97,6 +99,8 @@
                     name="email address"
                     class="input"
                     id="emailaddress"
+                    ng-model="username"
+                    required
                   />
                 </div>
               </div>
@@ -113,6 +117,8 @@
                     name="password"
                     class="input"
                     id="password"
+                    ng-model="password"
+                    required
                   />
                 </div>
               </div>
@@ -129,6 +135,8 @@
                   name="email address"
                   class="input"
                   id="emailaddress"
+                  ng-model="class"
+                  required
                 />
                 </div>
               </div>
@@ -145,6 +153,8 @@
                   name="email address"
                   class="input"
                   id="emailaddress"
+                  ng-model="gender"
+                  required
                 />
                 </div>
               </div>
@@ -161,13 +171,15 @@
                   name="email address"
                   class="input"
                   id="emailaddress"
+                  ng-model="enollmentnumber"
+                  required
                 />
                 </div>
               </div>
 
 
               </div>
-              <button>Register Now</button>
+              <button type="submit" ng-click="studentRegister()">Register Now</button>
             </form>
           </div>
         </div>

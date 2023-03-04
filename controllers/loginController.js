@@ -1,6 +1,10 @@
 mySchoolApp.controller(
   "loginController",
   function ($scope, $http, $state, jwtHelper) {
+
+    localStorage.removeItem("token");
+
+    console.log(' hi i am login controller')
     $scope.login = function () {
       $http
         .post("http://localhost:5000/login", {

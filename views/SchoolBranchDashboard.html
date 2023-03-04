@@ -3,7 +3,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="index2.css" />
+    <!-- <link rel="stylesheet" href="index2.css" /> -->
     <link
       href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
       rel="stylesheet"
@@ -47,18 +47,6 @@
           </a>
           <span class="tooltip">School's</span>
         </li>
-
-        <!-- <li>
-          <a href="#">
-            <i class="bx bx-pie-chart-alt-2"></i>
-            <span class="links_name">Analytics</span>
-          </a>
-          <span class="tooltip">Analytics</span>
-        </li> -->
-        <!-- 
-        <li class="profile">
-          <i class="bx bx-log-out" id="log_out"></i>
-        </li> -->
       </ul>
     </div>
 
@@ -77,9 +65,11 @@
                   </span>
                   <input
                     type="text"
-                    name="your name"
+                    name="yourname"
                     class="input"
                     id="yourname"
+                    ng-model="name"
+                    required
                   />
                 </div>
               </div>
@@ -92,17 +82,19 @@
                   </span>
                   <input
                     type="text"
-                    name="email address"
+                    name="emailaddress"
                     class="input"
                     id="emailaddress"
+                    ng-model="username"
+                    required
                   />
                 </div>
               </div>
+
               <div class="input_wrap">
                 <label for="password">Enter Coordinator's Password</label>
                 <div class="input_item">
                   <span class="icon">
-                    <!-- <ion-icon name="key-sharp"></ion-icon> -->
                     <i class="fa-solid fa-lock"></i>
                   </span>
                   <input
@@ -110,11 +102,50 @@
                     name="password"
                     class="input"
                     id="password"
+                    ng-model="password"
+                    required
                   />
                 </div>
               </div>
 
-              <!-- <div class="input_wrap">
+              <button type="submit" ng-click="coordinatorRegister()">
+                Register Now
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      let sidebar = document.querySelector(".sidebar");
+      let closeBtn = document.querySelector("#btn");
+      let searchBtn = document.querySelector(".bx-search");
+
+      closeBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
+        menuBtnChange(); //calling the function(optional)
+      });
+
+      searchBtn.addEventListener("click", () => {
+        // Sidebar open when you click on the search iocn
+        sidebar.classList.toggle("open");
+        menuBtnChange(); //calling the function(optional)
+      });
+
+      // following are the code to change sidebar button(optional)
+      function menuBtnChange() {
+        if (sidebar.classList.contains("open")) {
+          closeBtn.classList.replace("bx-menu", "bx-menu-alt-right"); //replacing the iocns class
+        } else {
+          closeBtn.classList.replace("bx-menu-alt-right", "bx-menu"); //replacing the iocns class
+        }
+      }
+    </script>
+  </body>
+</html>
+
+<!-- <div class="input_wrap">
                 <label for="confirmpassword">Confirm Password</label>
                 <div class="input_item">
                   <span class="icon">
@@ -128,7 +159,7 @@
                   />
                 </div>
               </div> -->
-              <!--               
+<!--               
               <div class="input_wrap">
                 <label for="phone">Phone</label>
                 <div class="input_item">
@@ -138,7 +169,7 @@
                   <input type="number" name="phone" class="input" id="phone" />
                 </div>
               </div> -->
-              <!--               
+<!--               
               <div class="input_wrap">
                 <label>Gender</label>
                 <div class="input_radio">
@@ -183,38 +214,3 @@
                   </div>
                 </div>
               </div> -->
-
-              <button>Register Now</button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <script>
-      let sidebar = document.querySelector(".sidebar");
-      let closeBtn = document.querySelector("#btn");
-      let searchBtn = document.querySelector(".bx-search");
-
-      closeBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("open");
-        menuBtnChange(); //calling the function(optional)
-      });
-
-      searchBtn.addEventListener("click", () => {
-        // Sidebar open when you click on the search iocn
-        sidebar.classList.toggle("open");
-        menuBtnChange(); //calling the function(optional)
-      });
-
-      // following are the code to change sidebar button(optional)
-      function menuBtnChange() {
-        if (sidebar.classList.contains("open")) {
-          closeBtn.classList.replace("bx-menu", "bx-menu-alt-right"); //replacing the iocns class
-        } else {
-          closeBtn.classList.replace("bx-menu-alt-right", "bx-menu"); //replacing the iocns class
-        }
-      }
-    </script>
-  </body>
-</html>

@@ -1,6 +1,8 @@
 mySchoolApp.controller(
   "superAdminDashboardController",
   function ($scope, $state, jwtHelper, $http) {
+    console.log("Hi i am superadmindashboard controller!");
+
     var token = localStorage.getItem("token");
 
     if (!token || jwtHelper.isTokenExpired(token)) {
@@ -8,6 +10,7 @@ mySchoolApp.controller(
     }
 
     $scope.logout = function () {
+      console.log("Hi i am Logout!");
       localStorage.removeItem("token");
       $state.go("login");
     };
@@ -42,5 +45,3 @@ mySchoolApp.controller(
     };
   }
 );
-
-const authenticateRequest = passport.authenticate("jwt", { session: false });
