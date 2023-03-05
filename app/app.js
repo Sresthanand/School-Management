@@ -25,6 +25,25 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     },
   });
 
+  // Define the nested state
+  $stateProvider.state("SuperAdminDashBoard.myschools", {
+    url: "/myschools",
+    templateUrl: "views/myschools.html",
+    controller: "myschoolsController",
+    resolve: {
+      auth: function ($q, $state, jwtHelper) {
+        var token = localStorage.getItem("token");
+        if (token) {
+          var payload = jwtHelper.decodeToken(token);
+          if (payload.role === "super-admin") {
+            return $q.when();
+          }
+        }
+        return $q.reject("Not Authorized");
+      },
+    },
+  });
+
   $stateProvider.state("SchoolDashboard", {
     url: "/schoolDashboard",
     templateUrl: "views/SchoolDashboard.html",
@@ -98,4 +117,18 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
   });
 
   $urlRouterProvider.otherwise("/login");
+});
+
+mySchoolApp.run(function ($rootScope, $state) {
+  $rootScope.$state = $state;
+});
+
+mySchoolApp.controller("myschoolsController", function ($scope, $rootScope) {
+  console.log("Hi  i am schooooooooolss controller");
+  $scope.$watch("$root.$state.current.name", function (newValue, oldValue) {
+    if (newValue !== oldValue) {
+      $rootScope.currentRoute = newValue;
+    }
+  });
+  // rest of your controller code
 });

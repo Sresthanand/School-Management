@@ -1,7 +1,13 @@
 mySchoolApp.controller(
   "superAdminDashboardController",
-  function ($scope, $state, jwtHelper, $http) {
+  function ($scope, $state, jwtHelper, $http, $location, $rootScope) {
     console.log("Hi i am superadmindashboard controller!");
+
+    $scope.$watch("$root.$state.current.name", function (newValue, oldValue) {
+      if (newValue !== oldValue) {
+        $rootScope.currentRoute = newValue;
+      }
+    });
 
     var token = localStorage.getItem("token");
 

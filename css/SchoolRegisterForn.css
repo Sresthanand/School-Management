@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 @import url("https://fonts.googleapis.com/css?family=Raleway:400,700");
+
 :root{
 	--white: #fff;
 	--text-clr: #000024;
-	--primary: #3e2093;
+	
 	--secondary: #c0c1d2;
 	--input-bg: #f1f1ff;
 	--btn-hvr: #1a0065;
@@ -149,6 +150,7 @@ button{
 	height: 40px;
 	color: var(--white);
 	cursor: pointer;
+	--primary: #3e2093;
 	transition: 0.5s ease;
 }
 
