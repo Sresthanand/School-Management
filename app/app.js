@@ -6,7 +6,8 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     templateUrl: "views/login.html",
     controller: "loginController",
   });
-
+ 
+  //superadmin
   $stateProvider.state("SuperAdminDashBoard", {
     url: "/superAdminDashboard",
     templateUrl: "views/SuperAdminDashboard.html",
@@ -25,7 +26,7 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     },
   });
 
-  // Define the nested state
+  // Define the nested state 1 for superadmin
   $stateProvider.state("SuperAdminDashBoard.myschools", {
     url: "/myschools",
     templateUrl: "views/myschools.html",
@@ -44,6 +45,26 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     },
   });
 
+  // Define the nested state 2 for superadmin
+  $stateProvider.state("SuperAdminDashBoard.stats", {
+    url: "/stats",
+    templateUrl: "views/SuperAdminStats.html",
+    controller: "SuperAdminStatsController",
+    resolve: {
+      auth: function ($q, $state, jwtHelper) {
+        var token = localStorage.getItem("token");
+        if (token) {
+          var payload = jwtHelper.decodeToken(token);
+          if (payload.role === "super-admin") {
+            return $q.when();
+          }
+        }
+        return $q.reject("Not Authorized");
+      },
+    },
+  });
+
+  //school 
   $stateProvider.state("SchoolDashboard", {
     url: "/schoolDashboard",
     templateUrl: "views/SchoolDashboard.html",
@@ -62,6 +83,27 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     },
   });
 
+
+  // Define the nested state 1 for schools
+  $stateProvider.state("SchoolDashboard.branches", {
+    url: "/mybranches",
+    templateUrl: "views/mybranches.html",
+    controller: "BranchesController",
+    resolve: {
+      auth: function ($q, $state, jwtHelper) {
+        var token = localStorage.getItem("token");
+        if (token) {
+          var payload = jwtHelper.decodeToken(token);
+          if (payload.role === "school") {
+            return $q.when();
+          }
+        }
+        return $q.reject("Not Authorized");
+      },
+    },
+  });
+  
+  //branch
   $stateProvider.state("SchoolBranchDashboard", {
     url: "/schoolBranchDashboard",
     templateUrl: "views/SchoolBranchDashboard.html",
@@ -72,6 +114,24 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
         if (token) {
           var payload = jwtHelper.decodeToken(token);
           if (payload.role === "branch") {
+            return $q.when();
+          }
+        }
+        return $q.reject("Not Authorized");
+      },
+    },
+  });
+
+  $stateProvider.state("SchoolBranchDashboard.coordinators", {
+    url: "/mycoordinators",
+    templateUrl: "views/mycoordinators.html",
+    controller: "myCoordinatorController",
+    resolve: {
+      auth: function ($q, $state, jwtHelper) {
+        var token = localStorage.getItem("token");
+        if (token) {
+          var payload = jwtHelper.decodeToken(token);
+          if (payload.role === "school") {
             return $q.when();
           }
         }
@@ -97,6 +157,8 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
       },
     },
   });
+ 
+
 
   $stateProvider.state("StudentDashBoard", {
     url: "/studentDashboard",
@@ -121,14 +183,4 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
 
 mySchoolApp.run(function ($rootScope, $state) {
   $rootScope.$state = $state;
-});
-
-mySchoolApp.controller("myschoolsController", function ($scope, $rootScope) {
-  console.log("Hi  i am schooooooooolss controller");
-  $scope.$watch("$root.$state.current.name", function (newValue, oldValue) {
-    if (newValue !== oldValue) {
-      $rootScope.currentRoute = newValue;
-    }
-  });
-  // rest of your controller code
 });

@@ -95,12 +95,109 @@ app.post(
 );
 
 //schoolGet Request
+app.get(
+  "/getAllSchools",
+  authenticateRequest,
+  checkUserRole(["super-admin"]),
+  (req, res) => {
+    console.log("Hi, I am from get all schools!");
 
-//schooldelete -> can only be deleted by software head that is super admin
+    SchoolModel.find({}, { name: 1, _id: 1 }, (err, schools) => {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else {
+        res.send({
+          success: true,
+          message: "Schools fetched successfully",
+          schools: schools,
+        });
+      }
+    });
+  }
+);
 
-//schoolUpdate -> can only be done via software head that is super admin in our case
+//schoolUpdate ->
+app.put(
+  "/updateSchool/:id",
+  authenticateRequest,
+  checkUserRole(["super-admin"]),
+  (req, res) => {
+    const id = req.params.id;
 
-//schoolget -> can only be done via software head that is super admin in our case
+    SchoolModel.findById(id)
+      .then((school) => {
+        if (!school) {
+          return res.status(404).json({
+            success: false,
+            message: "School not found",
+          });
+        }
+
+        school.name = req.body.name || school.name; // Update the school name if provided
+
+        school.updatedAt = Date.now();
+
+        school
+          .save()
+          .then((updatedSchool) => {
+            return res.status(200).json({
+              success: true,
+              message: "School updated successfully",
+              school: updatedSchool,
+            });
+          })
+          .catch((err) => {
+            return res.status(500).json({
+              success: false,
+              message: "Error updating school",
+              error: err,
+            });
+          });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          success: false,
+          message: "Error updating school",
+          error: err,
+        });
+      });
+  }
+);
+
+//schooldelete -
+
+// DELETE /schools/:id
+app.delete(
+  "/schools/:id",
+  authenticateRequest,
+  checkUserRole(["super-admin"]),
+  async (req, res) => {
+    const schoolId = req.params.id;
+    try {
+      // Check if the school exists
+      const school = await SchoolModel.findById(schoolId);
+      if (!school) {
+        return res.status(404).send({ message: "School not found" });
+      }
+
+      // Delete the school's associated user account
+      await UserModel.findByIdAndDelete(school.userId.id);
+
+      // Delete the school
+      await SchoolModel.findByIdAndDelete(schoolId);
+
+      res.send({ message: "School deleted successfully" });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: "Something went wrong" });
+    }
+  }
+);
 
 //------------------------------------------------------------------------------------------//
 

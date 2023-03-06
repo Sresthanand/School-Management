@@ -28,7 +28,7 @@
         <i class="fas fa-bars"></i>
       </label>
       <ul>
-        <li><a ng-click="logout()">Logout</a></li>
+        <li><a class="button-logout" ng-click="logout()">Logout</a></li>
       </ul>
     </nav>
 
@@ -57,8 +57,9 @@
           <span class="tooltip">My School's</span>
         </li>
 
+
         <li>
-          <a href="#">
+          <a ui-sref="SuperAdminDashBoard.stats">
             <i class="bx bx-pie-chart-alt-2"></i>
             <span class="links_name">Analytics</span>
           </a>
@@ -71,9 +72,13 @@
       ng-show="currentRoute === 'SuperAdminDashBoard.myschools'"
     ></ui-view>
 
+    <ui-view
+      ng-show="currentRoute === 'SuperAdminDashBoard.stats'"
+    ></ui-view>
+
     <section
       class="home-section"
-      ng-hide="currentRoute === 'SuperAdminDashBoard.myschools'"
+      ng-hide="currentRoute === 'SuperAdminDashBoard.myschools' || currentRoute === 'SuperAdminDashBoard.stats'"
     >
       <div class="text">Please Register Your School Details!</div>
       <div class="wrapper">

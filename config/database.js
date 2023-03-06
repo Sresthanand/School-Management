@@ -22,6 +22,7 @@ const userSchema = mongoose.Schema({
   },
 });
 
+
 const schoolSchema = mongoose.Schema({
   userId: {
     id: mongoose.Schema.Types.ObjectId,

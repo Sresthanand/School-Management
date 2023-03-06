@@ -2,7 +2,7 @@ mySchoolApp.controller(
   "coordinatorDashboardController",
   function ($scope, $state, jwtHelper, $http) {
     var token = localStorage.getItem("token");
-console.log("Hi i am coordinator controller!")
+    console.log("Hi i am coordinator controller!");
     if (!token || jwtHelper.isTokenExpired(token)) {
       $state.go("login");
     }
@@ -13,8 +13,7 @@ console.log("Hi i am coordinator controller!")
     };
 
     $scope.studentRegister = function () {
-
-      console.log('hi i am student !!!!!!!!!!!!!!!')
+      console.log("hi i am student !!!!!!!!!!!!!!!");
       const name = $scope.name;
       const username = $scope.username;
       const password = $scope.password;
@@ -60,37 +59,37 @@ console.log("Hi i am coordinator controller!")
 
 // const authenticateRequest = passport.authenticate("jwt", { session: false });
 
-mySchoolApp.controller(
-    "coordinatorController",
-    function ($scope, $state, $http) {
-      var token = localStorage.getItem("token");
+// mySchoolApp.controller(
+//     "coordinatorController",
+//     function ($scope, $state, $http) {
+//       var token = localStorage.getItem("token");
 
-      if (!token) {
-        $state.go("login");
-      }
+//       if (!token) {
+//         $state.go("login");
+//       }
 
-      $scope.logout = function () {
-        localStorage.removeItem("token");
-        $state.go("login");
-      };
+//       $scope.logout = function () {
+//         localStorage.removeItem("token");
+//         $state.go("login");
+//       };
 
-      $http({
-        method: "GET",
-        url: "http://localhost:5000/coordinator",
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          console.log("Coordinator data:", response.data);
-          $scope.coordinators = response.data;
-        })
-        .catch((error) => {
-          console.error("Error in getting coordinator data:", error.data);
-          alert("Something Went Wrong!");
-        });
-    }
-  )
+//       $http({
+//         method: "GET",
+//         url: "http://localhost:5000/coordinator",
+//         headers: {
+//           Authorization: "Bearer " + token,
+//           "Content-Type": "application/json",
+//         },
+//       })
+//         .then((response) => {
+//           console.log("Coordinator data:", response.data);
+//           $scope.coordinators = response.data;
+//         })
+//         .catch((error) => {
+//           console.error("Error in getting coordinator data:", error.data);
+//           alert("Something Went Wrong!");
+//         });
+//     }
+//   )
 
 //   const authenticateRequest = passport.authenticate("jwt", { session: false });

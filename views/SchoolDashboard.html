@@ -41,28 +41,29 @@
       </div>
       <ul class="nav-list">
         <li>
-          <a href="#">
+          <a href="#!/schoolDashboard">
             <i class="fa-solid fa-code-branch"></i>
             <span class="links_name">Branches</span>
           </a>
-          <span class="tooltip">School's</span>
+          <span class="tooltip">Home</span>
         </li>
 
-        <!-- <li>
-          <a href="#">
-            <i class="bx bx-pie-chart-alt-2"></i>
-            <span class="links_name">Analytics</span>
+        <li>
+          <a ui-sref="SchoolDashboard.branches">
+            <i class="fa-sharp fa-solid fa-school"></i>
+            <span class="links_name">My Branches</span>
           </a>
-          <span class="tooltip">Analytics</span>
-        </li> -->
-        <!-- 
-        <li class="profile">
-          <i class="bx bx-log-out" id="log_out"></i>
-        </li> -->
+          <span class="tooltip">My Branches</span>
+        </li>
       </ul>
     </div>
 
-    <section class="home-section">
+    <ui-view ng-show="currentRoute === 'SchoolDashboard.branches'"></ui-view>
+
+    <section
+      class="home-section"
+      ng-hide="currentRoute === 'SchoolDashboard.branches'"
+    >
       <div class="text">Please Register Your School Branch Details!</div>
 
       <div class="wrapper">
@@ -136,7 +137,7 @@
       </div>
     </section>
 
-    <script>
+    <!-- <script>
       let sidebar = document.querySelector(".sidebar");
       let closeBtn = document.querySelector("#btn");
       let searchBtn = document.querySelector(".bx-search");
@@ -160,7 +161,7 @@
           closeBtn.classList.replace("bx-menu-alt-right", "bx-menu"); //replacing the iocns class
         }
       }
-    </script>
+    </script> -->
   </body>
 </html>
 
