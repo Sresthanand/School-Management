@@ -41,16 +41,31 @@
       </div>
       <ul class="nav-list">
         <li>
-          <a href="#">
+          <a href="#!/schoolBranchDashboard">
             <i class="fa-solid fa-code-branch"></i>
             <span class="links_name">Branches</span>
           </a>
           <span class="tooltip">School's</span>
         </li>
+
+        <li>
+          <a ui-sref="SchoolBranchDashboard.coordinators">
+            <i class="fa-solid fa-chalkboard-user"></i>
+            <span class="links_name">Coordinators</span>
+          </a>
+          <span class="tooltip">Coordinator's</span>
+        </li>
       </ul>
     </div>
 
-    <section class="home-section">
+    <ui-view
+      ng-show="currentRoute === 'SchoolBranchDashboard.coordinators'"
+    ></ui-view>
+
+    <section
+      class="home-section"
+      ng-hide="currentRoute === 'SchoolBranchDashboard.coordinators'"
+    >
       <div class="text">Please Register Your Coordinator Details!</div>
 
       <div class="wrapper">

@@ -122,6 +122,7 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     },
   });
 
+// Define the nested state 1 for bracnhes
   $stateProvider.state("SchoolBranchDashboard.coordinators", {
     url: "/mycoordinators",
     templateUrl: "views/mycoordinators.html",
@@ -131,7 +132,7 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
         var token = localStorage.getItem("token");
         if (token) {
           var payload = jwtHelper.decodeToken(token);
-          if (payload.role === "school") {
+          if (payload.role === "branch") {
             return $q.when();
           }
         }
@@ -140,10 +141,30 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     },
   });
 
+
   $stateProvider.state("Coordinator", {
     url: "/coordinatorDashboard",
     templateUrl: "views/Coordinator.html",
     controller: "coordinatorDashboardController",
+    resolve: {
+      auth: function ($q, $state, jwtHelper) {
+        var token = localStorage.getItem("token");
+        if (token) {
+          var payload = jwtHelper.decodeToken(token);
+          if (payload.role === "coordinator") {
+            return $q.when();
+          }
+        }
+        return $q.reject("Not Authorized");
+      },
+    },
+  });
+
+  // Define the nested state 1 for coordinators
+  $stateProvider.state("Coordinator.students", {
+    url: "/mystudents",
+    templateUrl: "views/mystudents.html",
+    controller: "myStudentController",
     resolve: {
       auth: function ($q, $state, jwtHelper) {
         var token = localStorage.getItem("token");
