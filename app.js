@@ -363,7 +363,7 @@ app.post(
                   },
                   branch: {
                     id: branch._id,
-                    name: branch.name,
+                    location: branch.location,
                   },
                 });
 
@@ -417,11 +417,70 @@ app.post(
   }
 );
 
+//coordinator get can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
+app.get(
+  "/getCoordinators",
+  authenticateRequest,
+  checkUserRole(["branch"]),
+  (req, res) => {
+    console.log("Hi, I am from get coordinators!");
+
+    const userId = req.user.id;
+
+    BranchModel.findOne({ "userId.id": userId }, (err, branch) => {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!branch) {
+        console.log("No branch found for this user");
+        res.send({
+          success: false,
+          message: "No branch found for this user",
+        });
+      } else {
+        const branchId = branch._id;
+        console.log(branch);
+        console.log(branchId);
+
+        CoordinatorModel.find(
+          { "branch.id": branchId },
+          {
+            name: 1,
+            "branch.id": 1,
+            "branch.location": 1,
+            "school.id": 1,
+            "school.name": 1,
+            _id: 1,
+          },
+          (err, coordinators) => {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else {
+              res.send({
+                success: true,
+                message: "Coordinators fetched successfully",
+                coordinators: coordinators,
+              });
+            }
+          }
+        );
+      }
+    });
+  }
+);
+
 //coordinator delete -> can only be done by tha particular school branch and simulataneoulsy its(school branch)
 
 //coordinator update -> can only be done by tha particular school branch and simulataneoulsy its(school branch)
-
-//coordinator get can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
 
 //------------------------------------------------------------------------------------------//
 //student register -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
