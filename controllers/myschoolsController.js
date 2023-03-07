@@ -39,7 +39,8 @@ mySchoolApp.controller(
       .catch(function (err) {
         console.log(err);
       });
-
+     
+      //edit and delete change -> isDeleted and Bulk Operator and Transactional rollback
     // Open Edit Modal and set the selected school
     $scope.openEditModal = function (school) {
       console.log(school);

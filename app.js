@@ -270,9 +270,63 @@ app.post(
   }
 );
 
+//Branchges ->can only be done via that respective school(admin)
+
+app.get(
+  "/getBranches",
+  authenticateRequest,
+  checkUserRole(["school"]),
+  (req, res) => {
+    console.log("Hi, I am from get branches!");
+
+    const userId = req.user.id;
+
+    SchoolModel.findOne({ "userId.id": userId }, (err, school) => {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!school) {
+        console.log("No school found for this user");
+        res.send({
+          success: false,
+          message: "No school found for this user",
+        });
+      } else {
+        const schoolId = school._id;
+        console.log(school);
+        console.log(schoolId);
+
+        BranchModel.find(
+          { "school.id": schoolId },
+          { location: 1, "school.id": 1, "school.name": 1, _id: 1 },
+          (err, branches) => {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else {
+              res.send({
+                success: true,
+                message: "Branches fetched successfully",
+                branches: branches,
+              });
+            }
+          }
+        );
+      }
+    });
+  }
+);
+
 //BranchDelete ->can only be done via that respective school(admin)
 //BranchUpdate ->can only be done via that respective school(admin)
-//Branchget ->can only be done via that respective school(admin)
 
 //------------------------------------------------------------------------------------------//
 

@@ -13,7 +13,7 @@ mongoose
     console.log("MongoDB connection failed", error);
   });
 
-const userSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({ 
   username: String,
   password: String,
   role: {
@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema({
 });
 
 
-const schoolSchema = mongoose.Schema({
+const schoolSchema = mongoose.Schema({ 
   userId: {
     id: mongoose.Schema.Types.ObjectId,
     username: String,
