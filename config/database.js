@@ -98,7 +98,7 @@ const studentSchema = mongoose.Schema({
   },
   branch: {
     id: mongoose.Schema.Types.ObjectId,
-    name: String,
+    location: String,
   },
   coordinator: {
     id: mongoose.Schema.Types.ObjectId,

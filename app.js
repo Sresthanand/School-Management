@@ -503,11 +503,15 @@ app.post(
           .then((coordinator) => {
             BranchModel.findOne({ _id: coordinator.branch.id })
               .then((branch) => {
+                console.log("Hellooo school");
+                console.log(branch);
                 SchoolModel.findOne({ _id: branch.school.id })
                   .then((school) => {
+                    console.log("Hellooo school");
+                    console.log(school);
                     const student = new StudentModel({
                       name: req.body.information.name,
-                      class: req.body.information.class,
+                      class: req.body.information.classofstudent,
                       gender: req.body.information.gender,
                       enrollmentNumber: req.body.information.enrollmentNumber,
                       userId: {
@@ -520,14 +524,13 @@ app.post(
                       },
                       branch: {
                         id: branch._id,
-                        name: branch.name,
+                        location: branch.location, //location
                       },
                       coordinator: {
                         id: coordinator._id,
                         name: coordinator.name,
                       },
                     });
-
                     student.save().then((student) => {
                       res.send({
                         success: true,
@@ -590,11 +593,96 @@ app.post(
   }
 );
 
+//student get -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
+
+app.get(
+  "/getStudents",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const coordinatorId = req.user.id;
+
+    CoordinatorModel.findOne(
+      { "userId.id": coordinatorId },
+      (err, coordinator) => {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else if (!coordinator) {
+          console.log("No coordinator found for this user");
+          res.send({
+            success: false,
+            message: "No coordinator found for this user",
+          });
+        } else {
+          const coordinatorName = coordinator.name;
+          const coordinatorId = coordinator._id;
+          const schoolName = coordinator.school.name;
+          const schoolId = coordinator.school.id;
+          const branchName = coordinator.branch.location;
+          const branchId = coordinator.branch.id;
+
+          StudentModel.find(
+            { "coordinator.id": coordinatorId },
+            (err, students) => {
+              if (err) {
+                console.log(err);
+                res.send({
+                  success: false,
+                  message: "Something went wrong",
+                  error: err,
+                });
+              } else {
+                const formattedStudents = students.map((student) => {
+                  return {
+                    name: student.name,
+                    class: student.class,
+                    gender: student.gender,
+                    enrollmentNumber: student.enrollmentNumber,
+                    coordinator: {
+                      name: coordinatorName,
+                      id: coordinatorId,
+                    },
+                    school: {
+                      name: schoolName,
+                      id: schoolId,
+                    },
+                    branch: {
+                      location: branchName,
+                      id: branchId,
+                    },
+                  };
+                });
+
+                res.send({
+                  success: true,
+                  message: "Students fetched successfully",
+                  coordinator: {
+                    name: coordinatorName,
+                    id: coordinatorId,
+                    schoolName: schoolName,
+                    schoolId: schoolId,
+                    branchName: branchName,
+                    branchId: branchId,
+                  },
+                  students: formattedStudents,
+                });
+              }
+            }
+          );
+        }
+      }
+    );
+  }
+);
+
 //student delete -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
 
 //student update -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
-
-//student get -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
 
 //------------------------------------------------------------------------------------------//
 

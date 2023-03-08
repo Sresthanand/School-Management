@@ -17,6 +17,24 @@ mySchoolApp.controller(
       localStorage.removeItem("token");
       $state.go("login");
     };
+
+    $http({
+      method: "GET",
+      url: "http://localhost:5000/getStudents",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then(function (response) {
+        console.log("Hi!!!!!!!!!!");
+        console.log(response);
+        $scope.coordinator = response.data.coordinator;
+        $scope.students = response.data.students;
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   }
 );
 

@@ -1,3 +1,4 @@
+
 mySchoolApp.controller(
   "coordinatorDashboardController",
   function ($scope, $state, jwtHelper, $http, $rootScope) {
@@ -26,6 +27,18 @@ mySchoolApp.controller(
       const classofstudent = $scope.class;
       const gender = $scope.gender;
       const enrollmentNumber = $scope.enrollmentNumber;
+
+      console.log("Hey yyyyyyyyyysadfihoasfhlao");
+      console.log(
+        name + username + password + classofstudent + gender + enrollmentNumber
+      );
+
+      console.log("Name " + name);
+      console.log("username " + username);
+      console.log("password " + password);
+      console.log("classofstudent " + classofstudent);
+      console.log("gender " + gender);
+      console.log("enrollmentNumber " + enrollmentNumber);
 
       const requestData = {
         information: {
