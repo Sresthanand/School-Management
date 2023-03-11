@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <link rel="stylesheet" href="index2.css" /> -->
+    <link
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet"
+    href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > <link
+    rel="stylesheet" href="css\superAdminStyleSheet\SuperAdminDashBoard.css" / >
+    <link rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / >
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <nav>
+      <div class="logo">Super Admin</div>
+      <input type="checkbox" id="click" />
+      <label for="click" class="menu-btn">
+        <i class="fas fa-bars"></i>
+      </label>
+      <ul>
+        <li><a class="button-logout" ng-click="logout()">Logout</a></li>
+      </ul>
+    </nav>
+
+    <div class="content"></div>
+
+    <div class="sidebar">
+      <div class="logo-details">
+        <div class="logo_name">Super Admin</div>
+        <i class="bx bx-menu" id="btn"></i>
+      </div>
+      <ul class="nav-list">
+        <li>
+          <a href="#!/superAdminDashboard">
+            <i class="fa-solid fa-house"></i>
+            <span class="links_name">Schools</span>
+          </a>
+          <span class="tooltip">Home</span>
+        </li>
+
+        <li>
+          <a ui-sref="SuperAdminDashBoard.myschools">
+            <!-- Added ui-sref -->
+            <i class="fa-sharp fa-solid fa-school"></i>
+            <span class="links_name">Schools</span>
+          </a>
+          <span class="tooltip">My School's</span>
+        </li>
+
+        <li>
+          <a ui-sref="SuperAdminDashBoard.stats">
+            <i class="bx bx-pie-chart-alt-2"></i>
+            <span class="links_name">Analytics</span>
+          </a>
+          <span class="tooltip">Analytics</span>
+        </li>
+      </ul>
+    </div>
+
+    <ui-view
+      ng-show="currentRoute === 'SuperAdminDashBoard.myschools'"
+    ></ui-view>
+
+    <ui-view ng-show="currentRoute === 'SuperAdminDashBoard.stats'"></ui-view>
+
+    <section
+      class="home-section"
+      ng-hide="currentRoute === 'SuperAdminDashBoard.myschools' || currentRoute === 'SuperAdminDashBoard.stats'"
+    >
+      <div class="text">Please Register Your School Details!</div>
+      <div class="wrapper">
+        <div class="r_form_wrap">
+          <div class="r_form">
+            <form>
+              <div class="input_wrap">
+                <label for="schoolname">Enter School name</label>
+                <div class="input_item">
+                  <span class="icon">
+                    <i class="fa-solid fa-school"></i>
+                  </span>
+                  <input
+                    type="text"
+                    ng-model="schoolName"
+                    name="schoolname"
+                    class="input"
+                    id="schoolname"
+                  />
+                </div>
+              </div>
+              <div class="input_wrap">
+                <label for="username">Enter School's Username</label>
+                <div class="input_item">
+                  <span class="icon">
+                    <i class="fa-solid fa-user"></i>
+                  </span>
+                  <input
+                    type="text"
+                    ng-model="username"
+                    name="username"
+                    class="input"
+                    id="username"
+                  />
+                </div>
+              </div>
+              <div class="input_wrap">
+                <label for="password">Enter School's Password</label>
+                <div class="input_item">
+                  <span class="icon">
+                    <i class="fa-solid fa-lock"></i>
+                  </span>
+                  <input
+                    type="password"
+                    ng-model="password"
+                    name="password"
+                    class="input"
+                    id="password"
+                  />
+                </div>
+              </div>
+
+              <button type="submit" ng-click="registerSchool()">
+                Register Now
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

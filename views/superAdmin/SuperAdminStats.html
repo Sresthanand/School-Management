@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet"
+    href="css\superAdminStyleSheet\SchoolRegisterForm.css" / >
+    <link />
+    <title>editschools</title>
+  </head>
+  <body>
+    <section class="home-section">
+      <div class="text">Please Enter Updated school Details!</div>
+      <div class="wrapper">
+        <div class="r_form_wrap">
+          <div class="r_form">
+            <form>
+              <div class="input_wrap">
+                <label for="schoolname">Enter old School name</label>
+                <div class="input_item">
+                  <span class="icon">
+                    <i class="fa-solid fa-school"></i>
+                  </span>
+                  <input
+                    type="text"
+                    ng-model="oldschoolName"
+                    name="schoolname"
+                    class="input"
+                    id="schoolname"
+                  />
+                </div>
+              </div>
+
+              <div class="input_wrap">
+                <label for="username">Enter New School's Name</label>
+                <div class="input_item">
+                  <span class="icon">
+                    <i class="fa-solid fa-user"></i>
+                  </span>
+                  <input
+                    type="text"
+                    ng-model="newschoolName"
+                    name="username"
+                    class="input"
+                    id="username"
+                  />
+                </div>
+              </div>
+
+              <button type="submit" ng-click="updateSchool()">
+                Update Now
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

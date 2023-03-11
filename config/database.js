@@ -13,7 +13,7 @@ mongoose
     console.log("MongoDB connection failed", error);
   });
 
-const userSchema = mongoose.Schema({ 
+const userSchema = mongoose.Schema({
   username: String,
   password: String,
   role: {
@@ -22,8 +22,7 @@ const userSchema = mongoose.Schema({
   },
 });
 
-
-const schoolSchema = mongoose.Schema({ 
+const schoolSchema = mongoose.Schema({
   userId: {
     id: mongoose.Schema.Types.ObjectId,
     username: String,
@@ -114,11 +113,39 @@ const studentSchema = mongoose.Schema({
   },
 });
 
+const examinationSchema = new mongoose.Schema({
+  coordinator: {
+    id: mongoose.Schema.Types.ObjectId,
+    name: String,
+  },
+  userId: {
+    id: mongoose.Schema.Types.ObjectId,
+    username: String,
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
+  time: {
+    type: String,
+    required: true,
+  },
+  roomNo: {
+    type: String,
+    required: true,
+  },
+  subject: {
+    type: String,
+    required: true,
+  },
+});
+
 const UserModel = mongoose.model("User", userSchema);
 const SchoolModel = mongoose.model("School", schoolSchema);
 const BranchModel = mongoose.model("Branch", branchSchema);
 const CoordinatorModel = mongoose.model("Coordinator", coordinatorSchema);
 const StudentModel = mongoose.model("Student", studentSchema);
+const ExaminationModel = mongoose.model("Examination", examinationSchema);
 
 module.exports = {
   UserModel,
@@ -126,4 +153,5 @@ module.exports = {
   BranchModel,
   CoordinatorModel,
   StudentModel,
+  ExaminationModel,
 };

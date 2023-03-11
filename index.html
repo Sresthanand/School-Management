@@ -3,40 +3,69 @@
 <html lang="en" ng-app="mySchoolApp">
   <head>
     <title>Posist</title>
-    <!-- 
-    <link rel="stylesheet" href="css/styles.css" /> -->
-
-    <!-- Angular cdn -->
+    <!------------------------------- Angular cdn ---------------------------->
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.0/angular.min.js"
       integrity="sha512-M7xRXhk9w4nRi4DAb7uORHxVdPxDJojQiUVx48fiXXaUS+ceQNLo4/EUoxHHPw7qV3M1Uz/zh9JpgXxzU2v/Kg=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <!------------------------------- Angular Ui Router cdn---------------------------->
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"
       integrity="sha512-HdDqpFK+5KwK5gZTuViiNt6aw/dBc3d0pUArax73z0fYN8UXiSozGNTo3MFx4pwbBPldf5gaMUq/EqposBQyWQ=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-
+    <!------------------------------- Angular JWT Cdn ---------------------------->
     <script
       type="text/javascript"
       src="https://cdn.rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js"
     ></script>
-
+    <!------------------------------- App file ---------------------------->
     <script src="app/app.js"></script>
-    <script src="controllers/superAdminDashboardController.js"></script>
-    <script src="controllers/coordinatorDashboardController.js"></script>
-    <script src="controllers/loginController.js"></script>
-    <script src="controllers/schoolBranchDashboardController.js"></script>
-    <script src="controllers/schoolDashboardController.js"></script>
-    <script src="controllers/myschoolsController.js"></script>
-    <script src="controllers/SuperAdminStatsController.js"></script>
-    <script src="controllers/BranchesController.js"></script>
-    <script src="controllers/myCoordinatorController.js"></script>
-    <script src="controllers/myStudentController.js"></script>
 
+    <!------------------------------- Controllers ---------------------------->
+
+    <!-- Login Controller -->
+    <script src="controllers/loginController/loginController.js"></script>
+    <!-- superAdmin Controller -->
+    <script src="controllers/superAdminController/superAdminDashboardController.js"></script>
+    <script src="controllers/superAdminController/SuperAdminStatsController.js"></script>
+    <!-- my school controller -->
+    <script src="controllers/schoolController/myschoolsController.js"></script>
+    <!-- school dashboard controller -->
+    <script src="controllers/schoolDashboardController/schoolDashboardController.js"></script>
+    <!-- school branch controller -->
+    <script src="controllers/branchController/BranchesController.js"></script>
+    <!-- coordinator dashboard controller -->
+    <script src="controllers/coordinatorController/coordinatorDashboardController.js"></script>
+    <!-- school branch dashboard controller -->
+    <script src="controllers/schoolBranchDashboardController/schoolBranchDashboardController.js"></script>
+    <!-- my coordinator controller -->
+    <script src="controllers/myCoordinatorController/myCoordinatorController.js"></script>
+    <!-- my student controller -->
+    <script src="controllers/myStudentController/myStudentController.js"></script>
+    <!-- exam schedule controller -->
+    <script src="controllers/examScheduleController/examscheduleController.js"></script>
+    <!-- student dashboard controller -->
+    <script src="controllers/studentDashBoardController/studentDashboardController.js"></script>
+    <script src="controllers/studentDashBoardController/TimeTableController.js"></script>
+    <script src="controllers/studentDashBoardController/ExamController.js"></script>
+
+    <!------------------------------- services ---------------------------->
+    <script src="Services/loginServices/loginService.js"></script>
+
+    <script src="Services/superAdminServices/AuthService.js"></script>
+    <script src="Services/superAdminServices/SchoolService.js"></script>
+
+    <script src="Services/mySchoolServices/MyschoolService.js"></script>
+
+    <!------------------------------- factories ---------------------------->
+    <script src="Factories/loginFactory/tokenService.js"></script>
+    <script src="Factories/superAdminFactories/RouteChangeService.js"></script>
+
+    <!------------------------------- Bootstrap css ---------------------------->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
@@ -53,6 +82,7 @@
     <script>
       window.location.href = "/#!/login";
     </script>
+    <!------------------------------- Bootrstrap JavaScript ---------------------------->
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

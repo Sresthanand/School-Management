@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css\coordinatorStyleSheet\mystudents.css" / >
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="card-container">
+      <div class="card" ng-repeat="student in students">
+        <img
+          src="/assets/student/student_placeholder.jpg"
+          alt="Placeholder Image"
+        />
+        <div class="card-info">
+          <h2>{{ student.name }}</h2>
+          <p>Class: {{ student.class }}</p>
+          <p>Gender: {{ student.gender }}</p>
+          <p>Enrollment Number: {{ student.enrollmentNumber }}</p>
+          <p>School Name: {{ student.school.name }}</p>
+          <p>Branch Name: {{ student.branch.location }}</p>
+          <p>Coordinator Name: {{ student.coordinator.name }}</p>
+
+          <div class="card-buttons">
+            <button
+              class="edit-button"
+              data-toggle="modal"
+              data-target="#editModal"
+              ng-click="openEditModal(school)"
+            >
+              Edit
+            </button>
+
+            <button
+              class="delete-button"
+              data-toggle="modal"
+              data-toggle="modal"
+              data-target="#exampleModal"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">Edit Information</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="schoolNameInput">Enter New School Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="schoolNameInput"
+                  ng-model="updatedSchoolName"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              ng-click="updateSchoolName(updatedSchoolName)"
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete School</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are You Sure You want to delete the school?
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              ng-click="confirmDelete(school._id)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

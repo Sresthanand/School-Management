@@ -8,6 +8,7 @@ const { SchoolModel } = require("./config/database");
 const { BranchModel } = require("./config/database");
 const { CoordinatorModel } = require("./config/database");
 const { StudentModel } = require("./config/database");
+const { ExaminationModel } = require("./config/database");
 
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
@@ -169,7 +170,7 @@ app.put(
   }
 );
 
-//schooldelete -
+//schooldelete ->
 
 // DELETE /schools/:id
 app.delete(
@@ -686,8 +687,165 @@ app.get(
 
 //------------------------------------------------------------------------------------------//
 
-//login for super-admin, school , school-branch ,coordinator and student to their respective pages
+//Functionality api's
 
+//For student DashBoard, Can get its info
+app.get(
+  "/getStudentData",
+  authenticateRequest,
+  checkUserRole(["student"]),
+  (req, res) => {
+    const studentId = req.user.id;
+
+    StudentModel.findOne({ "userId.id": studentId }, (err, student) => {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!student) {
+        console.log("No student found for this user");
+        res.send({
+          success: false,
+          message: "No student found for this user",
+        });
+      } else {
+        const studentData = {
+          name: student.name,
+          class: student.class,
+          gender: student.gender,
+          enrollmentNumber: student.enrollmentNumber,
+          coordinator: {
+            name: student.coordinator.name,
+            id: student.coordinator.id,
+          },
+          school: {
+            name: student.school.name,
+            id: student.school.id,
+          },
+          branch: {
+            location: student.branch.location,
+            id: student.branch.id,
+          },
+        };
+
+        res.send({
+          success: true,
+          message: "Student data fetched successfully",
+          data: studentData,
+        });
+      }
+    });
+  }
+);
+
+//for saving exam
+app.post(
+  "/examRegistration",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    // Get the coordinator's user ID and username from the request
+    const { id, username } = req.user;
+
+    // Find the coordinator in the CoordinatorModel using their user ID
+    CoordinatorModel.findOne({ "userId.id": id })
+      .then((coordinator) => {
+        if (!coordinator) {
+          // If the coordinator is not found, return an error
+          return res.status(404).json({ message: "Coordinator not found" });
+        }
+
+        // Create a new examination document using the request body
+        const examination = new ExaminationModel({
+          coordinator: {
+            id: coordinator._id,
+            name: coordinator.name,
+          },
+          userId: {
+            id: id,
+            username: username,
+          },
+          date: req.body.date,
+          time: req.body.time,
+          roomNo: req.body.roomnumber,
+          subject: req.body.subject,
+        });
+
+        // Save the examination document to the database
+        examination.save().then((exam) => {
+          // Return a success response with the newly created examination document
+          res.status(201).json({ success: true, exam });
+        });
+      })
+      .catch((err) => {
+        // Return an error response if an error occurs
+        res.status(500).json({ success: false, message: err.message });
+      });
+  }
+);
+
+//for getting exam for student
+app.get(
+  "/getStudentExams",
+  authenticateRequest,
+  checkUserRole(["student"]),
+  (req, res) => {
+    const studentId = req.user.id;
+
+    StudentModel.findOne({ "userId.id": studentId }, (err, student) => {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!student) {
+        console.log("No student found for this user");
+        res.send({
+          success: false,
+          message: "No student found for this user",
+        });
+      } else {
+        ExaminationModel.find(
+          { "coordinator.id": student.coordinator.id },
+          (err, exams) => {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else {
+              const studentExams = exams.map((exam) => {
+                return {
+                  subject: exam.subject,
+                  roomNo: exam.roomNo,
+                  time: exam.time,
+                  date: exam.date,
+                };
+              });
+
+              res.send({
+                success: true,
+                message: "Exams fetched successfully",
+                data: studentExams,
+              });
+            }
+          }
+        );
+      }
+    });
+  }
+);
+
+
+
+//login for super-admin, school , school-branch ,coordinator and student to their respective pages
 app.post("/login", (req, res) => {
   UserModel.findOne({ username: req.body.username }).then((user) => {
     // console.log("Hi1111", user);

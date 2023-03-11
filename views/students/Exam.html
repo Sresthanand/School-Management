@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="shortcut icon" href="./images/logo.png">
+    <link rel="stylesheet" href="css\studentStyleSheet\StudentHomePage.css" />
+ 
+    <style>
+        body{overflow: hidden;}
+        header{position: relative;}
+        .exam{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 80vh;
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="exam timetable">
+            <h2>Examination Schedule</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Subject</th>
+                        <th>Room no.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="exam in exams">
+                     <td>{{ exam.date | date : 'dd/MM/yyyy' }}</td>
+                      <td>{{exam.time}}</td>
+                      <td>{{exam.subject}}</td>
+                      <td>{{exam.roomNo}}</td>
+                    </tr>
+                  </tbody>
+                  
+            </table>
+        </div>
+    </main>
+
+    
+    </main>
+
+
+</body>
+
+
+</html>
