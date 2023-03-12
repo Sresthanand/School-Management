@@ -8,9 +8,33 @@
     <title>Document</title>
   </head>
   <body>
+    <div class="wrap">
+      <div class="search">
+        <input
+          type="text"
+          class="searchTerm"
+          placeholder="Search Your Coordinator"
+          ng-model="searchQuery"
+        />
+        <button type="submit" class="searchButton">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+
+      <button type="button" class="resetButton" ng-click="resetFilters()">
+        Reset
+      </button>
+    </div>
+
     <div class="card-container">
-      <div class="card" ng-repeat="coordinator in coordinators">
-        <img src="/assets/coordinator/teacher_placeholder.jpg" alt="Placeholder Image" />
+      <div
+        class="card"
+        ng-repeat="coordinator in coordinators | filter:searchQuery"
+      >
+        <img
+          src="/assets/coordinator/teacher_placeholder.jpg"
+          alt="Placeholder Image"
+        />
         <div class="card-info">
           <h2>{{ coordinator.name }}</h2>
           <p>{{ coordinator.branch.location }}</p>
