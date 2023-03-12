@@ -11,24 +11,16 @@
       src="https://kit.fontawesome.com/d97b87339f.js"
       crossorigin="anonymous"
     ></script>
-
-
   </head>
-
   <body>
-  
-
-      <div class="wrap">
+    <div class="wrap">
         <div class="search">
            <input type="text" class="searchTerm" placeholder="Search Your School" ng-model="searchQuery">
            <button type="submit" class="searchButton">
              <i class="fa fa-search"></i>
           </button>
         </div>
-     </div>
-
- 
-   
+     </div>   
   </div>
     <div class="card-container">
       <div class="card" ng-repeat="school in schools | filter:searchQuery">

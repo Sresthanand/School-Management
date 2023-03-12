@@ -8,9 +8,49 @@
     <title>Document</title>
   </head>
   <body>
+    <div class="wrap">
+      <div class="search">
+        <input
+          type="text"
+          class="searchTerm"
+          placeholder="Search Your School branch"
+          ng-model="searchQuery"
+        />
+        <button type="submit" class="searchButton">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+
+      <div>
+        <div class="input_item">
+          <select ng-model="selectedLocation">
+            <option value="">City</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Kolkata">Kolkata</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Bangalore">Bangalore</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Ahmedabad">Ahmedabad</option>
+            <option value="Pune">Pune</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="resetButton" ng-click="resetFilters()">
+        Reset
+      </button>
+    </div>
+
     <div class="card-container">
-      <div class="card" ng-repeat="branch in branches">
-        <img src="/assets/branch/branch_placeholder.jpg" alt="Placeholder Image" />
+      <div
+        class="card"
+        ng-repeat="branch in branches | filter:{location:selectedLocation} | filter:searchQuery"
+      >
+        <img
+          src="/assets/branch/branch_placeholder.jpg"
+          alt="Placeholder Image"
+        />
         <div class="card-info">
           <h2>{{ branch.location }}</h2>
           <p>{{ branch.location }}</p>

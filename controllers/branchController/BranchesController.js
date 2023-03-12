@@ -43,6 +43,11 @@ mySchoolApp.controller(
     //edit
 
     //delete later
+      //reset filters
+  $scope.resetFilters = function() {
+    $scope.searchQuery = '';
+    $scope.selectedLocation = '';
+  }
   }
 );
 
