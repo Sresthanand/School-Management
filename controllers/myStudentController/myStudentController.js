@@ -35,6 +35,12 @@ mySchoolApp.controller(
       .catch(function (err) {
         console.log(err);
       });
+
+      $scope.resetFilters = function() {
+        $scope.searchQuery = '';
+        $scope.selectedClass = '';
+        $scope.selectedGender = '';
+      }
   }
 );
 

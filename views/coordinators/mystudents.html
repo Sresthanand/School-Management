@@ -8,8 +8,59 @@
     <title>Document</title>
   </head>
   <body>
+    <div class="wrap">
+      <div class="search">
+        <input
+          type="text"
+          class="searchTerm"
+          placeholder="Search Your Student"
+          ng-model="searchQuery"
+        />
+        <button type="submit" class="searchButton">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+
+      <div class="parent">
+        <div class="input_item">
+          <select ng-model="selectedClass">
+            <option value="">class</option>
+            <option value="First">I</option>
+            <option value="second">II</option>
+            <option value="third">III</option>
+            <option value="fourth">IV</option>
+            <option value="fifth">V</option>
+            <option value="sixth">VI</option>
+            <option value="seventh">VII</option>
+            <option value="eighth">VIII</option>
+            <option value="ninth">IX</option>
+            <option value="tenth">X</option>
+            <option value="eleventh">XI</option>
+            <option value="twelth">XII</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="parent2">
+        <div class="input_item">
+          <select ng-model="selectedGender">
+            <option value="">gender</option>
+            <option value="male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="resetButton" ng-click="resetFilters()">
+        Reset
+      </button>
+    </div>
+
     <div class="card-container">
-      <div class="card" ng-repeat="student in students">
+      <div
+        class="card"
+        ng-repeat="student in students | filter:{class:selectedClass} | filter:{gender:selectedGender } | filter: searchQuery"
+      >
         <img
           src="/assets/student/student_placeholder.jpg"
           alt="Placeholder Image"
