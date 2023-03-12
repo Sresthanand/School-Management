@@ -43,5 +43,24 @@ mySchoolApp.controller(
       .catch(function (err) {
         console.log(err);
       });
+
+    // API call to get student messages
+
+    $http({
+      method: "GET",
+      url: "http://localhost:5000/getStudentMessages",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then(function (response) {
+        console.log("Messages fetched successfully");
+        console.log(response);
+        $scope.messages = response.data.data;
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   }
 );

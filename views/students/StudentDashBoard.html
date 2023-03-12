@@ -79,8 +79,6 @@
       <main>
         <h1>Marks Scored</h1>
         <div class="subjects">
-
-
           <div class="eg">
             <span class="material-icons-sharp">architecture</span>
             <h3>Engineering Graphics</h3>
@@ -89,9 +87,7 @@
               <svg><circle cx="38" cy="38" r="36"></circle></svg>
               <div class="number"><p>86%</p></div>
             </div>
-      
           </div>
-
 
           <div class="mth">
             <span class="material-icons-sharp">functions</span>
@@ -101,9 +97,7 @@
               <svg><circle cx="38" cy="38" r="36"></circle></svg>
               <div class="number"><p>93%</p></div>
             </div>
-         
           </div>
-
 
           <div class="cs">
             <span class="material-icons-sharp">computer</span>
@@ -113,9 +107,7 @@
               <svg><circle cx="38" cy="38" r="36"></circle></svg>
               <div class="number"><p>81%</p></div>
             </div>
-         
           </div>
-
 
           <div class="cg">
             <span class="material-icons-sharp">dns</span>
@@ -125,10 +117,7 @@
               <svg><circle cx="38" cy="38" r="36"></circle></svg>
               <div class="number"><p>96%</p></div>
             </div>
-           
           </div>
-
-
 
           <div class="net">
             <span class="material-icons-sharp">router</span>
@@ -138,10 +127,7 @@
               <svg><circle cx="38" cy="38" r="36"></circle></svg>
               <div class="number"><p>92%</p></div>
             </div>
-          
           </div>
-
-
         </div>
 
         <!-- <div class="timetable" id="timetable">
@@ -163,67 +149,25 @@
             <tbody></tbody>
           </table>
         </div> -->
+
+        <div class="right">
+          <div class="announcements">
+            <h1>Class Announcements</h1>
+
+            <div class="updates">
+              <div
+                class="message"
+                ng-repeat="message in messages | orderBy: '-createdAt' | limitTo: 3"
+              >
+                <p><b>{{ message.title }}</b> {{ message.content }}</p>
+                <small class="text-muted"
+                  >{{ message.createdAt | date:'dd/MM/yyyy h:mm a' }}</small
+                >
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
-
-      <!-- <div class="right">
-        <div class="announcements">
-          <h2>Announcements</h2>
-          <div class="updates">
-            <div class="message">
-              <p>
-                <b>Academic</b> Summer training internship with Live Projects.
-              </p>
-              <small class="text-muted">2 Minutes Ago</small>
-            </div>
-            <div class="message">
-              <p>
-                <b>Co-curricular</b> Global internship oportunity by Student
-                organization.
-              </p>
-              <small class="text-muted">10 Minutes Ago</small>
-            </div>
-            <div class="message">
-              <p><b>Examination</b> Instructions for Mid Term Examination.</p>
-              <small class="text-muted">Yesterday</small>
-            </div>
-          </div>
-        </div>
-  
-        <div class="leaves">
-          <h2>Teachers on leave</h2>
-          <div class="teacher">
-            <div class="profile-photo">
-              <img src="./images/profile-2.jpeg" alt="" />
-            </div>
-            <div class="info">
-              <h3>The Professor</h3>
-              <small class="text-muted">Full Day</small>
-            </div>
-          </div>
-          <div class="teacher">
-            <div class="profile-photo">
-              <img src="./images/profile-3.jpg" alt="" />
-            </div>
-            <div class="info">
-              <h3>Lisa Manobal</h3>
-              <small class="text-muted">Half Day</small>
-            </div>
-          </div>
-          <div class="teacher">
-            <div class="profile-photo">
-              <img src="./images/profile-4.jpg" alt="" />
-            </div>
-            <div class="info">
-              <h3>Himanshu Jindal</h3>
-              <small class="text-muted">Full Day</small>
-            </div>
-          </div>
-        </div>
-      </div> -->
     </div>
-
-    <!-- <script src="timeTable.js"></script>
-
-    <script src="app.js"></script> -->
   </body>
 </html>

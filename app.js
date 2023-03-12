@@ -9,6 +9,7 @@ const { BranchModel } = require("./config/database");
 const { CoordinatorModel } = require("./config/database");
 const { StudentModel } = require("./config/database");
 const { ExaminationModel } = require("./config/database");
+const { MessageModel } = require("./config/database");
 
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
@@ -843,7 +844,107 @@ app.get(
   }
 );
 
+//for saving message
+app.post(
+  "/saveMessage",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    // Get the coordinator's user ID and username from the request
+    const { id, username } = req.user;
 
+    // Find the coordinator in the CoordinatorModel using their user ID
+    CoordinatorModel.findOne({ "userId.id": id })
+      .then((coordinator) => {
+        if (!coordinator) {
+          // If the coordinator is not found, return an error
+          return res.status(404).json({ message: "Coordinator not found" });
+        }
+
+        // Create a new message document using the request body
+        const message = new MessageModel({
+          coordinator: {
+            id: coordinator._id,
+            name: coordinator.name,
+          },
+          userId: {
+            id: id,
+            username: username,
+          },
+          messageTitle: req.body.messageTitle,
+          messageContent: req.body.messageContent,
+        });
+
+        // Save the message document to the database
+        message.save().then((savedMessage) => {
+          // Return a success response with the newly created message document
+          res.status(201).json({ success: true, message: savedMessage });
+        });
+      })
+      .catch((err) => {
+        // Return an error response if an error occurs
+        res.status(500).json({ success: false, message: err.message });
+      });
+  }
+);
+
+//for getting message for student
+app.get(
+  "/getStudentMessages",
+  authenticateRequest,
+  checkUserRole(["student"]),
+  (req, res) => {
+    const studentId = req.user.id;
+
+    StudentModel.findOne({ "userId.id": studentId }, (err, student) => {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!student) {
+        console.log("No student found for this user");
+        res.send({
+          success: false,
+          message: "No student found for this user",
+        });
+      } else {
+        MessageModel.find(
+          {
+            "coordinator.id": student.coordinator.id,
+            // "userId.id": studentId
+          },
+          (err, messages) => {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else {
+              const studentMessages = messages.map((message) => {
+                return {
+                  title: message.messageTitle,
+                  content: message.messageContent,
+                  createdAt: message.createdAt,
+                };
+              });
+
+              res.send({
+                success: true,
+                message: "Messages fetched successfully",
+                data: studentMessages,
+              });
+            }
+          }
+        );
+      }
+    });
+  }
+);
 
 //login for super-admin, school , school-branch ,coordinator and student to their respective pages
 app.post("/login", (req, res) => {

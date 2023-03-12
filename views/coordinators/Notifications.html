@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > <link
+    rel="stylesheet" href="css\superAdminStyleSheet\SuperAdminDashBoard.css" / > <link
+    rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / >
+
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+    
+    <title>Notification</title>
+    
+</head>
+<body>
+    <section class="home-section">
+     <div class="text">Please Send your Messages here!</div>
+
+     <div class="wrapper">
+       <div class="r_form_wrap">
+         <div class="r_form">
+
+           <form>
+
+             <div class="input_wrap">
+               <label for="yourname">Enter Message title:</label>
+               <div class="input_item">
+                 <span class="icon">
+                    <i class="fa-solid fa-envelope"></i>
+                 </span>
+                 <input
+                   type="text"
+                   name="your name"
+                   class="input"
+                   id="yourname"
+                   ng-model="messagetitle"
+                   required
+                 />
+               </div>
+             </div>
+
+             <div class="input_wrap">
+               <label for="emailaddress">Enter Message:</label>
+               <div class="input_item">
+                 <span class="icon">
+                    <i class="fa-solid fa-envelope"></i>
+                 </span>
+                 <input
+                   type="text"[]
+                   name="email address"
+                   class="input"
+                   id="emailaddress"
+                   ng-model="messagecontent"
+                   required
+                 />
+               </div>
+             </div>
+             </div>
+             <button type="submit" ng-click="sendMessage()">Send Now!</button>
+           </form>
+         </div>
+       </div>
+     </div>
+   </section>
+</body>
+</html>

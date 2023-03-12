@@ -186,12 +186,33 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
       },
     },
   });
-
+ 
+   // Define the nested state 2 for coordinators
   $stateProvider.state("Coordinator.examschedule", {
     //done //factories and servicecs later*
     url: "/examschedule",
     templateUrl: "views/coordinators/examschedule.html",
     controller: "examscheduleController",
+    resolve: {
+      auth: function ($q, $state, jwtHelper) {
+        var token = localStorage.getItem("token");
+        if (token) {
+          var payload = jwtHelper.decodeToken(token);
+          if (payload.role === "coordinator") {
+            return $q.when();
+          }
+        }
+        return $q.reject("Not Authorized");
+      },
+    },
+  });
+
+ // Define the nested state 3 for coordinators
+  $stateProvider.state("Coordinator.sendNotifications", {
+    //done //factories and servicecs later*
+    url: "/notification",
+    templateUrl: "views/coordinators/Notifications.html",
+    controller: "NotificationController",
     resolve: {
       auth: function ($q, $state, jwtHelper) {
         var token = localStorage.getItem("token");

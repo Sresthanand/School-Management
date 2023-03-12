@@ -140,12 +140,40 @@ const examinationSchema = new mongoose.Schema({
   },
 });
 
+const messageSchema = new mongoose.Schema({
+  coordinator: {
+    id: mongoose.Schema.Types.ObjectId,
+    name: String,
+  },
+  userId: {
+    id: mongoose.Schema.Types.ObjectId,
+    username: String,
+  },
+  messageTitle: {
+    type: String,
+    required: true,
+  },
+  messageContent: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  }
+});
+
 const UserModel = mongoose.model("User", userSchema);
 const SchoolModel = mongoose.model("School", schoolSchema);
 const BranchModel = mongoose.model("Branch", branchSchema);
 const CoordinatorModel = mongoose.model("Coordinator", coordinatorSchema);
 const StudentModel = mongoose.model("Student", studentSchema);
 const ExaminationModel = mongoose.model("Examination", examinationSchema);
+const MessageModel = mongoose.model("Message", messageSchema);
 
 module.exports = {
   UserModel,
@@ -154,4 +182,5 @@ module.exports = {
   CoordinatorModel,
   StudentModel,
   ExaminationModel,
+  MessageModel,
 };

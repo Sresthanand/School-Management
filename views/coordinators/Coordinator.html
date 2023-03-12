@@ -65,6 +65,16 @@
           </a>
           <span class="tooltip">Exam</span>
         </li>
+
+               
+        <li>
+          <a ui-sref="Coordinator.sendNotifications">
+           <i class="fa-solid fa-envelope"></i>
+            
+            <span class="links_name">Notifications</span>
+          </a>
+          <span class="tooltip">Notifications</span>
+        </li>
    
       </ul>
     </div>
@@ -77,9 +87,13 @@
   ng-show="currentRoute === 'Coordinator.examschedule'"
 ></ui-view>
 
+  <ui-view
+  ng-show="currentRoute === 'Coordinator.sendNotifications'"
+></ui-view>
+
 
     <section class="home-section" 
-     ng-hide="currentRoute === 'Coordinator.students' || currentRoute === 'Coordinator.examschedule'">
+     ng-hide="currentRoute === 'Coordinator.students' || currentRoute === 'Coordinator.examschedule'|| currentRoute ==='Coordinator.sendNotifications'">
       <div class="text">Please Register Your School Student Details!</div>
 
       <div class="wrapper">
