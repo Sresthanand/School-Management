@@ -6,13 +6,32 @@
     <link rel="stylesheet" href="css\superAdminStyleSheet\myschools.css" / >
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My schools</title>
+
+    <script
+      src="https://kit.fontawesome.com/d97b87339f.js"
+      crossorigin="anonymous"
+    ></script>
+
+
   </head>
 
   <body>
-    <!-- <h1>Here You can Find the details of your school!</h1> -->
+  
 
+      <div class="wrap">
+        <div class="search">
+           <input type="text" class="searchTerm" placeholder="Search Your School" ng-model="searchQuery">
+           <button type="submit" class="searchButton">
+             <i class="fa fa-search"></i>
+          </button>
+        </div>
+     </div>
+
+ 
+   
+  </div>
     <div class="card-container">
-      <div class="card" ng-repeat="school in schools">
+      <div class="card" ng-repeat="school in schools | filter:searchQuery">
         <img
           src="/assets/school/school_image_placeholder.jpg"
           alt="Placeholder Image"
