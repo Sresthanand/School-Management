@@ -36,11 +36,20 @@ mySchoolApp.controller(
         console.log(err);
       });
 
-      $scope.resetFilters = function() {
-        $scope.searchQuery = '';
-        $scope.selectedClass = '';
-        $scope.selectedGender = '';
-      }
+    $scope.selectedClass = "";
+    $scope.selectedGender = "";
+
+    $scope.resetFilters = function () {
+      $scope.searchQuery = "";
+      $scope.selectedClass = "";
+      $scope.selectedGender = "";
+    };
+    
+    $scope.genderFilter = function (student) {
+      return (
+        $scope.selectedGender === "" || student.gender === $scope.selectedGender
+      );
+    };
   }
 );
 

@@ -167,6 +167,7 @@ const messageSchema = new mongoose.Schema({
   }
 });
 
+
 const UserModel = mongoose.model("User", userSchema);
 const SchoolModel = mongoose.model("School", schoolSchema);
 const BranchModel = mongoose.model("Branch", branchSchema);

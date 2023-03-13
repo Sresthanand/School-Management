@@ -25,18 +25,18 @@
         <div class="input_item">
           <select ng-model="selectedClass">
             <option value="">class</option>
-            <option value="First">I</option>
-            <option value="second">II</option>
-            <option value="third">III</option>
-            <option value="fourth">IV</option>
-            <option value="fifth">V</option>
-            <option value="sixth">VI</option>
-            <option value="seventh">VII</option>
-            <option value="eighth">VIII</option>
-            <option value="ninth">IX</option>
-            <option value="tenth">X</option>
-            <option value="eleventh">XI</option>
-            <option value="twelth">XII</option>
+            <option value="1">I</option>
+            <option value="2">II</option>
+            <option value="3">III</option>
+            <option value="4">IV</option>
+            <option value="5">V</option>
+            <option value="6">VI</option>
+            <option value="7">VII</option>
+            <option value="8">VIII</option>
+            <option value="9">IX</option>
+            <option value="10">X</option>
+            <option value="11">XI</option>
+            <option value="12">XII</option>
           </select>
         </div>
       </div>
@@ -45,7 +45,7 @@
         <div class="input_item">
           <select ng-model="selectedGender">
             <option value="">gender</option>
-            <option value="male">Male</option>
+            <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
         </div>
@@ -59,7 +59,7 @@
     <div class="card-container">
       <div
         class="card"
-        ng-repeat="student in students | filter:{class:selectedClass} | filter:{gender:selectedGender } | filter: searchQuery"
+        ng-repeat="student in students | filter:{class:selectedClass} | filter:genderFilter | filter:searchQuery"
       >
         <img
           src="/assets/student/student_placeholder.jpg"
