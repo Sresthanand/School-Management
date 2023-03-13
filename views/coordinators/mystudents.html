@@ -55,11 +55,12 @@
         Reset
       </button>
     </div>
-
+   
+    <!-- | filter:{class:selectedClass} | filter:genderFilter | filter:searchQuery" -->
     <div class="card-container">
       <div
         class="card"
-        ng-repeat="student in students | filter:{class:selectedClass} | filter:genderFilter | filter:searchQuery"
+        ng-repeat="student in students" 
       >
         <img
           src="/assets/student/student_placeholder.jpg"

@@ -10,6 +10,7 @@ const { CoordinatorModel } = require("./config/database");
 const { StudentModel } = require("./config/database");
 const { ExaminationModel } = require("./config/database");
 const { MessageModel } = require("./config/database");
+const { MarksModel } = require("./config/database");
 
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
@@ -641,6 +642,7 @@ app.get(
               } else {
                 const formattedStudents = students.map((student) => {
                   return {
+                    id: student._id,
                     name: student.name,
                     class: student.class,
                     gender: student.gender,
@@ -945,6 +947,10 @@ app.get(
     });
   }
 );
+
+//for saving markks(coordinator will do)
+
+//for getting makrs(student will do)
 
 //login for super-admin, school , school-branch ,coordinator and student to their respective pages
 app.post("/login", (req, res) => {

@@ -164,9 +164,44 @@ const messageSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now,
-  }
+  },
 });
 
+const marksSchema = new mongoose.Schema({
+  coordinator: {
+    id: mongoose.Schema.Types.ObjectId,
+    name: String,
+  },
+  student: {
+    id: mongoose.Schema.Types.ObjectId,
+    name: String,
+  },
+  subject1: {
+    name: String,
+    marksObtained: Number,
+    totalMarks: Number,
+  },
+  subject2: {
+    name: String,
+    marksObtained: Number,
+    totalMarks: Number,
+  },
+  subject3: {
+    name: String,
+    marksObtained: Number,
+    totalMarks: Number,
+  },
+  subject4: {
+    name: String,
+    marksObtained: Number,
+    totalMarks: Number,
+  },
+  subject5: {
+    name: String,
+    marksObtained: Number,
+    totalMarks: Number,
+  },
+});
 
 const UserModel = mongoose.model("User", userSchema);
 const SchoolModel = mongoose.model("School", schoolSchema);
@@ -175,6 +210,7 @@ const CoordinatorModel = mongoose.model("Coordinator", coordinatorSchema);
 const StudentModel = mongoose.model("Student", studentSchema);
 const ExaminationModel = mongoose.model("Examination", examinationSchema);
 const MessageModel = mongoose.model("Message", messageSchema);
+const MarksModel = mongoose.model("Marks" , marksSchema);
 
 module.exports = {
   UserModel,
@@ -184,4 +220,5 @@ module.exports = {
   StudentModel,
   ExaminationModel,
   MessageModel,
+  MarksModel
 };
