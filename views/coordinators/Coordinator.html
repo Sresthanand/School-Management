@@ -19,6 +19,21 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+
+
+    
+    <style>
+      .submit-btn {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      .submit-btn:not([disabled]) {
+        cursor: pointer;
+        opacity: 1;
+      }
+    </style>
+
   </head>
   <body>
     <nav>
@@ -100,8 +115,8 @@
         <div class="r_form_wrap">
           <div class="r_form">
 
-            <form>
 
+            <form name="studentForm">
               <div class="input_wrap">
                 <label for="yourname">Enter Student's Name</label>
                 <div class="input_item">
@@ -110,15 +125,18 @@
                   </span>
                   <input
                     type="text"
-                    name="your name"
+                    name="yourname"
                     class="input"
                     id="yourname"
                     ng-model="name"
-                    required
+                    ng-pattern="/^[a-zA-Z ]*$/"
+                    ng-required="true"
                   />
+                  <div ng-show="studentForm.yourname.$error.required">Name is required.</div>
+                  <div ng-show="!studentForm.yourname.$error.required && studentForm.yourname.$error.pattern">Only alphabets are allowed in name.</div>
                 </div>
               </div>
-
+            
               <div class="input_wrap">
                 <label for="emailaddress">Enter Student's Username</label>
                 <div class="input_item">
@@ -127,20 +145,20 @@
                   </span>
                   <input
                     type="text"
-                    name="email address"
+                    name="emailaddress"
                     class="input"
                     id="emailaddress"
                     ng-model="username"
-                    required
+                    ng-required="true"
                   />
+                  <div ng-show="studentForm.emailaddress.$error.required">Username is required.</div>
                 </div>
               </div>
-
+            
               <div class="input_wrap">
                 <label for="password">Enter Student's Password</label>
                 <div class="input_item">
                   <span class="icon">
-                    <!-- <ion-icon name="key-sharp"></ion-icon> -->
                     <i class="fa-solid fa-lock"></i>
                   </span>
                   <input
@@ -149,98 +167,110 @@
                     class="input"
                     id="password"
                     ng-model="password"
-                    required
+                     ng-minlength="8"
+                      ng-pattern="/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]*$/"
+                    ng-required="true"
                   />
+                   <div
+                    ng-show="studentForm.password.$touched && studentForm.password.$error.required"
+                  >
+                    Password is required
+                  </div>
+                  <div ng-show="studentForm.password.$error.minlength">
+                    Password must be at least 8 characters long
+                  </div>
+                  <div ng-show="studentForm.password.$error.pattern">
+                    Password must contain at least one capital letter, one
+                    number, and one special character
+                  </div>
                 </div>
               </div>
-
+            
               <div class="input_wrap">
-                <label for="password">Enter Student's class</label>
+                <label for="class">Enter Student's Class</label>
                 <div class="input_item">
                   <span class="icon">
-                    <!-- <ion-icon name="key-sharp"></ion-icon> -->
                     <i class="fa-solid fa-school"></i>
                   </span>
                   <input
-                  type="text"
-                  name="email address"
-                  class="input"
-                  id="emailaddress"
-                  ng-model="class"
-                  required
-                />
+                    type="number"
+                    name="class"
+                    class="input"
+                    id="class"
+                    ng-model="class"
+                    min="1"
+                    max="12"
+                    ng-required="true"
+                  />
+                  <div ng-show="studentForm.class.$error.required">Class is required.</div>
+                  <div ng-show="!studentForm.class.$error.required && studentForm.class.$error.minlength">Only numbers are allowed in class.</div>
+                  <div ng-show="!studentForm.class.$error.required && !studentForm.class.$error.minlength && (studentForm.class.$error.min || studentForm.class.$error.max)">Only numbers from 1-12 are allowed in class.</div>
                 </div>
               </div>
 
+
+
               <div class="input_wrap">
-                <label for="password">Enter Student's Gender</label>
+                <label for="gender">Enter Student's Gender</label>
                 <div class="input_item">
                   <span class="icon">
-                    <!-- <ion-icon name="key-sharp"></ion-icon> -->
-                    <i class="fa-solid fa-venus-double"></i>>
+                    <i class="fa-solid fa-venus-double"></i>
                   </span>
-                  <input
-                  type="text"
-                  name="email address"
-                  class="input"
-                  id="emailaddress"
-                  ng-model="gender"
-                  required
-                />
+                  <input type="text"
+                         name="gender"
+                         class="input"
+                         id="gender"
+                         ng-model="gender"
+                         ng-required="true"
+                         ng-pattern="/^[a-zA-Z]+$/"
+                         title="Please enter only alphabets"/>
+                  <span ng-show="studentForm.gender.$error.required && !studentForm.gender.$pristine">
+                    Gender is required.
+                  </span>
+                  <span ng-show="studentForm.gender.$error.pattern && !studentForm.gender.$pristine">
+                    Only alphabets are required.
+                  </span>
                 </div>
               </div>
-
+              
               <div class="input_wrap">
-                <label for="password">Enter Student's Enrollment Number</label>
+                <label for="enrollment">Enter Student's Enrollment Number</label>
                 <div class="input_item">
                   <span class="icon">
-                    <!-- <ion-icon name="key-sharp"></ion-icon> -->
                     <i class="fa-solid fa-user"></i>
                   </span>
-                  <input
+                  <input 
                   type="text"
-                  name="email address"
+                  name="enrollment"
                   class="input"
-                  id="emailaddress"
+                   id="enrollment"
                   ng-model="enrollmentNumber"
-                  required
+                  ng-required="true"
+                  ng-pattern="/^[0-9]+$/"
+                    title="Please enter only numbers"
                 />
+                  <span ng-show="studentForm.enrollment.$error.required && !studentForm.enrollment.$pristine">
+                    Enrollment number is required.
+                  </span>
+                  <span 
+                  ng-show="studentForm.enrollment.$error.pattern && !studentForm.enrollment.$pristine">
+                    Only numbers are required.
+                  </span>
                 </div>
               </div>
-
-
               </div>
-              <button type="submit" ng-click="studentRegister()">Register Now</button>
+              <button 
+              type="submit"
+               ng-click="studentRegister()" 
+               ng-disabled="studentForm.$invalid"
+               class="submit-btn">
+               Register Now
+              </button>
             </form>
           </div>
         </div>
       </div>
     </section>
-<!-- 
-    <script>
-      let sidebar = document.querySelector(".sidebar");
-      let closeBtn = document.querySelector("#btn");
-      let searchBtn = document.querySelector(".bx-search");
 
-      closeBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("open");
-        menuBtnChange(); //calling the function(optional)
-      });
-
-      searchBtn.addEventListener("click", () => {
-        // Sidebar open when you click on the search iocn
-        sidebar.classList.toggle("open");
-        menuBtnChange(); //calling the function(optional)
-      });
-
-      // following are the code to change sidebar button(optional)
-      function menuBtnChange() {
-        if (sidebar.classList.contains("open")) {
-          closeBtn.classList.replace("bx-menu", "bx-menu-alt-right"); //replacing the iocns class
-        } else {
-          closeBtn.classList.replace("bx-menu-alt-right", "bx-menu"); //replacing the iocns class
-        }
-      }
-    </script> -->
   </body>
 </html>

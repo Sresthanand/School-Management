@@ -1,43 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > <link
-    rel="stylesheet" href="css\superAdminStyleSheet\SuperAdminDashBoard.css" / > <link
-    rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / >
+    <link rel="stylesheet"
+    href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > <link
+    rel="stylesheet" href="css\superAdminStyleSheet\SuperAdminDashBoard.css" / >
+    <link rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / >
     <title>Exam</title>
-</head>
-<body>
-   
-    
+
+    <style>
+      .submit-btn {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      .submit-btn:not([disabled]) {
+        cursor: pointer;
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
     <section class="home-section">
       <div class="text">Please Enter Exam Details</div>
 
       <div class="wrapper">
         <div class="r_form_wrap">
           <div class="r_form">
+            
+            <form name="examForm">
+              <div class="input_wrap">
+                <label for="date">Enter Date</label>
+                <div class="input_item">
+                  <span class="icon">
+                    <i class="fa-solid fa-calendar-days"></i>
+                  </span>
+                  <input
+                    type="date"
+                    name="date"
+                    class="input"
+                    id="date"
+                    ng-model="date"
+                    required
+                  />
+                  <span
+                    class="error"
+                    ng-show="examForm.date.$dirty && examForm.date.$invalid"
+                  >
+                    <span ng-show="examForm.date.$error.required"
+                      >Date is required.</span
+                    >
+                    <span ng-show="examForm.date.$error.date"
+                      >Invalid date format.</span
+                    >
+                  </span>
+                </div>
+              </div>
 
-            <form>
-                <div class="input_wrap">
-                    <label for="date">Enter Date</label>
-                    <div class="input_item">
-                      <span class="icon">
-                        <i class="fa-solid fa-calendar-days"></i>
-                      </span>
-                      <input
-                        type="date"
-                        name="date"
-                        class="input"
-                        id="date"
-                        ng-model="date"
-                        required
-                      />
-                    </div>
-                  </div>
-                  
               <div class="input_wrap">
                 <label for="emailaddress">Enter Time</label>
                 <div class="input_item">
@@ -46,12 +68,23 @@
                   </span>
                   <input
                     type="text"
-                    name="email address"
+                    name="time"
                     class="input"
-                    id="emailaddress"
+                    id="time"
                     ng-model="time"
                     required
                   />
+                  <span
+                    class="error"
+                    ng-show="examForm.time.$dirty && examForm.time.$invalid"
+                  >
+                    <span ng-show="examForm.time.$error.required"
+                      >Time is required.</span
+                    >
+                    <span ng-show="examForm.time.$error.pattern"
+                      >Invalid time format.</span
+                    >
+                  </span>
                 </div>
               </div>
 
@@ -63,12 +96,19 @@
                   </span>
                   <input
                     type="text"
-                    name="password"
+                    name="subject"
                     class="input"
-                    id="password"
+                    id="subject"
                     ng-model="subject"
+                    ng-pattern="/^[a-zA-Z\s]*$/"
                     required
                   />
+                  <div class="error" ng-show="examForm.subject.$error.required">
+                    Subject is required.
+                  </div>
+                  <div class="error" ng-show="examForm.subject.$error.pattern">
+                    Only alphabets are allowed in Subject field.
+                  </div>
                 </div>
               </div>
 
@@ -79,22 +119,34 @@
                     <i class="fa-solid fa-person-booth"></i>
                   </span>
                   <input
-                  type="text"
-                  name="email address"
-                  class="input"
-                  id="emailaddress"
-                  ng-model="roomnumber"
-                  required
-                />
+                    type="text"
+                    name="roomnumber"
+                    class="input"
+                    id="roomnumber"
+                    ng-model="roomnumber"
+                    required
+                  />
+                  <div
+                    class="error"
+                    ng-show="examForm.roomnumber.$error.required"
+                  >
+                    Room Number is required.
+                  </div>
                 </div>
               </div>
 
-              </div>
-              <button type="submit" ng-click="ExamRegister()">Schedule Exam</button>
+              <button
+                type="submit"
+                ng-click="ExamRegister()"
+                class="submit-btn"
+                ng-disabled="examForm.$invalid"
+              >
+                Schedule Exam
+              </button>
             </form>
           </div>
         </div>
       </div>
     </section>
-</body>
+  </body>
 </html>

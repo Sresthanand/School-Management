@@ -6,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css\coordinatorStyleSheet\mystudents.css" / >
     <title>Document</title>
+
+    <style>
+      .submit-btn {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      .submit-btn:not([disabled]) {
+        cursor: pointer;
+        opacity: 1;
+      }
+    </style>
   </head>
   <body>
     <div class="wrap">
@@ -229,137 +241,148 @@
             </button>
           </div>
 
-          <form>
+          <form name="marksform">
             <div class="modal-body">
               <div class="form-group">
                 <label for="email1">Subject 1</label>
                 <input
-                type="text"
+                  type="text"
                   class="form-control"
                   id="subject1"
                   aria-describedby="emailHelp"
                   placeholder="Enter Name of Subject 1"
                   ng-model="nameofsubject1"
+                  required
                 />
               </div>
 
               <div class="form-group">
                 <label for="email1">Marks</label>
                 <input
-                type="number"
+                  type="number"
                   class="form-control"
                   id="marks1"
                   aria-describedby="emailHelp"
                   placeholder="Enter Marks for subject 1"
                   ng-model="marksofsubject1"
+                  required
                 />
               </div>
 
               <div class="form-group">
                 <label for="email1">Subject 2</label>
                 <input
-                type="text"
+                  type="text"
                   class="form-control"
                   id="Subject2"
                   aria-describedby="emailHelp"
                   placeholder="Enter Name of Subject 2"
                   ng-model="nameofsubject2"
+                  required
                 />
               </div>
 
               <div class="form-group">
                 <label for="email1">Marks</label>
                 <input
-                type="number"
+                  type="number"
                   class="form-control"
                   id="marks2"
                   aria-describedby="emailHelp"
                   placeholder="Enter Marks for subject 2"
                   ng-model="marksofsubject2"
+                  required
                 />
               </div>
 
               <div class="form-group">
                 <label for="email1">Subject 3</label>
                 <input
-                   type="text"
+                  type="text"
                   class="form-control"
                   id="Subject3"
                   aria-describedby="emailHelp"
                   placeholder="Enter Name of Subject 3"
                   ng-model="nameofsubject3"
+                  required
                 />
               </div>
 
               <div class="form-group">
                 <label for="email1">Marks</label>
                 <input
-                type="number"
+                  type="number"
                   class="form-control"
                   id="marks3"
                   aria-describedby="emailHelp"
                   placeholder="Enter Marks for subject 3"
                   ng-model="marksofsubject3"
+                  required
                 />
               </div>
 
               <div class="form-group">
                 <label for="email1">Subject 4</label>
                 <input
-                type="text"
+                  type="text"
                   class="form-control"
                   id="Subject4"
                   aria-describedby="emailHelp"
                   placeholder="Enter Name of Subject 4"
                   ng-model="nameofsubject4"
+                  required
                 />
               </div>
 
               <div class="form-group">
                 <label for="email1">Marks</label>
                 <input
-                type="number"
+                  type="number"
                   class="form-control"
                   id="marks4"
                   aria-describedby="emailHelp"
                   placeholder="Enter Marks for subject 4"
                   ng-model="marksofsubject4"
+                  required
                 />
               </div>
 
               <div class="form-group">
                 <label for="email1">Subject 5</label>
                 <input
-                type="text"
+                  type="text"
                   class="form-control"
                   id="Subject5"
                   aria-describedby="emailHelp"
                   placeholder="Enter Name of Subject 5"
                   ng-model="nameofsubject5"
+                  required
                 />
               </div>
 
               <div class="form-group">
                 <label for="email1">Marks</label>
                 <input
-                type="number"
+                  type="number"
                   class="form-control"
                   id="marks5"
                   aria-describedby="emailHelp"
                   placeholder="Enter Marks for subject 5"
                   ng-model="marksofsubject5"
+                  required
                 />
               </div>
 
               <div class="form-group">
                 <label for="email1">Enter Maximum Marks</label>
                 <input
-                type="number"
+                  type="number"
                   class="form-control"
                   id="totalMarks"
                   aria-describedby="emailHelp"
                   placeholder="Enter Maximum Marks"
                   ng-model="maximumMarks"
+                  required
                 />
               </div>
             </div>
@@ -370,6 +393,8 @@
                 type="submit"
                 class="btn btn-success"
                 ng-click="saveMarks()"
+                class="submit-btn"
+                ng-disabled="marksform.$invalid"
               >
                 Submit
               </button>
