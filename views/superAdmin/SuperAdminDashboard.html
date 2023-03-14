@@ -21,6 +21,18 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+
+    <style>
+      .submit-btn {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      .submit-btn:not([disabled]) {
+        cursor: pointer;
+        opacity: 1;
+      }
+    </style>
   </head>
   <body>
     <nav>
@@ -83,7 +95,7 @@
       <div class="wrapper">
         <div class="r_form_wrap">
           <div class="r_form">
-            <form>
+            <form name="schoolForm">
               <div class="input_wrap">
                 <label for="schoolname">Enter School name</label>
                 <div class="input_item">
@@ -95,8 +107,22 @@
                     ng-model="schoolName"
                     name="schoolname"
                     class="input"
+                    ng-pattern="/^[a-zA-Z\s]*$/"
                     id="schoolname"
+                    required
                   />
+                  <span
+                    ng-show="schoolForm.schoolname.$dirty && schoolForm.schoolname.$error.required"
+                    class="error"
+                  >
+                    School name is required
+                  </span>
+                  <span
+                    ng-show="schoolForm.schoolname.$dirty && schoolForm.schoolname.$error.pattern"
+                    class="error"
+                  >
+                    Only alphabets are allowed in school name
+                  </span>
                 </div>
               </div>
               <div class="input_wrap">
@@ -111,7 +137,12 @@
                     name="username"
                     class="input"
                     id="username"
+                    required
                   />
+                  <span
+                    ng-show="schoolForm.username.$dirty && schoolForm.username.$error.required"
+                    >Username is required</span
+                  >
                 </div>
               </div>
               <div class="input_wrap">
@@ -126,11 +157,32 @@
                     name="password"
                     class="input"
                     id="password"
+                    ng-pattern="/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/"
+                    required
                   />
+                  <span
+                    ng-show="schoolForm.password.$dirty && schoolForm.password.$error.required"
+                    >Password is required</span
+                  >
+                  <span
+                    ng-show="
+                    schoolForm.password.$dirty &&
+                    !schoolForm.password.$error.required &&
+                    schoolForm.password.$error.pattern
+                  "
+                    >Password must be at least 8 characters long and contain at
+                    least one number, one capital letter, one special character,
+                    and one lowercase letter.</span
+                  >
                 </div>
               </div>
 
-              <button type="submit" ng-click="registerSchool()">
+              <button
+                type="submit"
+                ng-click="registerSchool()"
+                ng-disabled="schoolForm.$invalid"
+                class="submit-btn"
+              >
                 Register Now
               </button>
             </form>
