@@ -16,6 +16,7 @@ mySchoolApp.controller(
     };
 
     $scope.registerSchool = function () {
+      
       SchoolService.registerSchool(
         token,
         $scope.username,

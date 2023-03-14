@@ -40,6 +40,8 @@ const checkUserRole = (roles) => {
   };
 };
 
+
+
 // Middleware to authenticate requests using passport -> only for protected routes -> to verify token and reuests
 const authenticateRequest = passport.authenticate("jwt", { session: false });
 //------------------------------------------------------------------------------------------//

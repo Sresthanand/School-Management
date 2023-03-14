@@ -89,7 +89,9 @@
             </div> -->
 
             <div class="number">
-              <p>{{ (subject.marksObtained/subject.totalMarks)*100 }}%</p>
+              <p>
+                {{ (subject.marksObtained/subject.totalMarks)*100 | number:2 }}%
+              </p>
             </div>
           </div>
         </div>
