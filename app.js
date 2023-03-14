@@ -44,7 +44,9 @@ const checkUserRole = (roles) => {
 const authenticateRequest = passport.authenticate("jwt", { session: false });
 //------------------------------------------------------------------------------------------//
 
-//correct ->
+//SUPER-ADMIN API;S
+
+//school post req
 app.post(
   "/schoolRegister",
   authenticateRequest,
@@ -173,8 +175,6 @@ app.put(
 );
 
 //schooldelete ->
-
-// DELETE /schools/:id
 app.delete(
   "/schools/:id",
   authenticateRequest,
@@ -204,9 +204,9 @@ app.delete(
 
 //------------------------------------------------------------------------------------------//
 
-//Branchregister ->can only be done via that respective school(admin)
+//SCHOOL API'S
 
-//correct->
+//Branchregister 
 app.post(
   "/branchRegister",
   authenticateRequest,
@@ -273,8 +273,8 @@ app.post(
   }
 );
 
-//Branchges ->can only be done via that respective school(admin)
 
+//Branch Get req
 app.get(
   "/getBranches",
   authenticateRequest,
@@ -333,9 +333,9 @@ app.get(
 
 //------------------------------------------------------------------------------------------//
 
-//coordinator register -> can only be done by tha particular school branch and simulataneoulsy its(school branch)
+//BRANCH API'S
 
-//correct ->
+//Coordinator register
 app.post(
   "/coordinatorRegister",
   authenticateRequest,
@@ -420,7 +420,7 @@ app.post(
   }
 );
 
-//coordinator get can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
+//coordinator get
 app.get(
   "/getCoordinators",
   authenticateRequest,
@@ -486,8 +486,10 @@ app.get(
 //coordinator update -> can only be done by tha particular school branch and simulataneoulsy its(school branch)
 
 //------------------------------------------------------------------------------------------//
-//student register -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
 
+//COORDINATOR API'S
+
+//student register
 app.post(
   "/studentRegister",
   authenticateRequest,
@@ -596,8 +598,7 @@ app.post(
   }
 );
 
-//student get -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
-
+//student get 
 app.get(
   "/getStudents",
   authenticateRequest,
@@ -949,10 +950,186 @@ app.get(
 );
 
 //for saving markks(coordinator will do)
+app.post(
+  "/registerMarks",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const coordinatorId = req.user.id;
 
-//for getting makrs(student will do)
+    console.log("Hiii i am from regsiter marks");
+    console.log(req.body);
 
-//login for super-admin, school , school-branch ,coordinator and student to their respective pages
+    // Find the coordinator based on the authenticated user id
+    CoordinatorModel.findOne(
+      { "userId.id": coordinatorId },
+      (err, coordinator) => {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else if (!coordinator) {
+          console.log("No coordinator found for this user");
+          res.send({
+            success: false,
+            message: "No coordinator found for this user",
+          });
+        } else {
+          // Get the coordinator's id and name
+          const coordinatorId = coordinator._id;
+          const coordinatorName = coordinator.name;
+
+          // Get the student's id and name from the request body
+          const studentId = req.body.studentId;
+          const studentName = req.body.studentName;
+
+          // Create a new marks object using the request body
+          const newMarks = new MarksModel({
+            coordinator: {
+              id: coordinatorId,
+              name: coordinatorName,
+            },
+            student: {
+              id: studentId,
+              name: studentName,
+            },
+            subject1: {
+              name: req.body.subject1.name,
+              marksObtained: req.body.subject1.marks,
+              totalMarks: req.body.maximumMarks,
+            },
+            subject2: {
+              name: req.body.subject2.name,
+              marksObtained: req.body.subject2.marks,
+              totalMarks: req.body.maximumMarks,
+            },
+            subject3: {
+              name: req.body.subject3.name,
+              marksObtained: req.body.subject3.marks,
+              totalMarks: req.body.maximumMarks,
+            },
+            subject4: {
+              name: req.body.subject4.name,
+              marksObtained: req.body.subject4.marks,
+              totalMarks: req.body.maximumMarks,
+            },
+            subject5: {
+              name: req.body.subject5.name,
+              marksObtained: req.body.subject5.marks,
+              totalMarks: req.body.maximumMarks,
+            },
+          });
+
+          // Save the new marks object to the database
+          newMarks.save((err, savedMarks) => {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Failed to save marks",
+                error: err,
+              });
+            } else {
+              console.log("Marks saved successfully");
+              res.send({
+                success: true,
+                message: "Marks saved successfully",
+                marks: savedMarks,
+              });
+            }
+          });
+        }
+      }
+    );
+  }
+);
+
+//for getting marks(student will do)
+app.get(
+  "/getStudentMarks",
+  authenticateRequest,
+  checkUserRole(["student"]),
+  (req, res) => {
+    const studentId = req.user.id;
+
+    StudentModel.findOne({ "userId.id": studentId }, (err, student) => {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!student) {
+        console.log("No student found for this user");
+        res.send({
+          success: false,
+          message: "No student found for this user",
+        });
+      } else {
+        MarksModel.findOne(
+          {
+            "student.id": student._id,
+          },
+          (err, marks) => {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else if (!marks) {
+              console.log("No marks found for this student");
+              res.send({
+                success: false,
+                message: "No marks found for this student",
+              });
+            } else {
+              const {
+                coordinator,
+                student: studentData,
+                subject1,
+                subject2,
+                subject3,
+                subject4,
+                subject5,
+              } = marks;
+
+              const { name: coordinatorName } = coordinator;
+              const { name: studentName } = studentData;
+              //this data is returning
+              const data = {
+                //coordinator id and student id is not getting returned* check
+                id: marks._id,
+                coordinator: { id: coordinator._id, name: coordinatorName },
+                student: { id: studentData._id, name: studentName },
+                subject1,
+                subject2,
+                subject3,
+                subject4,
+                subject5,
+              };
+              res.json({
+                //this is getting returned
+                success: true,
+                message: "Marks fetched successfully",
+                data,
+              });
+            }
+          }
+        );
+      }
+    });
+  }
+);
+
+
+
+//login for All Users
 app.post("/login", (req, res) => {
   UserModel.findOne({ username: req.body.username }).then((user) => {
     // console.log("Hi1111", user);

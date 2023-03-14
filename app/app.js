@@ -228,9 +228,6 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
   });
 
 
-
-
-
   $stateProvider.state("StudentDashBoard", {
     //done
     url: "/studentDashboard",

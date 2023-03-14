@@ -55,13 +55,10 @@
         Reset
       </button>
     </div>
-   
+
     <!-- | filter:{class:selectedClass} | filter:genderFilter | filter:searchQuery" -->
     <div class="card-container">
-      <div
-        class="card"
-        ng-repeat="student in students" 
-      >
+      <div class="card" ng-repeat="student in students">
         <img
           src="/assets/student/student_placeholder.jpg"
           alt="Placeholder Image"
@@ -88,10 +85,18 @@
             <button
               class="delete-button"
               data-toggle="modal"
-              data-toggle="modal"
-              data-target="#exampleModal"
+              data-target="#deleteModal"
             >
               Delete
+            </button>
+
+            <button
+              class="delete-button"
+              data-toggle="modal"
+              data-target="#marksForm"
+              ng-click="openMarksModal(student)"
+            >
+              Marks
             </button>
           </div>
         </div>
@@ -156,7 +161,7 @@
     <!-- Delete Modal -->
     <div
       class="modal fade"
-      id="exampleModal"
+      id="deleteModal"
       tabindex="-1"
       role="dialog"
       aria-labelledby="exampleModalLabel"
@@ -194,6 +199,182 @@
               Delete
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marks Modal -->
+
+    <div
+      class="modal fade"
+      id="marksForm"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header border-bottom-0">
+            <h5 class="modal-title" id="exampleModalLabel">
+              Enter Marks for Student
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <form>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="email1">Subject 1</label>
+                <input
+                type="text"
+                  class="form-control"
+                  id="subject1"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Name of Subject 1"
+                  ng-model="nameofsubject1"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email1">Marks</label>
+                <input
+                type="number"
+                  class="form-control"
+                  id="marks1"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Marks for subject 1"
+                  ng-model="marksofsubject1"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email1">Subject 2</label>
+                <input
+                type="text"
+                  class="form-control"
+                  id="Subject2"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Name of Subject 2"
+                  ng-model="nameofsubject2"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email1">Marks</label>
+                <input
+                type="number"
+                  class="form-control"
+                  id="marks2"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Marks for subject 2"
+                  ng-model="marksofsubject2"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email1">Subject 3</label>
+                <input
+                   type="text"
+                  class="form-control"
+                  id="Subject3"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Name of Subject 3"
+                  ng-model="nameofsubject3"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email1">Marks</label>
+                <input
+                type="number"
+                  class="form-control"
+                  id="marks3"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Marks for subject 3"
+                  ng-model="marksofsubject3"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email1">Subject 4</label>
+                <input
+                type="text"
+                  class="form-control"
+                  id="Subject4"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Name of Subject 4"
+                  ng-model="nameofsubject4"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email1">Marks</label>
+                <input
+                type="number"
+                  class="form-control"
+                  id="marks4"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Marks for subject 4"
+                  ng-model="marksofsubject4"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email1">Subject 5</label>
+                <input
+                type="text"
+                  class="form-control"
+                  id="Subject5"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Name of Subject 5"
+                  ng-model="nameofsubject5"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email1">Marks</label>
+                <input
+                type="number"
+                  class="form-control"
+                  id="marks5"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Marks for subject 5"
+                  ng-model="marksofsubject5"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="email1">Enter Maximum Marks</label>
+                <input
+                type="number"
+                  class="form-control"
+                  id="totalMarks"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Maximum Marks"
+                  ng-model="maximumMarks"
+                />
+              </div>
+            </div>
+            <div
+              class="modal-footer border-top-0 d-flex justify-content-center"
+            >
+              <button
+                type="submit"
+                class="btn btn-success"
+                ng-click="saveMarks()"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

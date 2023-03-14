@@ -62,5 +62,36 @@ mySchoolApp.controller(
       .catch(function (err) {
         console.log(err);
       });
+
+    //API call to get student marks
+    $http({
+      method: "GET",
+      url: "http://localhost:5000/getStudentMarks",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then(function (response) {
+        console.log("Marks fetched successfully");
+        console.log(response);
+
+        //need to exclude first three keys as they are not needed
+        //0th index has id
+        //1st index has coordinator
+        //2bd index has student
+
+        var marksArray = [];
+
+        var responseKeys = Object.keys(response.data.data);
+        for (var i = 3; i < responseKeys.length; i++) {
+          marksArray.push(response.data.data[responseKeys[i]]);
+        }
+        console.log(marksArray);
+        $scope.marks = marksArray;
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   }
 );

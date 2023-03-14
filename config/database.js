@@ -14,8 +14,16 @@ mongoose
   });
 
 const userSchema = mongoose.Schema({
-  username: String,
-  password: String,
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   role: {
     type: String,
     enum: ["super-admin", "school", "branch", "coordinator", "student"],
@@ -27,7 +35,11 @@ const schoolSchema = mongoose.Schema({
     id: mongoose.Schema.Types.ObjectId,
     username: String,
   },
-  name: String,
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -39,7 +51,10 @@ const schoolSchema = mongoose.Schema({
 });
 
 const branchSchema = mongoose.Schema({
-  location: String,
+  location: {
+    type: String,
+    required: true,
+  },
   userId: {
     id: mongoose.Schema.Types.ObjectId,
     username: String,
@@ -59,7 +74,10 @@ const branchSchema = mongoose.Schema({
 });
 
 const coordinatorSchema = mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+  },
   userId: {
     id: mongoose.Schema.Types.ObjectId,
     username: String,
@@ -83,10 +101,23 @@ const coordinatorSchema = mongoose.Schema({
 });
 
 const studentSchema = mongoose.Schema({
-  name: String,
-  class: String,
-  gender: String,
-  enrollmentNumber: Number,
+  name: {
+    type: String,
+    required: true,
+  },
+  class: {
+    type: String,
+    required: true,
+  },
+  gender: {
+    type: String,
+    required: true,
+  },
+  enrollmentNumber: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   userId: {
     id: mongoose.Schema.Types.ObjectId,
     username: String,
@@ -177,29 +208,74 @@ const marksSchema = new mongoose.Schema({
     name: String,
   },
   subject1: {
-    name: String,
-    marksObtained: Number,
-    totalMarks: Number,
+    name: {
+      type: String,
+      required: true,
+    },
+    marksObtained: {
+      type: Number,
+      required: true,
+    },
+    totalMarks: {
+      type: Number,
+      required: true,
+    },
   },
   subject2: {
-    name: String,
-    marksObtained: Number,
-    totalMarks: Number,
+    name: {
+      type: String,
+      required: true,
+    },
+    marksObtained: {
+      type: Number,
+      required: true,
+    },
+    totalMarks: {
+      type: Number,
+      required: true,
+    },
   },
   subject3: {
-    name: String,
-    marksObtained: Number,
-    totalMarks: Number,
+    name: {
+      type: String,
+      required: true,
+    },
+    marksObtained: {
+      type: Number,
+      required: true,
+    },
+    totalMarks: {
+      type: Number,
+      required: true,
+    },
   },
   subject4: {
-    name: String,
-    marksObtained: Number,
-    totalMarks: Number,
+    name: {
+      type: String,
+      required: true,
+    },
+    marksObtained: {
+      type: Number,
+      required: true,
+    },
+    totalMarks: {
+      type: Number,
+      required: true,
+    },
   },
   subject5: {
-    name: String,
-    marksObtained: Number,
-    totalMarks: Number,
+    name: {
+      type: String,
+      required: true,
+    },
+    marksObtained: {
+      type: Number,
+      required: true,
+    },
+    totalMarks: {
+      type: Number,
+      required: true,
+    },
   },
 });
 
@@ -210,7 +286,7 @@ const CoordinatorModel = mongoose.model("Coordinator", coordinatorSchema);
 const StudentModel = mongoose.model("Student", studentSchema);
 const ExaminationModel = mongoose.model("Examination", examinationSchema);
 const MessageModel = mongoose.model("Message", messageSchema);
-const MarksModel = mongoose.model("Marks" , marksSchema);
+const MarksModel = mongoose.model("Marks", marksSchema);
 
 module.exports = {
   UserModel,
@@ -220,5 +296,5 @@ module.exports = {
   StudentModel,
   ExaminationModel,
   MessageModel,
-  MarksModel
+  MarksModel,
 };

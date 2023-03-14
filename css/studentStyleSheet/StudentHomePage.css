@@ -231,6 +231,37 @@ main .subjects > div span{
 main .subjects > div.mth span,main .subjects > div.cg span{background: var(--color-danger);}
 main .subjects > div.cs span{background: var(--color-success);}
 
+
+/* .progress-circle {
+    transform: rotate(-90deg);
+    margin-top: -40px;
+  }
+
+  .progress-circle-back {
+    fill: none;
+    stroke: #d2d2d2;
+    stroke-width: 10px;
+  }
+  
+  .progress-circle-prog {
+    fill: none;
+    stroke: #7e3451;
+    stroke-width: 10px;
+    stroke-dasharray: 0 999;
+    stroke-dashoffset: 0px;
+    transition: stroke-dasharray 0.7s linear 0s;
+  }
+
+  .progress-text {
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    text-align: center;
+    font-size: 2em;
+  }
+   */
+
+
 main .subjects h3{
     margin: 1rem 0 0.6rem;
     font-size: 1rem;
