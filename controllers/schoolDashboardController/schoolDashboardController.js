@@ -1,3 +1,23 @@
+//Image Upload Directive
+mySchoolApp.directive("fileModel", [
+  "$parse",
+  function ($parse) {
+    return {
+      restrict: "A",
+      link: function (scope, element, attrs) {
+        var model = $parse(attrs.fileModel);
+        var modelSetter = model.assign;
+
+        element.bind("change", function () {
+          scope.$apply(function () {
+            modelSetter(scope, element[0].files[0]);
+          });
+        });
+      },
+    };
+  },
+]);
+
 mySchoolApp.controller(
   "schoolDashboardController",
   function ($scope, $state, jwtHelper, $http, $rootScope) {
@@ -18,36 +38,67 @@ mySchoolApp.controller(
       $state.go("login");
     };
 
+    //first call the api for image upload then take its response and pass here in image
     $scope.branchRegister = function () {
+      // Get the branch location, username, and password from the scope
       const location = $scope.location;
       const username = $scope.username;
       const password = $scope.password;
 
-      const requestData = {
-        branch: {
-          location,
-        },
-        username,
-        password,
-      };
+      // Use FormData to construct the request body for image upload
+      const fd = new FormData();
+      fd.append("file", $scope.file);
 
+      // Call the image upload API
       $http({
         method: "POST",
-        url: "http://localhost:5000/branchRegister",
+        url: "http://localhost:5000/uploadImage",
+        data: fd,
         headers: {
           Authorization: "Bearer " + token,
-          "Content-Type": "application/json",
+          "Content-Type": undefined,
         },
-        data: requestData,
       })
-        .then((response) => {
-          console.log("User created successfully:", response.data.user);
-          console.log("Branch created successfully:", response.data.branch);
-          alert("Branch Created Succesfully");
+        .then(function (uploadResponse) {
+          console.log("Image uploaded successfully");
+          console.log(uploadResponse);
+
+    
+          const requestData = {
+            branch: {
+              location,
+              image: uploadResponse.data.Location,
+            },
+            username,
+            password,
+          };
+
+          // Call the branch registration API
+          $http({
+            method: "POST",
+            url: "http://localhost:5000/branchRegister",
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+            data: requestData,
+          })
+            .then(function (registerResponse) {
+              console.log("Branch registered successfully");
+              console.log(registerResponse);
+              alert("Branch Created Successfully");
+            })
+            .catch(function (registerError) {
+              console.error(
+                "Error in branch registration:",
+                registerError.data
+              );
+              alert("Something went wrong with branch registration");
+            });
         })
-        .catch((error) => {
-          console.error("Error in registration:", error.data);
-          alert("Something Went Wrong!");
+        .catch(function (uploadError) {
+          console.error("Error in image upload:", uploadError.data);
+          alert("Something went wrong with image upload");
         });
     };
   }

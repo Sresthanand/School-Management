@@ -42,6 +42,8 @@ const schoolSchema = mongoose.Schema({
   },
   image: {
     type: String,
+    required:true,
+    unique: true,
   },
   createdAt: {
     type: Date,
@@ -57,6 +59,11 @@ const branchSchema = mongoose.Schema({
   location: {
     type: String,
     required: true,
+  },
+  image: {
+    type: String,
+    required:true,
+    unique: true,
   },
   userId: {
     id: mongoose.Schema.Types.ObjectId,

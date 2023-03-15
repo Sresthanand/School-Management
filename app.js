@@ -246,6 +246,7 @@ app.post(
           .then((school) => {
             const branch = new BranchModel({
               location: req.body.branch.location,
+              image: req.body.branch.image,
               school: {
                 id: school._id,
                 name: school.name,
@@ -325,7 +326,7 @@ app.get(
 
         BranchModel.find(
           { "school.id": schoolId },
-          { location: 1, "school.id": 1, "school.name": 1, _id: 1 },
+          { location: 1, "school.id": 1, "school.name": 1, _id: 1, image: 1 },
           (err, branches) => {
             if (err) {
               console.log(err);

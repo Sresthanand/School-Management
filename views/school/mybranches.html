@@ -49,7 +49,7 @@
         ng-repeat="branch in branches | filter:{location:selectedLocation} | filter:searchQuery"
       >
         <img
-          src="/assets/branch/branch_placeholder.jpg"
+        ng-src="{{branch.image}}"
           alt="Placeholder Image"
         />
         <div class="card-info">
