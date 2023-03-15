@@ -8,9 +8,10 @@
       href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > <link
-    rel="stylesheet" href="css\superAdminStyleSheet\SuperAdminDashBoard.css" / > <link
-    rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / >
+    <link rel="stylesheet"
+    href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > <link
+    rel="stylesheet" href="css\superAdminStyleSheet\SuperAdminDashBoard.css" / >
+    <link rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / >
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
@@ -20,8 +21,6 @@
       referrerpolicy="no-referrer"
     />
 
-
-    
     <style>
       .submit-btn {
         cursor: not-allowed;
@@ -33,7 +32,6 @@
         opacity: 1;
       }
     </style>
-
   </head>
   <body>
     <nav>
@@ -71,51 +69,43 @@
           <span class="tooltip">Students</span>
         </li>
 
-        
         <li>
           <a ui-sref="Coordinator.examschedule">
             <i class="fa-sharp fa-solid fa-note-sticky"></i>
-            
+
             <span class="links_name">Exam</span>
           </a>
           <span class="tooltip">Exam</span>
         </li>
 
-               
         <li>
           <a ui-sref="Coordinator.sendNotifications">
-           <i class="fa-solid fa-envelope"></i>
-            
+            <i class="fa-solid fa-envelope"></i>
+
             <span class="links_name">Notifications</span>
           </a>
           <span class="tooltip">Notifications</span>
         </li>
-   
       </ul>
     </div>
 
+    <ui-view ng-show="currentRoute === 'Coordinator.students'"></ui-view>
+
+    <ui-view ng-show="currentRoute === 'Coordinator.examschedule'"></ui-view>
+
     <ui-view
-    ng-show="currentRoute === 'Coordinator.students'"
-  ></ui-view>
+      ng-show="currentRoute === 'Coordinator.sendNotifications'"
+    ></ui-view>
 
-  <ui-view
-  ng-show="currentRoute === 'Coordinator.examschedule'"
-></ui-view>
-
-  <ui-view
-  ng-show="currentRoute === 'Coordinator.sendNotifications'"
-></ui-view>
-
-
-    <section class="home-section" 
-     ng-hide="currentRoute === 'Coordinator.students' || currentRoute === 'Coordinator.examschedule'|| currentRoute ==='Coordinator.sendNotifications'">
+    <section
+      class="home-section"
+      ng-hide="currentRoute === 'Coordinator.students' || currentRoute === 'Coordinator.examschedule'|| currentRoute ==='Coordinator.sendNotifications'"
+    >
       <div class="text">Please Register Your School Student Details!</div>
 
       <div class="wrapper">
         <div class="r_form_wrap">
           <div class="r_form">
-
-
             <form name="studentForm">
               <div class="input_wrap">
                 <label for="yourname">Enter Student's Name</label>
@@ -132,11 +122,17 @@
                     ng-pattern="/^[a-zA-Z ]*$/"
                     ng-required="true"
                   />
-                  <div ng-show="studentForm.yourname.$error.required">Name is required.</div>
-                  <div ng-show="!studentForm.yourname.$error.required && studentForm.yourname.$error.pattern">Only alphabets are allowed in name.</div>
+                  <div ng-show="studentForm.yourname.$error.required">
+                    Name is required.
+                  </div>
+                  <div
+                    ng-show="!studentForm.yourname.$error.required && studentForm.yourname.$error.pattern"
+                  >
+                    Only alphabets are allowed in name.
+                  </div>
                 </div>
               </div>
-            
+
               <div class="input_wrap">
                 <label for="emailaddress">Enter Student's Username</label>
                 <div class="input_item">
@@ -151,10 +147,12 @@
                     ng-model="username"
                     ng-required="true"
                   />
-                  <div ng-show="studentForm.emailaddress.$error.required">Username is required.</div>
+                  <div ng-show="studentForm.emailaddress.$error.required">
+                    Username is required.
+                  </div>
                 </div>
               </div>
-            
+
               <div class="input_wrap">
                 <label for="password">Enter Student's Password</label>
                 <div class="input_item">
@@ -167,11 +165,11 @@
                     class="input"
                     id="password"
                     ng-model="password"
-                     ng-minlength="8"
-                      ng-pattern="/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]*$/"
+                    ng-minlength="8"
+                    ng-pattern="/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]*$/"
                     ng-required="true"
                   />
-                   <div
+                  <div
                     ng-show="studentForm.password.$touched && studentForm.password.$error.required"
                   >
                     Password is required
@@ -185,7 +183,7 @@
                   </div>
                 </div>
               </div>
-            
+
               <div class="input_wrap">
                 <label for="class">Enter Student's Class</label>
                 <div class="input_item">
@@ -202,13 +200,21 @@
                     max="12"
                     ng-required="true"
                   />
-                  <div ng-show="studentForm.class.$error.required">Class is required.</div>
-                  <div ng-show="!studentForm.class.$error.required && studentForm.class.$error.minlength">Only numbers are allowed in class.</div>
-                  <div ng-show="!studentForm.class.$error.required && !studentForm.class.$error.minlength && (studentForm.class.$error.min || studentForm.class.$error.max)">Only numbers from 1-12 are allowed in class.</div>
+                  <div ng-show="studentForm.class.$error.required">
+                    Class is required.
+                  </div>
+                  <div
+                    ng-show="!studentForm.class.$error.required && studentForm.class.$error.minlength"
+                  >
+                    Only numbers are allowed in class.
+                  </div>
+                  <div
+                    ng-show="!studentForm.class.$error.required && !studentForm.class.$error.minlength && (studentForm.class.$error.min || studentForm.class.$error.max)"
+                  >
+                    Only numbers from 1-12 are allowed in class.
+                  </div>
                 </div>
               </div>
-
-
 
               <div class="input_wrap">
                 <label for="gender">Enter Student's Gender</label>
@@ -216,61 +222,89 @@
                   <span class="icon">
                     <i class="fa-solid fa-venus-double"></i>
                   </span>
-                  <input type="text"
-                         name="gender"
-                         class="input"
-                         id="gender"
-                         ng-model="gender"
-                         ng-required="true"
-                         ng-pattern="/^[a-zA-Z]+$/"
-                         title="Please enter only alphabets"/>
-                  <span ng-show="studentForm.gender.$error.required && !studentForm.gender.$pristine">
+                  <input
+                    type="text"
+                    name="gender"
+                    class="input"
+                    id="gender"
+                    ng-model="gender"
+                    ng-required="true"
+                    ng-pattern="/^[a-zA-Z]+$/"
+                    title="Please enter only alphabets"
+                  />
+                  <span
+                    ng-show="studentForm.gender.$error.required && !studentForm.gender.$pristine"
+                  >
                     Gender is required.
                   </span>
-                  <span ng-show="studentForm.gender.$error.pattern && !studentForm.gender.$pristine">
+                  <span
+                    ng-show="studentForm.gender.$error.pattern && !studentForm.gender.$pristine"
+                  >
                     Only alphabets are required.
                   </span>
                 </div>
               </div>
-              
+
               <div class="input_wrap">
-                <label for="enrollment">Enter Student's Enrollment Number</label>
+                <label for="enrollment"
+                  >Enter Student's Enrollment Number</label
+                >
                 <div class="input_item">
                   <span class="icon">
                     <i class="fa-solid fa-user"></i>
                   </span>
-                  <input 
-                  type="text"
-                  name="enrollment"
-                  class="input"
-                   id="enrollment"
-                  ng-model="enrollmentNumber"
-                  ng-required="true"
-                  ng-pattern="/^[0-9]+$/"
+                  <input
+                    type="text"
+                    name="enrollment"
+                    class="input"
+                    id="enrollment"
+                    ng-model="enrollmentNumber"
+                    ng-required="true"
+                    ng-pattern="/^[0-9]+$/"
                     title="Please enter only numbers"
-                />
-                  <span ng-show="studentForm.enrollment.$error.required && !studentForm.enrollment.$pristine">
+                  />
+                  <span
+                    ng-show="studentForm.enrollment.$error.required && !studentForm.enrollment.$pristine"
+                  >
                     Enrollment number is required.
                   </span>
-                  <span 
-                  ng-show="studentForm.enrollment.$error.pattern && !studentForm.enrollment.$pristine">
+                  <span
+                    ng-show="studentForm.enrollment.$error.pattern && !studentForm.enrollment.$pristine"
+                  >
                     Only numbers are required.
                   </span>
                 </div>
               </div>
+
+              <div class="input_wrap">
+                <label for="Images">Enter Student's Image</label>
+                <div class="input_item">
+                  <span class="icon">
+                    <i class="fa-solid fa-image"></i>
+                  </span>
+                  <input
+                    type="file"
+                    name="file"
+                    class="fileInput"
+                    ng-file-model="StudentImage"
+                    id="file"
+                    required
+                  />
+                </div>
               </div>
-              <button 
-              type="submit"
-               ng-click="studentRegister()" 
-               ng-disabled="studentForm.$invalid"
-               class="submit-btn">
-               Register Now
+
+              <button
+                type="submit"
+                ng-click="studentRegister()"
+                ng-disabled="studentForm.$invalid"
+                class="submit-btn"
+              >
+                Register Now
               </button>
             </form>
           </div>
         </div>
       </div>
     </section>
-
   </body>
 </html>

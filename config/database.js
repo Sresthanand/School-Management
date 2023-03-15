@@ -40,6 +40,9 @@ const schoolSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  image: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -15,6 +15,9 @@ const { MarksModel } = require("./config/database");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
+const uploadFile = require("./awsS3");
+const upload = require("./middleware/multer");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors()); //cross origin
@@ -40,8 +43,6 @@ const checkUserRole = (roles) => {
   };
 };
 
-
-
 // Middleware to authenticate requests using passport -> only for protected routes -> to verify token and reuests
 const authenticateRequest = passport.authenticate("jwt", { session: false });
 //------------------------------------------------------------------------------------------//
@@ -64,6 +65,7 @@ app.post(
 
     const school = new SchoolModel({
       name: req.body.school.name,
+      image: req.body.school.image,
     });
 
     user
@@ -87,6 +89,7 @@ app.post(
           school: {
             id: savedSchool._id,
             name: savedSchool.name,
+            image: savedSchool.image,
           },
         });
       })
@@ -101,6 +104,22 @@ app.post(
   }
 );
 
+//upload Image API
+app.post("/uploadImage", upload, (req, res) => {
+  const file = req.file;
+  console.log("hello i am from upload image api!");
+  console.log(file);
+
+  if (!file) {
+    res.status(400).json({ error: "No files were Found!!" });
+  } else {
+    uploadFile(file).then(function (result) {
+      console.log(result);
+      res.send(result);
+    });
+  }
+});
+
 //schoolGet Request
 app.get(
   "/getAllSchools",
@@ -109,7 +128,7 @@ app.get(
   (req, res) => {
     console.log("Hi, I am from get all schools!");
 
-    SchoolModel.find({}, { name: 1, _id: 1 }, (err, schools) => {
+    SchoolModel.find({}, { name: 1, _id: 1, image: 1 }, (err, schools) => {
       if (err) {
         console.log(err);
         res.send({
@@ -208,7 +227,7 @@ app.delete(
 
 //SCHOOL API'S
 
-//Branchregister 
+//Branchregister
 app.post(
   "/branchRegister",
   authenticateRequest,
@@ -274,7 +293,6 @@ app.post(
       });
   }
 );
-
 
 //Branch Get req
 app.get(
@@ -600,7 +618,7 @@ app.post(
   }
 );
 
-//student get 
+//student get
 app.get(
   "/getStudents",
   authenticateRequest,
@@ -1128,8 +1146,6 @@ app.get(
     });
   }
 );
-
-
 
 //login for All Users
 app.post("/login", (req, res) => {

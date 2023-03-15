@@ -1,4 +1,8 @@
-var mySchoolApp = angular.module("mySchoolApp", ["ui.router", "angular-jwt"]);
+var mySchoolApp = angular.module("mySchoolApp", [
+  "ui.router",
+  "angular-jwt",
+  "ng-file-model",
+]);
 
 mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
   $stateProvider.state("login", {
@@ -186,8 +190,8 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
       },
     },
   });
- 
-   // Define the nested state 2 for coordinators
+
+  // Define the nested state 2 for coordinators
   $stateProvider.state("Coordinator.examschedule", {
     //done //factories and servicecs later*
     url: "/examschedule",
@@ -207,7 +211,7 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     },
   });
 
- // Define the nested state 3 for coordinators
+  // Define the nested state 3 for coordinators
   $stateProvider.state("Coordinator.sendNotifications", {
     //done //factories and servicecs later*
     url: "/notification",
@@ -226,7 +230,6 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
       },
     },
   });
-
 
   $stateProvider.state("StudentDashBoard", {
     //done
