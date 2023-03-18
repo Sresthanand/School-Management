@@ -28,4 +28,16 @@ mySchoolApp.service("MyschoolService", function ($http) {
       },
     });
   };
+  
+  //delete school
+  this.deleteSchool = function (token,schoolId) {
+    return $http({
+      method: "PUT",
+      url: baseUrl + "deleteSchool/" + schoolId,
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    });
+  };
 });

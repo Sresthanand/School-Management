@@ -66,6 +66,7 @@ app.post(
     const school = new SchoolModel({
       name: req.body.school.name,
       image: req.body.school.image,
+      isDelete: false,
     });
 
     user
@@ -128,26 +129,30 @@ app.get(
   (req, res) => {
     console.log("Hi, I am from get all schools!");
 
-    SchoolModel.find({}, { name: 1, _id: 1, image: 1 }, (err, schools) => {
-      if (err) {
-        console.log(err);
-        res.send({
-          success: false,
-          message: "Something went wrong",
-          error: err,
-        });
-      } else {
-        res.send({
-          success: true,
-          message: "Schools fetched successfully",
-          schools: schools,
-        });
+    SchoolModel.find(
+      { isDelete: false },
+      { name: 1, _id: 1, image: 1 },
+      (err, schools) => {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else {
+          res.send({
+            success: true,
+            message: "Schools fetched successfully",
+            schools: schools,
+          });
+        }
       }
-    });
+    );
   }
 );
 
-//schoolUpdate ->
+//schoolUpdate -> //have to use bulk update or transactional rollback
 app.put(
   "/updateSchool/:id",
   authenticateRequest,
@@ -196,30 +201,54 @@ app.put(
 );
 
 //schooldelete ->
-app.delete(
-  "/schools/:id",
+app.put(
+  "/deleteSchool/:id",
   authenticateRequest,
   checkUserRole(["super-admin"]),
-  async (req, res) => {
-    const schoolId = req.params.id;
-    try {
-      // Check if the school exists
-      const school = await SchoolModel.findById(schoolId);
-      if (!school) {
-        return res.status(404).send({ message: "School not found" });
-      }
+  (req, res) => {
+    const id = req.params.id;
 
-      // Delete the school's associated user account
-      await UserModel.findByIdAndDelete(school.userId.id);
+    console.log("Hi iam from delete school api");
+    console.log(id);
 
-      // Delete the school
-      await SchoolModel.findByIdAndDelete(schoolId);
+    SchoolModel.findById(id)
+      .then((school) => {
+        if (!school) {
+          return res.status(404).json({
+            success: false,
+            message: "School not found",
+          });
+        }
 
-      res.send({ message: "School deleted successfully" });
-    } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: "Something went wrong" });
-    }
+        // Set isDelete property to true
+        school.isDelete = true;
+
+        school.updatedAt = Date.now();
+
+        school
+          .save()
+          .then((updatedSchool) => {
+            return res.status(200).json({
+              success: true,
+              message: "School updated successfully",
+              school: updatedSchool,
+            });
+          })
+          .catch((err) => {
+            return res.status(500).json({
+              success: false,
+              message: "Error updating school",
+              error: err,
+            });
+          });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          success: false,
+          message: "Error updating school",
+          error: err,
+        });
+      });
   }
 );
 
@@ -247,6 +276,7 @@ app.post(
             const branch = new BranchModel({
               location: req.body.branch.location,
               image: req.body.branch.image,
+              isDelete: false,
               school: {
                 id: school._id,
                 name: school.name,
@@ -325,7 +355,7 @@ app.get(
         console.log(schoolId);
 
         BranchModel.find(
-          { "school.id": schoolId },
+          { "school.id": schoolId, isDelete: false },
           { location: 1, "school.id": 1, "school.name": 1, _id: 1, image: 1 },
           (err, branches) => {
             if (err) {
@@ -349,8 +379,59 @@ app.get(
   }
 );
 
-//BranchDelete ->can only be done via that respective school(admin)
 //BranchUpdate ->can only be done via that respective school(admin)
+
+//BranchDelete ->can only be done via that respective school(admin)
+app.put(
+  "/deleteBranch/:id",
+  authenticateRequest,
+  checkUserRole(["school"]),
+  (req, res) => {
+    const id = req.params.id;
+
+    console.log("Hi, I am from delete branch API.");
+    console.log(id);
+
+    BranchModel.findById(id)
+      .then((branch) => {
+        if (!branch) {
+          return res.status(404).json({
+            success: false,
+            message: "Branch not found",
+          });
+        }
+
+        // Set isDelete property to true
+        branch.isDelete = true;
+
+        branch.updatedAt = Date.now();
+
+        branch
+          .save()
+          .then((updatedBranch) => {
+            return res.status(200).json({
+              success: true,
+              message: "Branch updated successfully",
+              branch: updatedBranch,
+            });
+          })
+          .catch((err) => {
+            return res.status(500).json({
+              success: false,
+              message: "Error updating branch",
+              error: err,
+            });
+          });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          success: false,
+          message: "Error updating branch",
+          error: err,
+        });
+      });
+  }
+);
 
 //------------------------------------------------------------------------------------------//
 
@@ -377,6 +458,8 @@ app.post(
               .then((school) => {
                 const coordinator = new CoordinatorModel({
                   name: req.body.name.name,
+                  image: req.body.name.image,
+                  isDelete: false,
                   userId: {
                     id: user._id,
                     username: user.username,
@@ -471,9 +554,10 @@ app.get(
         console.log(branchId);
 
         CoordinatorModel.find(
-          { "branch.id": branchId },
+          { "branch.id": branchId, isDelete: false },
           {
             name: 1,
+            image: 1,
             "branch.id": 1,
             "branch.location": 1,
             "school.id": 1,
@@ -503,7 +587,56 @@ app.get(
 );
 
 //coordinator delete -> can only be done by tha particular school branch and simulataneoulsy its(school branch)
+app.put(
+  "/deleteCoordinator/:id",
+  authenticateRequest,
+  checkUserRole(["branch"]),
+  (req, res) => {
+    const id = req.params.id;
 
+    console.log("Hi, I am from delete coordinator API.");
+    console.log(id);
+
+    CoordinatorModel.findById(id)
+      .then((coordinator) => {
+        if (!coordinator) {
+          return res.status(404).json({
+            success: false,
+            message: "Coordinator not found",
+          });
+        }
+
+        // Set isDelete property to true
+        coordinator.isDelete = true;
+
+        coordinator.updatedAt = Date.now();
+
+        coordinator
+          .save()
+          .then((updatedCoordinator) => {
+            return res.status(200).json({
+              success: true,
+              message: "Coordinator updated successfully",
+              coordinator: updatedCoordinator,
+            });
+          })
+          .catch((err) => {
+            return res.status(500).json({
+              success: false,
+              message: "Error updating coordinator",
+              error: err,
+            });
+          });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          success: false,
+          message: "Error updating coordinator",
+          error: err,
+        });
+      });
+  }
+);
 //coordinator update -> can only be done by tha particular school branch and simulataneoulsy its(school branch)
 
 //------------------------------------------------------------------------------------------//
@@ -540,6 +673,8 @@ app.post(
                       class: req.body.information.classofstudent,
                       gender: req.body.information.gender,
                       enrollmentNumber: req.body.information.enrollmentNumber,
+                      image: req.body.information.image,
+                      isDelete: false,
                       userId: {
                         id: user._id,
                         username: user.username,
@@ -652,7 +787,7 @@ app.get(
           const branchId = coordinator.branch.id;
 
           StudentModel.find(
-            { "coordinator.id": coordinatorId },
+            { "coordinator.id": coordinatorId, isDelete: false },
             (err, students) => {
               if (err) {
                 console.log(err);
@@ -669,6 +804,7 @@ app.get(
                     class: student.class,
                     gender: student.gender,
                     enrollmentNumber: student.enrollmentNumber,
+                    image: student.image,
                     coordinator: {
                       name: coordinatorName,
                       id: coordinatorId,
@@ -707,10 +843,147 @@ app.get(
 );
 
 //student delete -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
+app.put(
+  "/deleteStudent/:id",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const id = req.params.id;
+
+    console.log("Hi, I am from delete student API.");
+    console.log(id);
+
+    StudentModel.findById(id)
+      .then((student) => {
+        if (!student) {
+          return res.status(404).json({
+            success: false,
+            message: "Student not found",
+          });
+        }
+
+        // Set isDelete property to true
+        student.isDelete = true;
+
+        student.updatedAt = Date.now();
+
+        student
+          .save()
+          .then((updatedStudent) => {
+            return res.status(200).json({
+              success: true,
+              message: "Student updated successfully",
+              student: updatedStudent,
+            });
+          })
+          .catch((err) => {
+            return res.status(500).json({
+              success: false,
+              message: "Error updating student",
+              error: err,
+            });
+          });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          success: false,
+          message: "Error updating student",
+          error: err,
+        });
+      });
+  }
+);
 
 //student update -> can only be done by tha particular coordinator and simulataneoulsy its(coordinator)
 
 //------------------------------------------------------------------------------------------//
+
+//for getting student marks on coordinator dashboard
+
+app.get(
+  "/getMarksCoordinator",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const coordinatorId = req.user.id;
+
+    console.log("Hi i am marks dedo api ");
+
+    CoordinatorModel.findOne(
+      { "userId.id": coordinatorId },
+      (err, coordinator) => {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else if (!coordinator) {
+          console.log("No coordinator found for this user");
+          res.send({
+            success: false,
+            message: "No coordinator found for this user",
+          });
+        } else {
+          MarksModel.find(
+            {
+              "coordinator.id": coordinator._id,
+            },
+            (err, marks) => {
+              if (err) {
+                console.log(err);
+                res.send({
+                  success: false,
+                  message: "Something went wrong",
+                  error: err,
+                });
+              } else if (!marks) {
+                console.log("No marks found for this coordinator");
+                res.send({
+                  success: false,
+                  message: "No marks found for this coordinator",
+                });
+              } else {
+                const data = marks.map((mark) => {
+                  const {
+                    coordinator,
+                    student,
+                    subject1,
+                    subject2,
+                    subject3,
+                    subject4,
+                    subject5,
+                  } = mark;
+
+                  const { name: coordinatorName } = coordinator;
+                  const { name: studentName } = student;
+                  // Return this data
+                  return {
+                    id: mark._id,
+                    coordinator: { id: coordinator._id, name: coordinatorName },
+                    student: { id: student._id, name: studentName },
+                    subject1,
+                    subject2,
+                    subject3,
+                    subject4,
+                    subject5,
+                  };
+                });
+
+                res.json({
+                  success: true,
+                  message: "Marks fetched successfully",
+                  data,
+                });
+              }
+            }
+          );
+        }
+      }
+    );
+  }
+);
 
 //Functionality api's
 
@@ -742,6 +1015,7 @@ app.get(
           class: student.class,
           gender: student.gender,
           enrollmentNumber: student.enrollmentNumber,
+          image: student.image,
           coordinator: {
             name: student.coordinator.name,
             id: student.coordinator.id,
@@ -1068,7 +1342,7 @@ app.post(
   }
 );
 
-//for getting marks(student will do)
+//for getting marks on student dashboard(student will do)
 app.get(
   "/getStudentMarks",
   authenticateRequest,
@@ -1148,11 +1422,9 @@ app.get(
   }
 );
 
-//login for All Users
 app.post("/login", (req, res) => {
   UserModel.findOne({ username: req.body.username }).then((user) => {
-    // console.log("Hi1111", user);
-    //No user Found
+    // No user Found
     if (!user) {
       return res.status(401).send({
         success: false,
@@ -1175,11 +1447,291 @@ app.post("/login", (req, res) => {
 
     const token = jwt.sign(payLoad, "Random string", { expiresIn: "1d" });
 
-    return res.json({
-      success: true,
-      token: token,
-      role: user.role,
-    });
+    if (user.role === "school") {
+      console.log("Hi i am froms school login and role");
+      SchoolModel.findOne({ "userId.id": user._id }, (err, school) => {
+        console.log("school" + school);
+        if (err) {
+          console.log("hi1");
+          return res.status(500).send({
+            success: false,
+            message: "An error occurred while finding the school.",
+          });
+        }
+
+        if (!school) {
+          console.log("hi2");
+          return res.status(401).send({
+            success: false,
+            message: "Could not find the school.",
+          });
+        }
+
+        if (school.isDelete === "true") {
+          console.log("hi3");
+          return res.status(401).send({
+            success: false,
+            message: "Your account has been deleted!",
+          });
+        }
+
+        console.log("hi4");
+        return res.json({
+          success: true,
+          token: token,
+          role: user.role,
+        });
+      });
+    } else if (user.role === "branch") {
+      console.log("Hi i am from branch login and role");
+      BranchModel.findOne({ "userId.id": user._id }, (err, branch) => {
+        console.log("branch" + branch);
+        if (err) {
+          return res.status(500).send({
+            success: false,
+            message: "An error occurred while finding the branch.",
+          });
+        }
+
+        if (!branch) {
+          return res.status(401).send({
+            success: false,
+            message: "Could not find the branch.",
+          });
+        }
+
+        if (branch.isDelete === "true") {
+          return res.status(401).send({
+            success: false,
+            message: "Your account has been deleted!",
+          });
+        }
+
+        SchoolModel.findOne({ _id: branch.school.id }, (err, school) => {
+          console.log("school" + school);
+          if (err) {
+            return res.status(500).send({
+              success: false,
+              message: "An error occurred while finding the school.",
+            });
+          }
+
+          if (!school) {
+            return res.status(401).send({
+              success: false,
+              message: "Could not find the school.",
+            });
+          }
+
+          if (school.isDelete === "true") {
+            return res.status(401).send({
+              success: false,
+              message: "Your account has been deleted!",
+            });
+          }
+
+          return res.json({
+            success: true,
+            token: token,
+            role: user.role,
+          });
+        });
+      });
+    } else if (user.role === "coordinator") {
+      console.log("Hi i am from coordinator login and role");
+      CoordinatorModel.findOne(
+        { "userId.id": user._id },
+        (err, coordinator) => {
+          console.log("coordinator" + coordinator);
+          if (err) {
+            return res.status(500).send({
+              success: false,
+              message: "An error occurred while finding the coordinator.",
+            });
+          }
+
+          if (!coordinator) {
+            return res.status(401).send({
+              success: false,
+              message: "Could not find the coordinator.",
+            });
+          }
+
+          if (coordinator.isDelete === "true") {
+            return res.status(401).send({
+              success: false,
+              message: "Your account has been deleted!",
+            });
+          }
+
+          BranchModel.findOne({ _id: coordinator.branch.id }, (err, branch) => {
+            console.log("branch" + branch);
+            if (err) {
+              return res.status(500).send({
+                success: false,
+                message: "An error occurred while finding the branch.",
+              });
+            }
+
+            if (!branch) {
+              return res.status(401).send({
+                success: false,
+                message: "Could not find the branch.",
+              });
+            }
+
+            if (branch.isDelete === "true") {
+              return res.status(401).send({
+                success: false,
+                message: "Your account has been deleted!",
+              });
+            }
+
+            SchoolModel.findOne({ _id: branch.school.id }, (err, school) => {
+              console.log("school" + school);
+              if (err) {
+                return res.status(500).send({
+                  success: false,
+                  message: "An error occurred while finding the school.",
+                });
+              }
+
+              if (!school) {
+                return res.status(401).send({
+                  success: false,
+                  message: "Could not find the school.",
+                });
+              }
+
+              if (school.isDelete === "true") {
+                return res.status(401).send({
+                  success: false,
+                  message: "Your account has been deleted!",
+                });
+              }
+
+              return res.json({
+                success: true,
+                token: token,
+                role: user.role,
+              });
+            });
+          });
+        }
+      );
+    } else if (user.role === "student") {
+      console.log("Hi i am from student login and role");
+      StudentModel.findOne({ "userId.id": user._id }, (err, student) => {
+        console.log("student" + student);
+        if (err) {
+          return res.status(500).send({
+            success: false,
+            message: "An error occurred while finding the coordinator.",
+          });
+        }
+
+        if (!student) {
+          return res.status(401).send({
+            success: false,
+            message: "Could not find the student.",
+          });
+        }
+
+        if (student.isDelete === "true") {
+          return res.status(401).send({
+            success: false,
+            message: "Your account has been deleted!",
+          });
+        }
+
+        CoordinatorModel.findOne(
+          { _id: student.coordinator.id },
+          (err, coordinator) => {
+            console.log("coordinator" + coordinator);
+            if (err) {
+              return res.status(500).send({
+                success: false,
+                message: "An error occurred while finding the coordinator.",
+              });
+            }
+
+            if (!coordinator) {
+              return res.status(401).send({
+                success: false,
+                message: "Could not find the coordinator.",
+              });
+            }
+
+            if (coordinator.isDelete === "true") {
+              return res.status(401).send({
+                success: false,
+                message: "Your account has been deleted!",
+              });
+            }
+
+            BranchModel.findOne({ _id: student.branch.id }, (err, branch) => {
+              console.log("branch" + branch);
+              if (err) {
+                return res.status(500).send({
+                  success: false,
+                  message: "An error occurred while finding the branch.",
+                });
+              }
+
+              if (!branch) {
+                return res.status(401).send({
+                  success: false,
+                  message: "Could not find the branch.",
+                });
+              }
+
+              if (branch.isDelete === "true") {
+                return res.status(401).send({
+                  success: false,
+                  message: "Your account has been deleted!",
+                });
+              }
+
+              SchoolModel.findOne({ _id: student.school.id }, (err, school) => {
+                console.log("school" + school);
+                if (err) {
+                  return res.status(500).send({
+                    success: false,
+                    message: "An error occurred while finding the school.",
+                  });
+                }
+
+                if (!school) {
+                  return res.status(401).send({
+                    success: false,
+                    message: "Could not find the school.",
+                  });
+                }
+
+                if (school.isDelete === "true") {
+                  return res.status(401).send({
+                    success: false,
+                    message: "Your account has been deleted!",
+                  });
+                }
+
+                return res.json({
+                  success: true,
+                  token: token,
+                  role: user.role,
+                });
+              });
+            });
+          }
+        );
+      });
+    } else {
+      return res.json({
+        success: true,
+        token: token,
+        role: user.role,
+      });
+    }
   });
 });
 
@@ -1209,5 +1761,6 @@ app.put("/resetpassword", authenticateRequest, async (req, res) => {
     res.status(500).send(error);
   }
 });
+
 
 app.listen(5000, () => console.log("Listening to port 5000"));

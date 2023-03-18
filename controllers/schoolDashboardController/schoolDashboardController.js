@@ -39,8 +39,12 @@ mySchoolApp.controller(
     };
 
     //first call the api for image upload then take its response and pass here in image
+     $scope.loading = false;
+
     $scope.branchRegister = function () {
       // Get the branch location, username, and password from the scope
+      $scope.loading = true;
+      
       const location = $scope.location;
       const username = $scope.username;
       const password = $scope.password;
@@ -86,6 +90,7 @@ mySchoolApp.controller(
             .then(function (registerResponse) {
               console.log("Branch registered successfully");
               console.log(registerResponse);
+               $scope.loading = false;
               alert("Branch Created Successfully");
             })
             .catch(function (registerError) {
@@ -99,6 +104,8 @@ mySchoolApp.controller(
         .catch(function (uploadError) {
           console.error("Error in image upload:", uploadError.data);
           alert("Something went wrong with image upload");
+        }).finally(function () {
+          $scope.loading = false;
         });
     };
   }

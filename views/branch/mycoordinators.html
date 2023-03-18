@@ -32,7 +32,7 @@
         ng-repeat="coordinator in coordinators | filter:searchQuery"
       >
         <img
-          src="/assets/coordinator/teacher_placeholder.jpg"
+          ng-src="{{coordinator.image}}"
           alt="Placeholder Image"
         />
         <div class="card-info">
@@ -40,20 +40,21 @@
           <p>{{ coordinator.branch.location }}</p>
           <p>{{ coordinator.school.name }}</p>
           <div class="card-buttons">
-            <button
+            <!-- <button
               class="edit-button"
               data-toggle="modal"
               data-target="#editModal"
               ng-click="openEditModal(school)"
             >
               Edit
-            </button>
+            </button> -->
 
             <button
               class="delete-button"
               data-toggle="modal"
               data-toggle="modal"
-              data-target="#exampleModal"
+              data-target="#deleteModal"
+              ng-click="openDeleteModal(coordinator)"
             >
               Delete
             </button>
@@ -119,7 +120,7 @@
     <!-- Delete Modal -->
     <div
       class="modal fade"
-      id="exampleModal"
+      id="deleteModal"
       tabindex="-1"
       role="dialog"
       aria-labelledby="exampleModalLabel"
@@ -139,7 +140,7 @@
             </button>
           </div>
           <div class="modal-body">
-            Are You Sure You want to delete the school?
+            Are You Sure You want to delete the coordinator?
           </div>
           <div class="modal-footer">
             <button
@@ -152,7 +153,7 @@
             <button
               type="button"
               class="btn btn-danger"
-              ng-click="confirmDelete(school._id)"
+              ng-click="confirmDelete(coordinator)"
             >
               Delete
             </button>

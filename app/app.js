@@ -230,6 +230,26 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
       },
     },
   });
+   
+  // Define the nested state 4 for coordinators
+  $stateProvider.state("Coordinator.studentMarks", {
+    //done //factories and servicecs later*
+    url: "/studentMarks",
+    templateUrl: "views/coordinators/StudentMarks.html",
+    controller: "StudentMarksController",
+    resolve: {
+      auth: function ($q, $state, jwtHelper) {
+        var token = localStorage.getItem("token");
+        if (token) {
+          var payload = jwtHelper.decodeToken(token);
+          if (payload.role === "coordinator") {
+            return $q.when();
+          }
+        }
+        return $q.reject("Not Authorized");
+      },
+    },
+  });
 
   $stateProvider.state("StudentDashBoard", {
     //done

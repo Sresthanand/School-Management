@@ -54,25 +54,26 @@
         />
         <div class="card-info">
           <h2>{{ branch.location }}</h2>
-          <p>{{ branch.location }}</p>
+          <!-- <p>{{ branch.location }}</p> -->
           <p>{{ branch.school.name }}</p>
-          <p>{{ branch.school.name }}</p>
+          <!-- <p>{{ branch.school.name }}</p> -->
 
           <div class="card-buttons">
-            <button
+            <!-- <button
               class="edit-button"
               data-toggle="modal"
               data-target="#editModal"
               ng-click="openEditModal(school)"
             >
               Edit
-            </button>
+            </button> -->
 
             <button
               class="delete-button"
               data-toggle="modal"
               data-toggle="modal"
-              data-target="#exampleModal"
+              data-target="#deleteModal"
+               ng-click="openDeleteModal(branch)"
             >
               Delete
             </button>
@@ -139,7 +140,7 @@
     <!-- Delete Modal -->
     <div
       class="modal fade"
-      id="exampleModal"
+      id="deleteModal"
       tabindex="-1"
       role="dialog"
       aria-labelledby="exampleModalLabel"
@@ -159,7 +160,7 @@
             </button>
           </div>
           <div class="modal-body">
-            Are You Sure You want to delete the school?
+            Are You Sure You want to delete the Branch?
           </div>
           <div class="modal-footer">
             <button
@@ -172,7 +173,7 @@
             <button
               type="button"
               class="btn btn-danger"
-              ng-click="confirmDelete(school._id)"
+              ng-click="confirmDelete(branch)" 
             >
               Delete
             </button>

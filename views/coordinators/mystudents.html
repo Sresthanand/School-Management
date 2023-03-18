@@ -70,11 +70,11 @@
 
     <!-- | filter:{class:selectedClass} | filter:genderFilter | filter:searchQuery" -->
     <div class="card-container">
-      <div class="card" ng-repeat="student in students">
-        <img
-          src="/assets/student/student_placeholder.jpg"
-          alt="Placeholder Image"
-        />
+      <div
+        class="card"
+        ng-repeat="student in students | filter:searchQuery | filter:{class:selectedClass} | filter:genderFilter"
+      >
+        <img ng-src="{{student.image}}" alt="Placeholder Image" />
         <div class="card-info">
           <h2>{{ student.name }}</h2>
           <p>Class: {{ student.class }}</p>
@@ -85,19 +85,20 @@
           <p>Coordinator Name: {{ student.coordinator.name }}</p>
 
           <div class="card-buttons">
-            <button
+            <!-- <button
               class="edit-button"
               data-toggle="modal"
               data-target="#editModal"
-              ng-click="openEditModal(school)"
+              ng-click="openEditModal(student)"
             >
               Edit
-            </button>
+            </button> -->
 
             <button
               class="delete-button"
               data-toggle="modal"
               data-target="#deleteModal"
+              ng-click="openDeleteModal(student)"
             >
               Delete
             </button>
@@ -193,7 +194,7 @@
             </button>
           </div>
           <div class="modal-body">
-            Are You Sure You want to delete the school?
+            Are You Sure You want to delete this Student?
           </div>
           <div class="modal-footer">
             <button
@@ -206,7 +207,7 @@
             <button
               type="button"
               class="btn btn-danger"
-              ng-click="confirmDelete(school._id)"
+              ng-click="confirmDelete(student)"
             >
               Delete
             </button>
@@ -216,7 +217,6 @@
     </div>
 
     <!-- Marks Modal -->
-
     <div
       class="modal fade"
       id="marksForm"
@@ -244,16 +244,55 @@
           <form name="marksform">
             <div class="modal-body">
               <div class="form-group">
+                <label for="email1">Enter Maximum Marks</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="totalMarks"
+                  name="totalMarks"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Maximum Marks"
+                  ng-model="maximumMarks"
+                  required
+                  ng-pattern="/^[1-9][0-9]*$/"
+                  min="1"
+                />
+                <div
+                  ng-show="marksform.totalMarks.$error.required && marksform.totalMarks.$dirty"
+                >
+                  Maximum Marks is required
+                </div>
+                <div
+                  ng-show="marksform.totalMarks.$error.pattern && marksform.totalMarks.$dirty"
+                >
+                  Maximum Marks should be a positive integer
+                </div>
+                <div
+                  ng-show="marksform.totalMarks.$error.min && marksform.totalMarks.$dirty"
+                >
+                  Maximum Marks should be greater than 0
+                </div>
+              </div>
+
+              <div class="form-group">
                 <label for="email1">Subject 1</label>
                 <input
                   type="text"
                   class="form-control"
                   id="subject1"
+                  name="Subject"
                   aria-describedby="emailHelp"
                   placeholder="Enter Name of Subject 1"
                   ng-model="nameofsubject1"
+                  ng-pattern="/^[a-zA-Z\s]*$/"
                   required
                 />
+                <span class="error" ng-show="marksform.Subject.$error.required"
+                  >Subject is required</span
+                >
+                <span class="error" ng-show="marksform.Subject.$error.pattern"
+                  >Only alphabets are allowed</span
+                >
               </div>
 
               <div class="form-group">
@@ -262,11 +301,35 @@
                   type="number"
                   class="form-control"
                   id="marks1"
+                  name="marks1"
                   aria-describedby="emailHelp"
                   placeholder="Enter Marks for subject 1"
                   ng-model="marksofsubject1"
                   required
+                  ng-pattern="/^[0-9]*$/"
+                  ng-max="{{maximumMarks}}"
+                  ng-min="0"
                 />
+                <div
+                  ng-show="marksform.marks1.$error.required && marksform.marks1.$touched"
+                >
+                  Marks is required.
+                </div>
+                <div
+                  ng-show="!marksform.marks1.$error.required && marksform.marks1.$invalid && marksform.marks1.$touched"
+                >
+                  Only integers are allowed.
+                </div>
+                <!-- <div
+                  ng-show="marksform.marks1.$error.max && marksform.marks1.$touched"
+                >
+                  Marks should be less than or equal to maximum marks.
+                </div> -->
+                <div
+                  ng-show="marksform.marks1.$error.min && marksform.marks1.$touched"
+                >
+                  You can't enter negative marks.
+                </div>
               </div>
 
               <div class="form-group">
@@ -275,11 +338,19 @@
                   type="text"
                   class="form-control"
                   id="Subject2"
+                  name="Subject2"
                   aria-describedby="emailHelp"
                   placeholder="Enter Name of Subject 2"
                   ng-model="nameofsubject2"
+                  ng-pattern="/^[a-zA-Z\s]*$/"
                   required
                 />
+                <span class="error" ng-show="marksform.Subject2.$error.required"
+                  >Subject is required</span
+                >
+                <span class="error" ng-show="marksform.Subject2.$error.pattern"
+                  >Only alphabets are allowed</span
+                >
               </div>
 
               <div class="form-group">
@@ -288,11 +359,35 @@
                   type="number"
                   class="form-control"
                   id="marks2"
+                  name="marks2"
                   aria-describedby="emailHelp"
                   placeholder="Enter Marks for subject 2"
                   ng-model="marksofsubject2"
                   required
+                  ng-pattern="/^[0-9]*$/"
+                  ng-max="{{maximumMarks}}"
+                  ng-min="0"
                 />
+                <div
+                  ng-show="marksform.marks2.$error.required && marksform.marks2.$touched"
+                >
+                  Marks is required.
+                </div>
+                <div
+                  ng-show="!marksform.marks2.$error.required && marksform.marks2.$invalid && marksform.marks2.$touched"
+                >
+                  Only integers are allowed.
+                </div>
+                <!-- <div
+                  ng-show="marksform.marks1.$error.max && marksform.marks1.$touched"
+                >
+                  Marks should be less than or equal to maximum marks.
+                </div> -->
+                <div
+                  ng-show="marksform.marks2.$error.min && marksform.marks2.$touched"
+                >
+                  You can't enter negative marks.
+                </div>
               </div>
 
               <div class="form-group">
@@ -301,11 +396,19 @@
                   type="text"
                   class="form-control"
                   id="Subject3"
+                  name="Subject3"
                   aria-describedby="emailHelp"
                   placeholder="Enter Name of Subject 3"
                   ng-model="nameofsubject3"
+                  ng-pattern="/^[a-zA-Z\s]*$/"
                   required
                 />
+                <span class="error" ng-show="marksform.Subject3.$error.required"
+                  >Subject is required</span
+                >
+                <span class="error" ng-show="marksform.Subject3.$error.pattern"
+                  >Only alphabets are allowed</span
+                >
               </div>
 
               <div class="form-group">
@@ -314,11 +417,35 @@
                   type="number"
                   class="form-control"
                   id="marks3"
+                  name="marks3"
                   aria-describedby="emailHelp"
                   placeholder="Enter Marks for subject 3"
                   ng-model="marksofsubject3"
                   required
+                  ng-pattern="/^[0-9]*$/"
+                  ng-max="{{maximumMarks}}"
+                  ng-min="0"
                 />
+                <div
+                  ng-show="marksform.marks3.$error.required && marksform.marks3.$touched"
+                >
+                  Marks is required.
+                </div>
+                <div
+                  ng-show="!marksform.marks3.$error.required && marksform.marks3.$invalid && marksform.marks3.$touched"
+                >
+                  Only integers are allowed.
+                </div>
+                <!-- <div
+                  ng-show="marksform.marks1.$error.max && marksform.marks1.$touched"
+                >
+                  Marks should be less than or equal to maximum marks.
+                </div> -->
+                <div
+                  ng-show="marksform.marks3.$error.min && marksform.marks3.$touched"
+                >
+                  You can't enter negative marks.
+                </div>
               </div>
 
               <div class="form-group">
@@ -327,11 +454,19 @@
                   type="text"
                   class="form-control"
                   id="Subject4"
+                  name="Subject4"
                   aria-describedby="emailHelp"
                   placeholder="Enter Name of Subject 4"
                   ng-model="nameofsubject4"
+                  ng-pattern="/^[a-zA-Z\s]*$/"
                   required
                 />
+                <span class="error" ng-show="marksform.Subject4.$error.required"
+                  >Subject is required</span
+                >
+                <span class="error" ng-show="marksform.Subject4.$error.pattern"
+                  >Only alphabets are allowed</span
+                >
               </div>
 
               <div class="form-group">
@@ -340,11 +475,36 @@
                   type="number"
                   class="form-control"
                   id="marks4"
+                  name="marks4"
                   aria-describedby="emailHelp"
                   placeholder="Enter Marks for subject 4"
                   ng-model="marksofsubject4"
                   required
+                  ng-pattern="/^[0-9]*$/"
+                  ng-max="{{maximumMarks}}"
+                  ng-min="0"
                 />
+
+                <div
+                  ng-show="marksform.marks4.$error.required && marksform.marks4.$touched"
+                >
+                  Marks is required.
+                </div>
+                <div
+                  ng-show="!marksform.marks4.$error.required && marksform.marks4.$invalid && marksform.marks4.$touched"
+                >
+                  Only integers are allowed.
+                </div>
+                <!-- <div
+                  ng-show="marksform.marks1.$error.max && marksform.marks1.$touched"
+                >
+                  Marks should be less than or equal to maximum marks.
+                </div> -->
+                <div
+                  ng-show="marksform.marks4.$error.min && marksform.marks4.$touched"
+                >
+                  You can't enter negative marks.
+                </div>
               </div>
 
               <div class="form-group">
@@ -353,11 +513,19 @@
                   type="text"
                   class="form-control"
                   id="Subject5"
+                  name="Subject5"
                   aria-describedby="emailHelp"
                   placeholder="Enter Name of Subject 5"
+                  ng-pattern="/^[a-zA-Z\s]*$/"
                   ng-model="nameofsubject5"
                   required
                 />
+                <span class="error" ng-show="marksform.Subject5.$error.required"
+                  >Subject is required</span
+                >
+                <span class="error" ng-show="marksform.Subject5.$error.pattern"
+                  >Only alphabets are allowed</span
+                >
               </div>
 
               <div class="form-group">
@@ -366,38 +534,51 @@
                   type="number"
                   class="form-control"
                   id="marks5"
+                  name="marks5"
                   aria-describedby="emailHelp"
                   placeholder="Enter Marks for subject 5"
                   ng-model="marksofsubject5"
                   required
+                  ng-pattern="/^[0-9]*$/"
+                  ng-max="{{maximumMarks}}"
+                  ng-min="0"
                 />
+
+                <div
+                  ng-show="marksform.marks5.$error.required && marksform.marks5.$touched"
+                >
+                  Marks is required.
+                </div>
+                <div
+                  ng-show="!marksform.marks5.$error.required && marksform.marks5.$invalid && marksform.marks5.$touched"
+                >
+                  Only integers are allowed.
+                </div>
+                <!-- <div
+                  ng-show="marksform.marks1.$error.max && marksform.marks1.$touched"
+                >
+                  Marks should be less than or equal to maximum marks.
+                </div> -->
+                <div
+                  ng-show="marksform.marks5.$error.min && marksform.marks5.$touched"
+                >
+                  You can't enter negative marks.
+                </div>
               </div>
 
-              <div class="form-group">
-                <label for="email1">Enter Maximum Marks</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="totalMarks"
-                  aria-describedby="emailHelp"
-                  placeholder="Enter Maximum Marks"
-                  ng-model="maximumMarks"
-                  required
-                />
-              </div>
-            </div>
-            <div
-              class="modal-footer border-top-0 d-flex justify-content-center"
-            >
-              <button
-                type="submit"
-                class="btn btn-success"
-                ng-click="saveMarks()"
-                class="submit-btn"
-                ng-disabled="marksform.$invalid"
+              <div
+                class="modal-footer border-top-0 d-flex justify-content-center"
               >
-                Submit
-              </button>
+                <button
+                  type="submit"
+                  class="btn btn-success"
+                  ng-click="saveMarks()"
+                  class="submit-btn"
+                  ng-disabled="marksform.$invalid"
+                >
+                  Submit
+                </button>
+              </div>
             </div>
           </form>
         </div>

@@ -30,24 +30,25 @@
         />
         <div class="card-info">
           <h2>{{school.name}}</h2>
+          <!-- <p>{{school.name}}</p>
           <p>{{school.name}}</p>
-          <p>{{school.name}}</p>
-          <p>{{school.name}}</p>
+          <p>{{school.name}}</p> -->
           <div class="card-buttons">
-            <button
+            <!-- <button
               class="edit-button"
               data-toggle="modal"
               data-target="#editModal"
               ng-click="openEditModal(school)"
             >
               Edit
-            </button>
+            </button> -->
 
             <button
               class="delete-button"
               data-toggle="modal"
               data-toggle="modal"
-              data-target="#exampleModal"
+              data-target="#deleteModal"
+              ng-click="openDeleteModal(school)"
             >
               Delete
             </button>
@@ -114,7 +115,7 @@
     <!-- Delete Modal -->
     <div
       class="modal fade"
-      id="exampleModal"
+      id="deleteModal"
       tabindex="-1"
       role="dialog"
       aria-labelledby="exampleModalLabel"
@@ -147,7 +148,7 @@
             <button
               type="button"
               class="btn btn-danger"
-              ng-click="confirmDelete(school._id)"
+              ng-click="confirmDelete(school)" 
             >
               Delete
             </button>

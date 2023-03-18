@@ -1,4 +1,3 @@
-// Inject the new services and factories into your controller
 mySchoolApp.controller(
   "loginController",
   function ($scope, $state, loginService, tokenService, jwtHelper) {
@@ -36,9 +35,13 @@ mySchoolApp.controller(
         })
         .catch(function (error) {
           if (error.status === 401) {
-            alert("Invalid username or password");
+            if (error.data.message === "Your account has been deleted!") {
+              alert("Your account has been deleted!");
+            } else {
+              alert("Invalid username or password");
+            }
           } else {
-            alert("An error occurred: " + error.statusText);
+            alert("An error occurred: " + error);
           }
         });
     };

@@ -1,6 +1,6 @@
 mySchoolApp.controller(
   "myStudentController",
-  function ($scope, $state, jwtHelper, $http, $rootScope) {
+  function ($scope, $state, jwtHelper, $http, $rootScope, studentService) {
     $scope.selectedClass = "";
     $scope.selectedGender = "";
 
@@ -34,9 +34,9 @@ mySchoolApp.controller(
         $scope.selectedGender === "" || student.gender === $scope.selectedGender
       );
     };
+    
 
     //GET Request for getting students
-
     $http({
       method: "GET",
       url: "http://localhost:5000/getStudents",
@@ -48,8 +48,13 @@ mySchoolApp.controller(
       .then(function (response) {
         console.log("Hi!!!!!!!!!!");
         console.log(response);
-        $scope.coordinator = response.data.coordinator;
+        // $scope.coordinator = response.data.coordinator;
         $scope.students = response.data.students;
+        if ($scope.students.length === 0 && !$scope.alertShown) {
+          $scope.alertShown = true;
+          alert("Please register a student first.");
+          $state.go("Coordinator");
+        }
       })
       .catch(function (err) {
         console.log(err);
@@ -108,6 +113,33 @@ mySchoolApp.controller(
           alert("there is error!");
           console.log(err);
         });
+    };
+
+    //delete
+    $scope.openDeleteModal = function (student) {
+      console.log(student);
+      $rootScope.selectedStudenDelete = student;
+      console.log($rootScope.selectedStudenDelete);
+    };
+
+    $scope.confirmDelete = function (student) {
+      var studentId = $rootScope.selectedStudenDelete.id;
+      console.log("studentId : " + studentId);
+
+      studentService
+        .deleteStudent(token, studentId)
+        .then(function (response) {
+          console.log(response);
+          var index = $scope.students.indexOf($rootScope.selectedStudenDelete);
+          if (index !== -1) {
+            $scope.students.splice(index, 1);
+          }
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+
+      $("#deleteModal").modal("hide");
     };
   }
 );

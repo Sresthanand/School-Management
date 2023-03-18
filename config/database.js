@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 mongoose.set("strictQuery", true);
+
 mongoose
   .connect("mongodb://localhost:27017/posist-project", {
     useNewUrlParser: true,
@@ -45,6 +46,10 @@ const schoolSchema = mongoose.Schema({
     required:true,
     unique: true,
   },
+  isDelete: {
+    type: String,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -64,6 +69,10 @@ const branchSchema = mongoose.Schema({
     type: String,
     required:true,
     unique: true,
+  },
+  isDelete: {
+    type: String,
+    required: true,
   },
   userId: {
     id: mongoose.Schema.Types.ObjectId,
@@ -85,6 +94,15 @@ const branchSchema = mongoose.Schema({
 
 const coordinatorSchema = mongoose.Schema({
   name: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required:true,
+    unique: true,
+  },
+  isDelete: {
     type: String,
     required: true,
   },
@@ -115,6 +133,11 @@ const studentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  image: {
+    type: String,
+    required:true,
+    unique: true,
+  },
   class: {
     type: String,
     required: true,
@@ -127,6 +150,10 @@ const studentSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+  },
+  isDelete: {
+    type: String,
+    required: true,
   },
   userId: {
     id: mongoose.Schema.Types.ObjectId,

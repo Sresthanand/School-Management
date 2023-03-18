@@ -24,10 +24,10 @@
           <h3>Home</h3>
         </a>
 
-        <a ui-sref="StudentDashBoard.Timetable">
+        <!-- <a ui-sref="StudentDashBoard.Timetable">
           <span class="material-icons-sharp">today</span>
           <h3>Time Table</h3>
-        </a>
+        </a> -->
 
         <a ui-sref="StudentDashBoard.exam">
           <span class="material-icons-sharp">grid_view</span>
@@ -41,7 +41,7 @@
       </div>
     </header>
 
-    <ui-view ng-show="currentRoute === 'StudentDashBoard.Timetable'"></ui-view>
+    <!-- <ui-view ng-show="currentRoute === 'StudentDashBoard.Timetable'"></ui-view> -->
 
     <ui-view ng-show="currentRoute === 'StudentDashBoard.exam'"></ui-view>
 
@@ -53,7 +53,7 @@
         <div class="profile">
           <div class="top">
             <div class="profile-photo">
-              <img src="assets\student\student_dashboard_logo.png" alt="" />
+              <img ng-src="{{image}}" />
             </div>
             <div class="info">
               <p>Hey, <b>{{name}}</b></p>
@@ -78,15 +78,17 @@
 
       <main>
         <h1>Marks Scored</h1>
-        <div class="subjects">
+
+        <div ng-if="marksUnavailable">
+          <h2>Your marks will be displayed soon by the coordinator!</h2>
+        </div>
+
+        <div ng-if="!marksUnavailable" class="subjects">
           <div class="eg" ng-repeat="subject in marks">
             <span class="material-icons-sharp">dns</span>
             <h3>{{ subject.name }}</h3>
 
             <h2>{{ subject.marksObtained }}/{{ subject.totalMarks }}</h2>
-            <!-- <div class="progress">
-              <svg><circle cx="38" cy="38" r="36"></circle></svg>
-            </div> -->
 
             <div class="number">
               <p>
@@ -100,7 +102,11 @@
           <div class="announcements">
             <h1>Class Announcements</h1>
 
-            <div class="updates">
+            <div ng-if="messages.length === 0">
+              <h2>there are no current announcements yet!</h2>
+            </div>
+
+            <div ng-if="messages.length > 0" class="updates">
               <div
                 class="message"
                 ng-repeat="message in messages | orderBy: '-createdAt' | limitTo: 3"
@@ -113,6 +119,8 @@
             </div>
           </div>
         </div>
+
+        
       </main>
     </div>
   </body>

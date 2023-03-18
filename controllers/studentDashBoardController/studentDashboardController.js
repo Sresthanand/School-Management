@@ -35,10 +35,12 @@ mySchoolApp.controller(
         $scope.name = response.data.data.name;
         $scope.studentClass = response.data.data.class;
         $scope.gender = response.data.data.gender;
+        $scope.image = response.data.data.image;
         $scope.enrollmentNumber = response.data.data.enrollmentNumber;
         $scope.schoolName = response.data.data.school.name;
         $scope.branchName = response.data.data.branch.location;
         $scope.coordinatorName = response.data.data.coordinator.name;
+       
       })
       .catch(function (err) {
         console.log(err);
@@ -75,23 +77,23 @@ mySchoolApp.controller(
       .then(function (response) {
         console.log("Marks fetched successfully");
         console.log(response);
-
-        //need to exclude first three keys as they are not needed
-        //0th index has id
-        //1st index has coordinator
-        //2bd index has student
-
-        var marksArray = [];
-
-        var responseKeys = Object.keys(response.data.data);
-        for (var i = 3; i < responseKeys.length; i++) {
-          marksArray.push(response.data.data[responseKeys[i]]);
+    
+        if (!response.data.data || typeof response.data.data !== "object") {
+          $scope.marksUnavailable = true;
+        } else {
+          var marksArray = [];
+    
+          var responseKeys = Object.keys(response.data.data);
+          for (var i = 3; i < responseKeys.length; i++) {
+            marksArray.push(response.data.data[responseKeys[i]]);
+          }
+          console.log(marksArray);
+          $scope.marks = marksArray;
         }
-        console.log(marksArray);
-        $scope.marks = marksArray;
       })
       .catch(function (err) {
         console.log(err);
       });
+    
   }
 );

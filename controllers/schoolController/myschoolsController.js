@@ -1,7 +1,7 @@
 // Define a controller for schools
 mySchoolApp.controller(
   "myschoolsController",
-  function ($scope, $rootScope, jwtHelper, MyschoolService) {
+  function ($scope, $rootScope, jwtHelper, MyschoolService, $state) {
     console.log("Hi, I am schools controller.");
 
     $scope.$watch("$root.$state.current.name", function (newValue, oldValue) {
@@ -24,12 +24,16 @@ mySchoolApp.controller(
     };
 
     // Call API to get all schools
-    MyschoolService
-      .getAllSchools(token)
+    // Call API to get all schools
+    MyschoolService.getAllSchools(token)
       .then(function (response) {
         console.log("Hi!!!!!!!!!!");
         console.log(response);
         $scope.schools = response.data.schools;
+        if ($scope.schools.length === 0) {
+          alert("Please register a school first.");
+          $state.go("SuperAdminDashBoard");
+        }
       })
       .catch(function (err) {
         console.log(err);
@@ -46,12 +50,11 @@ mySchoolApp.controller(
     $scope.updateSchoolName = function (updatedSchoolName) {
       console.log("Hiii i am from updateSchoolname");
       console.log($rootScope.selectedSchool);
-      MyschoolService
-        .updateSchoolName(
-          token,
-          $rootScope.selectedSchool._id,
-          updatedSchoolName
-        )
+      MyschoolService.updateSchoolName(
+        token,
+        $rootScope.selectedSchool._id,
+        updatedSchoolName
+      )
         .then(function (response) {
           for (var i = 0; i < $scope.schools.length; i++) {
             if ($scope.schools[i]._id === $rootScope.selectedSchool._id) {
@@ -70,6 +73,38 @@ mySchoolApp.controller(
       $("#editModal").modal("hide");
     };
 
-    // Call API to Delete all schools
+    //Delete School
+    $scope.openDeleteModal = function (school) {
+      console.log(school);
+      $rootScope.selectedSchoolDelete = school;
+      console.log($rootScope.selectedSchoolDelete);
+    };
+
+    //confirm delete func -> Call API to Delete all schools
+    $scope.confirmDelete = function (school) {
+      var schoolId = $rootScope.selectedSchoolDelete._id;
+      console.log("schoolId : " + schoolId);
+      MyschoolService.deleteSchool(token, schoolId)
+        .then(function (response) {
+          console.log(response);
+          for (var i = 0; i < $scope.schools.length; i++) {
+            if ($scope.schools[i]._id === schoolId) {
+              if (response.data.success) {
+                $scope.schools.splice(i, 1);
+              } else {
+                $scope.schools[i].isDelete = true;
+              }
+              break;
+            }
+          }
+          alert(response.data.message);
+        })
+        .catch(function (error) {
+          console.log(error);
+          alert("Error deleting school.");
+        });
+
+      $("#deleteModal").modal("hide");
+    };
   }
 );

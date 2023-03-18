@@ -27,7 +27,7 @@ mySchoolApp.controller(
     SchoolService,
     SchoolImageUploadService,
     RouteChangeService,
-    $http,
+    $http
   ) {
     console.log("Hi i am superadmindashboard controller!");
 
@@ -67,27 +67,22 @@ mySchoolApp.controller(
     //     }
     //   );
     // };
+    $scope.loading = false;
 
     $scope.registerSchool = function () {
+      $scope.loading = true;
 
-      console.log("Hi i am registerSchool starting");
-      console.log($scope.file);
-      console.log("Hi i am registerSchool");
-
-      SchoolImageUploadService.uploadImage(token,$scope.file, $http)
+      SchoolImageUploadService.uploadImage(token, $scope.file, $http)
         .then(function (uploadResponse) {
-          console.log("hello i am after school image upload service is completed!");
-          console.log(uploadResponse);
           SchoolService.registerSchool(
             token,
             $scope.username,
             $scope.password,
             $scope.schoolName,
-            uploadResponse.data.Location,
+            uploadResponse.data.Location
           )
             .then(function (registerResponse) {
-              console.log("hello i am after school service is completed!");
-              console.log(registerResponse);
+              $scope.loading = false;
               alert("School created successfully");
             })
             .catch(function (registerError) {
@@ -98,6 +93,9 @@ mySchoolApp.controller(
         .catch(function (uploadError) {
           console.log(uploadError);
           alert("Something went wrong with image upload");
+        })
+        .finally(function () {
+          $scope.loading = false;
         });
     };
   }

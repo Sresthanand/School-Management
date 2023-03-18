@@ -1,6 +1,6 @@
 mySchoolApp.controller(
   "BranchesController",
-  function ($scope, $state, jwtHelper, $rootScope, $http) {
+  function ($scope, $state, jwtHelper, $rootScope, $http, BranchService) {
     console.log("Hi i am From BranCH coNTROLLER");
 
     $scope.$watch("$root.$state.current.name", function (newValue, oldValue) {
@@ -32,9 +32,12 @@ mySchoolApp.controller(
       },
     })
       .then(function (response) {
-        console.log("Hi!!!!!!!!!!");
         console.log(response);
         $scope.branches = response.data.branches;
+        if ($scope.branches.length === 0) {
+          alert("Please register a branch first.");
+          $state.go("SchoolDashboard");
+        }
       })
       .catch(function (err) {
         console.log(err);
@@ -42,13 +45,41 @@ mySchoolApp.controller(
 
     //edit
 
-    //delete later
-      //reset filters
-  $scope.resetFilters = function() {
-    $scope.searchQuery = '';
-    $scope.selectedLocation = '';
-  }
+    //delete
+    $scope.openDeleteModal = function (branch) {
+      console.log(branch);
+      $rootScope.selectedBranchDelete = branch;
+      console.log($rootScope.selectedBranchDelete);
+    };
+
+    //confirm delete func -> Call API to Delete all schools
+    $scope.confirmDelete = function (branch) {
+      var branchId = $rootScope.selectedBranchDelete._id;
+      console.log("branchId : " + branchId);
+      BranchService.deleteBranch(token, branchId)
+        .then(function (response) {
+          for (var i = 0; i < $scope.branches.length; i++) {
+            if ($scope.branches[i]._id === branchId) {
+              $scope.branches.splice(i, 1);
+              break;
+            }
+          }
+          console.log(response);
+          alert("Branch deleted successfully!");
+        })
+        .catch(function (error) {
+          console.log(error);
+          alert("Error deleting branch.");
+        });
+
+      $("#deleteModal").modal("hide");
+    };
+
+    //reset filters
+    $scope.resetFilters = function () {
+      $scope.searchQuery = "";
+      $scope.selectedLocation = "";
+    };
   }
 );
 
-//   const authenticateRequest = passport.authenticate("jwt", { session: false });
