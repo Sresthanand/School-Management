@@ -9,9 +9,11 @@
       rel="stylesheet"
     />
     <link rel="stylesheet"
-    href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > <link
-    rel="stylesheet" href="css\superAdminStyleSheet\SuperAdminDashBoard.css" / >
+    href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > 
+   
     <link rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / >
+
+    <link rel="stylesheet" href="css\branchStyleSheet\branchDashboard.css"/ >
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
@@ -31,7 +33,6 @@
         cursor: pointer;
         opacity: 1;
       }
-
 
       .loader {
         border: 16px solid #f3f3f3;
@@ -69,7 +70,6 @@
         align-items: center;
         justify-content: center;
       }
-
     </style>
   </head>
   <body>
@@ -80,7 +80,7 @@
         <i class="fas fa-bars"></i>
       </label>
       <ul>
-        <li><a href="#">Logout</a></li>
+        <li><a class="button-logout" href="#">Logout</a></li>
       </ul>
     </nav>
 
@@ -118,7 +118,7 @@
       class="home-section"
       ng-hide="currentRoute === 'SchoolBranchDashboard.coordinators'"
     >
-      <div class="text">Please Register Your Coordinator Details!</div>
+      <h1 class="text"></h1>
 
       <div class="wrapper">
         <div class="r_form_wrap">
@@ -200,7 +200,6 @@
                     Password must contain at least one capital letter, one
                     number, and one special character
                   </div>
-                  
                 </div>
               </div>
 
@@ -211,13 +210,13 @@
                     <i class="fa-solid fa-image"></i>
                   </span>
                   <input
-                  type="file"
-                  name="file"
-                  class="fileInput"
-                  file-model="file"
-                  accept=".png, .jpeg, .jpg, .svg"
-                  id="file"
-                  required                   
+                    type="file"
+                    name="file"
+                    class="fileInput"
+                    file-model="file"
+                    accept=".png, .jpeg, .jpg, .svg"
+                    id="file"
+                    required
                   />
                 </div>
               </div>

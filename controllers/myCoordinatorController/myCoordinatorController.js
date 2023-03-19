@@ -22,7 +22,7 @@ mySchoolApp.controller(
 
     $http({
       method: "GET",
-      url: "http://localhost:5000/getCoordinators",
+      url: "http://localhost:5000/api/branch/getCoordinators",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -53,7 +53,6 @@ mySchoolApp.controller(
       console.log($rootScope.selectedCoordinatorDelete);
     };
 
-    //confirm delete func -> Call API to Delete all schools
     $scope.confirmDelete = function (coordinator) {
       var coordinatorId = $rootScope.selectedCoordinatorDelete._id;
       console.log("coordinatorId : " + coordinatorId);
@@ -61,6 +60,7 @@ mySchoolApp.controller(
       CoordinatorService.deleteCoordinator(token, coordinatorId)
         .then(function (response) {
           console.log(response);
+          
           var index = $scope.coordinators.indexOf(
             $rootScope.selectedCoordinatorDelete
           );

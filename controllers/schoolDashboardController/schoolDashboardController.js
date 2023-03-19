@@ -56,7 +56,7 @@ mySchoolApp.controller(
       // Call the image upload API
       $http({
         method: "POST",
-        url: "http://localhost:5000/uploadImage",
+        url: "http://localhost:5000/api/upload/uploadImage",
         data: fd,
         headers: {
           Authorization: "Bearer " + token,
@@ -80,7 +80,7 @@ mySchoolApp.controller(
           // Call the branch registration API
           $http({
             method: "POST",
-            url: "http://localhost:5000/branchRegister",
+            url: "http://localhost:5000/api/school/branchRegister",
             headers: {
               Authorization: "Bearer " + token,
               "Content-Type": "application/json",

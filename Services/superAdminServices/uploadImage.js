@@ -5,7 +5,7 @@ mySchoolApp.service("SchoolImageUploadService", function ($http) {
     console.log(fd);
     return $http({
       method: "POST",
-      url: "http://localhost:5000/uploadImage",
+      url: "http://localhost:5000/api/upload/uploadImage",
       data: fd,
       headers: {
         Authorization: "Bearer " + token,

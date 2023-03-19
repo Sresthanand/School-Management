@@ -23,7 +23,7 @@ mySchoolApp.controller(
 
     $http({
       method: "GET",
-      url: "http://localhost:5000/getStudentData",
+     url: "http://localhost:5000/api/student/getStudentData",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -50,7 +50,7 @@ mySchoolApp.controller(
 
     $http({
       method: "GET",
-      url: "http://localhost:5000/getStudentMessages",
+      url: "http://localhost:5000/api/student/getStudentMessages",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -68,7 +68,7 @@ mySchoolApp.controller(
     //API call to get student marks
     $http({
       method: "GET",
-      url: "http://localhost:5000/getStudentMarks",
+      url: "http://localhost:5000/api/student/getStudentMarks",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",

@@ -25,7 +25,7 @@ mySchoolApp.controller(
     //call api to get all branches
     $http({
       method: "GET",
-      url: "http://localhost:5000/getBranches",
+      url: "http://localhost:5000/api/school/getBranches",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",

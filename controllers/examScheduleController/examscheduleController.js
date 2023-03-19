@@ -28,7 +28,7 @@ mySchoolApp.controller(
 
       $http({
         method: "POST",
-        url: "http://localhost:5000/examRegistration",
+        url: "http://localhost:5000/api/coordinator/examRegistration",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",

@@ -9,9 +9,11 @@
       rel="stylesheet"
     />
     <link rel="stylesheet"
-    href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > <link
-    rel="stylesheet" href="css\superAdminStyleSheet\SuperAdminDashBoard.css" / >
+    href="css\superAdminStyleSheet\SchoolRegisterForm.css"/> 
     <link rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / >
+
+    <link rel="stylesheet" href="css\schoolStyleSheet\schoolDashboard.css"/ >
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
@@ -81,7 +83,7 @@
         <i class="fas fa-bars"></i>
       </label>
       <ul>
-        <li><a href="#">Logout</a></li>
+        <li><a class="button-logout" href="#">Logout</a></li>
       </ul>
     </nav>
 
@@ -117,7 +119,7 @@
       class="home-section"
       ng-hide="currentRoute === 'SchoolDashboard.branches'"
     >
-      <div class="text">Please Register Your School Branch Details!</div>
+      <div class="text">Please Register Your Branch!</div>
 
       <div class="wrapper">
         <div class="r_form_wrap">

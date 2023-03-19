@@ -27,7 +27,7 @@ mySchoolApp.controller(
 
       $http({
         method: "POST",
-        url: "http://localhost:5000/saveMessage",
+        url: "http://localhost:5000/api/coordinator/saveMessage",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",

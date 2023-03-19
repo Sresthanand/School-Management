@@ -19,7 +19,7 @@ mySchoolApp.service("SchoolService", function ($http) {
 
     return $http({
       method: "POST",
-      url: "http://localhost:5000/schoolRegister",
+      url: "http://localhost:5000/api/superadmin/schoolRegister",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",

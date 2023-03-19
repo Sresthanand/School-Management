@@ -22,7 +22,7 @@ mySchoolApp.controller(
     // call the API to get student marks
     $http({
       method: "GET",
-      url: "http://localhost:5000/getMarksCoordinator",
+      url: "http://localhost:5000/api/coordinator/getMarksCoordinator",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",

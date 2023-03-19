@@ -13,6 +13,7 @@
     ></script>
   </head>
   <body>
+
     <div class="wrap">
         <div class="search">
            <input type="text" class="searchTerm" placeholder="Search Your School" ng-model="searchQuery">
@@ -21,7 +22,10 @@
           </button>
         </div>
      </div>   
-  </div>
+
+
+
+
     <div class="card-container">
       <div class="card" ng-repeat="school in schools | filter:searchQuery">
         <img

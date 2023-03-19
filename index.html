@@ -15,6 +15,7 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.min.js"
       integrity="sha512-HdDqpFK+5KwK5gZTuViiNt6aw/dBc3d0pUArax73z0fYN8UXiSozGNTo3MFx4pwbBPldf5gaMUq/EqposBQyWQ=="
       crossorigin="anonymous"
+      c
       referrerpolicy="no-referrer"
     ></script>
     <!------------------------------- Angular JWT Cdn ---------------------------->
@@ -97,6 +98,21 @@
     <script>
       window.location.href = "/#!/login";
     </script>
+
+    <!-- <script>
+      window.addEventListener("hashchange", function () {
+        localStorage.setItem("currentRoute", window.location.hash);
+      });
+      window.addEventListener("load", function () {
+        var currentRoute = localStorage.getItem("currentRoute");
+
+        if (currentRoute) {
+          window.location.hash = currentRoute;
+        } else {
+          window.location.hash = "/#!/login";
+        }
+      });
+    </script> -->
     <!------------------------------- Bootrstrap JavaScript ---------------------------->
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

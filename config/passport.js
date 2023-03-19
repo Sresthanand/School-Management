@@ -4,7 +4,7 @@ const passport = require("passport");
 const JwtStrategy = require("passport-jwt").Strategy,
   ExtractJwt = require("passport-jwt").ExtractJwt;
 const opts = {};
-const {UserModel} = require("./database");
+const {UserModel} = require("../models/user");
 
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = "Random string";

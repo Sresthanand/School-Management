@@ -34,12 +34,17 @@ mySchoolApp.controller(
         $scope.selectedGender === "" || student.gender === $scope.selectedGender
       );
     };
-    
+
+    $scope.classFilter = function (student) {
+      return (
+        $scope.selectedClass === "" || student.class === $scope.selectedClass
+      );
+    };
 
     //GET Request for getting students
     $http({
       method: "GET",
-      url: "http://localhost:5000/getStudents",
+      url: "http://localhost:5000/api/coordinator/getStudents",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -97,7 +102,7 @@ mySchoolApp.controller(
 
       $http({
         method: "POST",
-        url: "http://localhost:5000/registerMarks",
+        url: "http://localhost:5000/api/coordinator/registerMarks",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",

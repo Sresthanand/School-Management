@@ -72,7 +72,7 @@
     <div class="card-container">
       <div
         class="card"
-        ng-repeat="student in students | filter:searchQuery | filter:{class:selectedClass} | filter:genderFilter"
+        ng-repeat="student in students | filter:searchQuery | filter: classFilter| filter:genderFilter"
       >
         <img ng-src="{{student.image}}" alt="Placeholder Image" />
         <div class="card-info">

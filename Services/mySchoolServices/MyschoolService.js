@@ -6,7 +6,7 @@ mySchoolApp.service("MyschoolService", function ($http) {
   this.getAllSchools = function (token) {
     return $http({
       method: "GET",
-      url: baseUrl + "getAllSchools",
+      url: "http://localhost:5000/api/superadmin/getAllSchools",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -28,12 +28,12 @@ mySchoolApp.service("MyschoolService", function ($http) {
       },
     });
   };
-  
+
   //delete school
-  this.deleteSchool = function (token,schoolId) {
+  this.deleteSchool = function (token, schoolId) {
     return $http({
       method: "PUT",
-      url: baseUrl + "deleteSchool/" + schoolId,
+      url: "http://localhost:5000/api/superadmin/deleteSchool/" + schoolId,
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",

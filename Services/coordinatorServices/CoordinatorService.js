@@ -4,7 +4,7 @@ mySchoolApp.service("CoordinatorService", function ($http) {
   this.deleteCoordinator = function (token,coordinatorId) {
     return $http({
       method: "PUT",
-      url: baseUrl + "deleteCoordinator/" + coordinatorId,
+      url: "http://localhost:5000/api/branch/deleteCoordinator/" + coordinatorId,
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",

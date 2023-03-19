@@ -21,7 +21,7 @@ mySchoolApp.controller(
      
       $http({
         method: "GET",
-        url: "http://localhost:5000/getStudentExams",
+        url: "http://localhost:5000/api/student/getStudentExams",
         headers: {
           Authorization: "Bearer " + token,
           "Content-Type": "application/json",
@@ -30,7 +30,7 @@ mySchoolApp.controller(
         .then(function (response) {
           console.log(response);
           $scope.exams = response.data.data;
-          console.log(exams.date);
+          // console.log(exams.date);
         })
         .catch(function (err) {
           console.log(err);

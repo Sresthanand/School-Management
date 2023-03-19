@@ -5,7 +5,7 @@ mySchoolApp.service("studentService", function ($http) {
     console.log("Hi i am from student services" + studentId);
     return $http({
       method: "PUT",
-      url: baseUrl + "deleteStudent/" + studentId,
+      url: "http://localhost:5000/api/coordinator/deleteStudent/" + studentId,
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",

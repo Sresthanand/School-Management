@@ -4,24 +4,36 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css\coordinatorStyleSheet\mystudents.css" / >
+    <link rel="stylesheet" href="css\coordinatorStyleSheet\studentmarks.css" / >
     <title>marks</title>
   </head>
   <body>
-    <div class="card-container">
-      <div class="card" ng-repeat="marks in marksList">
-        <img src="assets\marks\svg_marks.svg" alt="Placeholder Image" />
-        <div class="card-info">
-          <h3>Student name: {{ marks.student.name }}</h3>
-          <h3>Coordinator name: {{ marks.coordinator.name }}</h3>
-          <p>Total marks: {{ marks.subject1.totalMarks }}</p>
-          <p>{{ marks.subject1.name }}: {{ marks.subject1.marksObtained }}</p>
-          <p>{{ marks.subject2.name }}: {{ marks.subject2.marksObtained }}</p>
-          <p>{{ marks.subject3.name }}: {{ marks.subject3.marksObtained }}</p>
-          <p>{{ marks.subject4.name }}: {{ marks.subject4.marksObtained }}</p>
-          <p>{{ marks.subject5.name }}: {{ marks.subject5.marksObtained }}</p>
-        </div>
-      </div>
-    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Student Name</th>
+       
+          <th>Subject 1</th>
+          <th>Subject 2</th>
+          <th>Subject 3</th>
+          <th>Subject 4</th>
+          <th>Subject 5</th>
+          <th>Total Marks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="marks in marksList">
+          <td>{{ marks.student.name }}</td>
+         
+          <td>{{ marks.subject1.marksObtained }}</td>
+          <td>{{ marks.subject2.marksObtained }}</td>
+          <td>{{ marks.subject3.marksObtained }}</td>
+          <td>{{ marks.subject4.marksObtained }}</td>
+          <td>{{ marks.subject5.marksObtained }}</td>
+          <td>{{ marks.subject1.marksObtained + marks.subject2.marksObtained + marks.subject3.marksObtained + marks.subject4.marksObtained + marks.subject5.marksObtained }}</td>
+        </tr>
+      </tbody>
+    </table>
+    
   </body>
 </html>

@@ -19,7 +19,7 @@ mySchoolApp.service("BranchService", function ($http) {
   this.deleteBranch = function (token,branchId) {
     return $http({
       method: "PUT",
-      url: baseUrl + "deleteBranch/" + branchId,
+      url: "http://localhost:5000/api/school/deleteBranch/" + branchId,
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
