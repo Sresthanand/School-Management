@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet"
+    href="css\coordinatorStyleSheet\studentattendance.css" / >
+    <title>Attendance</title>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="search">
+        <input
+          type="text"
+          class="searchTerm"
+          placeholder="Search Your Student"
+          ng-model="searchQuery"
+        />
+        <button type="submit" class="searchButton">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+
+      <div class="parent">
+        <div class="input_item">
+          <select ng-model="selectedStatus">
+            <option value="">Status</option>
+            <option value="present">Present</option>
+            <option value="absent">Absent</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="parent2">
+        <div class="input_item">
+          <input
+            type="date"
+            id="start"
+            name="date-start"
+            value="2023-03-20"
+            ng-model="dateQuery"
+          />
+        </div>
+      </div>
+
+      <button type="button" class="resetButton" ng-click="resetFilters()">
+        Reset
+      </button>
+    </div>
+    <div class="imageHandler">
+      <div>
+        <img src="assets\coordinator\attendance.svg" />
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Status</th>
+            <th>Date and Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            ng-repeat="attendance in attendances | filter:searchQuery | filter:StatusFilter | filter:filterByDate"
+          >
+            <td>{{ attendance.studentName }}</td>
+            <td>{{ attendance.status }}</td>
+            <td>{{ attendance.createdAt | date:'dd/MM/yyyy' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

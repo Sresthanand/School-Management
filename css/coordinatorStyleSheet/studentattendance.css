@@ -1,0 +1,153 @@
+.table {
+  border-collapse: collapse;
+  width: fit-content;
+  margin-bottom: 1rem;
+  margin-left: 50px;
+  margin-top: 20px;
+  
+}
+
+.table th {
+  background-color: #f7f7f7;
+  border: 1px solid #dee2e6;
+  text-align: left;
+  padding: 0.75rem;
+}
+
+.table td {
+  border: 1px solid #dee2e6;
+  padding: 0.75rem;
+  vertical-align: middle;
+}
+
+.table td:last-child {
+  font-weight: bold;
+}
+.table tbody tr:nth-of-type(even) {
+  background-color: #f7f7f7;
+}
+
+.table tbody tr:hover {
+  background-color: #dfe4ea;
+}
+.imageHandler{
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+}
+body {
+  position: relative;
+  min-height: 100vh;
+  top: 0;
+  left: 78px;
+  width: calc(100% - 78px);
+  transition: all 0.5s ease;
+  z-index: 2;
+  background-image: url("");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(228, 233, 247, 0.7);
+  /* Search bar and buttons css with it
+ 
+}
+
+
+
+
+.searchBarDiv {
+  margin-left: 100px;
+  /* margin-top: 500px; */
+  /* background-color: black; */
+}
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+.search {
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+
+.searchTerm {
+  width: 100%;
+  border: 3px solid #00b4cc;
+  border-right: none;
+  padding: 5px;
+
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  color: #9dbfaf;
+}
+
+.searchTerm:focus {
+  color: #00b4cc;
+}
+
+.searchButton {
+  width: 40px;
+  height: 36px;
+  border: 1px solid #00b4cc;
+  background: #00b4cc;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.wrap {
+  width: 50%;
+  padding-top: 20px;
+  margin-left: 300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search {
+  flex-grow: 1;
+}
+
+.input_item {
+  padding-left: 20px;
+}
+
+.input_item select {
+  /* width: 100%;
+      height: 38px; */
+  padding: 6px 12px;
+  font-size: 16px;
+  line-height: 1.428571429;
+  color: #555;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s,
+    box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+.input_item select:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.resetButton {
+  background-color: #ffcccc;
+  color: #8b0000;
+  margin-left: 10px;
+  width: 20%;
+}
+
+.parent {
+  width: 30%;
+}
+
+.parent2 {
+  width: 30%;
+}

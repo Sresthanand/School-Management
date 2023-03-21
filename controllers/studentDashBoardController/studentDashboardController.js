@@ -23,7 +23,7 @@ mySchoolApp.controller(
 
     $http({
       method: "GET",
-     url: "http://localhost:5000/api/student/getStudentData",
+      url: "http://localhost:5000/api/student/getStudentData",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -40,7 +40,8 @@ mySchoolApp.controller(
         $scope.schoolName = response.data.data.school.name;
         $scope.branchName = response.data.data.branch.location;
         $scope.coordinatorName = response.data.data.coordinator.name;
-       
+
+        $scope.studentId = response.data.data.id; //for attendance
       })
       .catch(function (err) {
         console.log(err);
@@ -77,12 +78,12 @@ mySchoolApp.controller(
       .then(function (response) {
         console.log("Marks fetched successfully");
         console.log(response);
-    
+
         if (!response.data.data || typeof response.data.data !== "object") {
           $scope.marksUnavailable = true;
         } else {
           var marksArray = [];
-    
+
           var responseKeys = Object.keys(response.data.data);
           for (var i = 3; i < responseKeys.length; i++) {
             marksArray.push(response.data.data[responseKeys[i]]);
@@ -94,6 +95,38 @@ mySchoolApp.controller(
       .catch(function (err) {
         console.log(err);
       });
-    
+
+    $scope.handleAttendance = function (studentId) {
+      $http({
+        method: "PUT",
+        url: "http://localhost:5000/api/student/markAttendance/" + studentId,
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      })
+        .then(function (response) {
+          if (
+            response.data &&
+            response.data.message === "Attendance already marked for today"
+          ) {
+            alert("Your attendance has already been marked for today");
+          } else {
+            alert("Your attendance has been marked!");
+            console.log(response);
+          }
+        })
+        .catch(function (err) {
+          if (
+            err.status === 400 &&
+            err.data === "Attendance already marked for today"
+          ) {
+            alert("Your attendance has already been marked for today");
+          } else {
+            alert("There was an error while marking your attendance");
+            console.log(err);
+          }
+        });
+    };
   }
 );

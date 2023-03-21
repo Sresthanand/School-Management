@@ -11,6 +11,7 @@ const { StudentModel } = require("../models/student");
 const { ExaminationModel } = require("../models/examinaton");
 const { MessageModel } = require("../models/message");
 const { MarksModel } = require("../models/marks");
+const { AttendanceModel } = require("../models/attendance");
 
 const {
   authenticateRequest,
@@ -521,6 +522,70 @@ router.get(
                   success: true,
                   message: "Marks fetched successfully",
                   data,
+                });
+              }
+            }
+          );
+        }
+      }
+    );
+  }
+);
+
+router.get(
+  "/getStudentAttendance",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const coordinatorId = req.user.id;
+
+    console.log("Hi i am attendance bata do api ");
+
+    CoordinatorModel.findOne(
+      { "userId.id": coordinatorId },
+      (err, coordinator) => {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else if (!coordinator) {
+          console.log("No coordinator found for this user");
+          res.send({
+            success: false,
+            message: "No coordinator found for this user",
+          });
+        } else {
+          AttendanceModel.find(
+            { "coordinator.id": coordinator._id },
+            (err, attendances) => {
+              if (err) {
+                console.log(err);
+                res.send({
+                  success: false,
+                  message: "Something went wrong",
+                  error: err,
+                });
+              } else if (!attendances.length) {
+                console.log("No attendance records found for this coordinator");
+                res.send({
+                  success: false,
+                  message: "No attendance records found for this coordinator",
+                });
+              } else {
+                const attendanceInfo = attendances.map((attendance) => ({
+                  id: attendance._id,
+                  studentName: attendance.student.name,
+                  status: attendance.status,
+                  coordinatorName: attendance.coordinator.name,
+                  createdAt: attendance.createdAt,
+                }));
+                res.send({
+                  success: true,
+                  message: "Attendance records retrieved successfully",
+                  data: attendanceInfo,
                 });
               }
             }

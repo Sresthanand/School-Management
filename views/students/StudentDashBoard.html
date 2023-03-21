@@ -24,20 +24,26 @@
           <h3>Home</h3>
         </a>
 
-        <!-- <a ui-sref="StudentDashBoard.Timetable">
-          <span class="material-icons-sharp">today</span>
-          <h3>Time Table</h3>
-        </a> -->
 
         <a ui-sref="StudentDashBoard.exam">
           <span class="material-icons-sharp">grid_view</span>
           <h3>Examination</h3>
         </a>
 
+        
+        <a ng-click="handleAttendance(studentId)">
+          <span class="material-icons-sharp">edit_calendar</span>
+          <h3>Attendance</h3>
+        </a>
+        
+
+      
         <a ng-click="logout()">
           <span class="material-icons-sharp">logout</span>
           <h3>Logout</h3>
         </a>
+
+      
       </div>
     </header>
 
@@ -119,6 +125,8 @@
             </div>
           </div>
         </div>
+
+
 
         
       </main>

@@ -2,14 +2,21 @@ const express = require("express");
 const router = express.Router();
 const { hashSync, compareSync } = require("bcrypt");
 
+const CronJob = require("cron").CronJob;
+
 const { UserModel } = require("../models/user");
 const { SchoolModel } = require("../models/school");
 const { BranchModel } = require("../models/branch");
+
 const { CoordinatorModel } = require("../models/coordinator");
 const { StudentModel } = require("../models/student");
 const { ExaminationModel } = require("../models/examinaton");
 const { MessageModel } = require("../models/message");
 const { MarksModel } = require("../models/marks");
+const { AttendanceModel } = require("../models/attendance");
+
+const job = new CronJob("0 0 * * *", markAttendance); //every mid night
+job.start();
 
 const {
   authenticateRequest,
@@ -44,6 +51,7 @@ router.get(
           gender: student.gender,
           enrollmentNumber: student.enrollmentNumber,
           image: student.image,
+          id: student._id,
           coordinator: {
             name: student.coordinator.name,
             id: student.coordinator.id,
@@ -258,5 +266,87 @@ router.get(
     });
   }
 );
+
+router.put("/markAttendance/:id", (req, res) => {
+  const studentId = req.params.id;
+
+  console.log("hi i am from mark attendance");
+
+  console.log("StudentId " + studentId);
+
+  const currentDate = new Date().toISOString().split("T")[0];
+
+  AttendanceModel.findOne(
+    { "student.id": studentId, createdAt: { $gte: currentDate } },
+    (err, attendance) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("Internal Server Error");
+      }
+
+      if (!attendance) {
+        return res.status(404).send("Attendance Not Found");
+      }
+
+      if (attendance.status === "present") {
+        console.log("i will run my attendance has already been marked for the day")
+        return res.status(400).send("Attendance already marked for today");
+      }
+
+      attendance.status = "present";
+      attendance.updatedAt = Date.now();
+
+      attendance.save((err, updatedAttendance) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).send("Internal Server Error");
+        }
+
+        return res.status(200).send(updatedAttendance);
+      });
+    }
+  );
+});
+
+function markAttendance() {
+  CoordinatorModel.find(function (err, coordinators) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    coordinators.forEach(function (coordinator) {
+      StudentModel.find(
+        { "coordinator.id": coordinator._id },
+        function (err, students) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+
+          students.forEach(function (student) {
+            const attendance = new AttendanceModel({
+              status: "absent",
+              coordinator: {
+                id: coordinator._id,
+                name: coordinator.name,
+              },
+              student: {
+                id: student._id,
+                name: student.name,
+              },
+            });
+
+            attendance.save(function (err) {
+              if (err) {
+                console.error(err);
+              }
+            });
+          });
+        }
+      );
+    });
+  });
+}
 
 module.exports = router;

@@ -149,6 +149,15 @@
           </a>
           <span class="tooltip">Student Marks</span>
         </li>
+
+        <li>
+          <a ui-sref="Coordinator.studentAttendance">
+            <i class="fa-solid fa-clipboard-user"></i>
+
+            <span class="links_name">Attendance</span>
+          </a>
+          <span class="tooltip">Attendance</span>
+        </li>
       </ul>
     </div>
 
@@ -162,9 +171,13 @@
 
     <ui-view ng-show="currentRoute === 'Coordinator.studentMarks'"></ui-view>
 
+    <ui-view
+      ng-show="currentRoute === 'Coordinator.studentAttendance'"
+    ></ui-view>
+
     <section
       class="home-section"
-      ng-hide="currentRoute === 'Coordinator.students' || currentRoute==='Coordinator.studentMarks'|| currentRoute === 'Coordinator.examschedule'|| currentRoute ==='Coordinator.sendNotifications'"
+      ng-hide="currentRoute === 'Coordinator.students' || currentRoute==='Coordinator.studentMarks'|| currentRoute === 'Coordinator.examschedule'|| currentRoute ==='Coordinator.sendNotifications' || currentRoute ==='Coordinator.studentAttendance'"
     >
       <div class="text"></div>
 
