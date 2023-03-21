@@ -2,7 +2,11 @@ const express = require("express");
 const router = express.Router();
 const { hashSync, compareSync } = require("bcrypt");
 const { UserModel } = require("../models/user");
+
 const { SchoolModel } = require("../models/school");
+const { BranchModel } = require("../models/branch");
+const { CoordinatorModel } = require("../models/coordinator");
+const { StudentModel } = require("../models/student");
 
 const {
   authenticateRequest,
@@ -194,4 +198,79 @@ router.put(
   }
 );
 
+// Define API endpoint
+router.get(
+  "/total",
+  authenticateRequest,
+  checkUserRole(["super-admin"]),
+  function (req, res) {
+    var schoolCount, branchCount, coordinatorCount, studentCount;
+    
+    SchoolModel.aggregate(
+      [
+        {
+          $group: {
+            _id: null,
+            count: { $sum: 1 },
+          },
+        },
+      ],
+      function (err, result) {
+        if (err) throw err;
+        schoolCount = result[0].count;
+        BranchModel.aggregate(
+          [
+            {
+              $group: {
+                _id: null,
+                count: { $sum: 1 },
+              },
+            },
+          ],
+          function (err, result) {
+            if (err) throw err;
+            branchCount = result[0].count;
+            CoordinatorModel.aggregate(
+              [
+                {
+                  $group: {
+                    _id: null,
+                    count: { $sum: 1 },
+                  },
+                },
+              ],
+              function (err, result) {
+                if (err) throw err;
+                coordinatorCount = result[0].count;
+                StudentModel.aggregate(
+                  [
+                    {
+                      $group: {
+                        _id: null,
+                        count: { $sum: 1 },
+                      },
+                    },
+                  ],
+                  function (err, result) {
+                    if (err) throw err;
+                    studentCount = result[0].count;
+                    res.json({
+                      totalSchools: schoolCount,
+                      totalBranches: branchCount,
+                      totalCoordinators: coordinatorCount,
+                      totalStudents: studentCount,
+                    });
+                  }
+                );
+              }
+            );
+          }
+        );
+      }
+    );
+  }
+);
+
 module.exports = router;
+
+//now here also with total number of scools return total nuymber of branches , total number of coordinators, total numbe of students, i have imported there models already

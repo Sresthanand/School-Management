@@ -1,60 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet"
-    href="css\superAdminStyleSheet\SchoolRegisterForm.css" / >
-    <link />
-    <title>editschools</title>
+    <title></title>
+    <link
+      rel="stylesheet"
+      href="css\superAdminStyleSheet\superAdminStats.css"
+      type="text/css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
   </head>
+
   <body>
-    <section class="home-section">
-      <div class="text">Please Enter Updated school Details!</div>
-      <div class="wrapper">
-        <div class="r_form_wrap">
-          <div class="r_form">
-            <form>
-              <div class="input_wrap">
-                <label for="schoolname">Enter old School name</label>
-                <div class="input_item">
-                  <span class="icon">
-                    <i class="fa-solid fa-school"></i>
-                  </span>
-                  <input
-                    type="text"
-                    ng-model="oldschoolName"
-                    name="schoolname"
-                    class="input"
-                    id="schoolname"
-                  />
-                </div>
-              </div>
 
-              <div class="input_wrap">
-                <label for="username">Enter New School's Name</label>
-                <div class="input_item">
-                  <span class="icon">
-                    <i class="fa-solid fa-user"></i>
-                  </span>
-                  <input
-                    type="text"
-                    ng-model="newschoolName"
-                    name="username"
-                    class="input"
-                    id="username"
-                  />
-                </div>
-              </div>
+    <div class="head">
+      <div class="col-div-6">
+        <p class="nav">Analytics Dashboard</p>
+      </div>
 
-              <button type="submit" ng-click="updateSchool()">
-                Update Now
-              </button>
-            </form>
-          </div>
+      <div class="clearfix"></div>
+    </div>
+    <div id="main">
+    
+
+      <div class="clearfix"></div>
+      <br />
+
+      <div class="col-div-4-1">
+        <div class="box">
+          <p class="head-1">Schools</p>
+          <p class="number">{{totalSchools}}</p>
+          <i class="fa fa-line-chart box-icon"></i>
         </div>
       </div>
-    </section>
+
+      <div class="col-div-4-1">
+        <div class="box">
+          <p class="head-1">Branches</p>
+          <p class="number">{{totalBranches}}</p>
+          <i class="fa fa-line-chart box-icon"></i>
+        </div>
+      </div>
+
+      <div class="col-div-4-1">
+        <div class="box">
+          <p class="head-1">Coordinators</p>
+          <p class="number">{{totalCoordinators}}</p>
+          <i class="fa fa-line-chart box-icon"></i>
+        </div>
+      </div>
+
+      <div class="clearfix"></div>
+      <br />
+
+      <div class="col-div-4-1">
+        <div class="box">
+          <p class="head-1">Students</p>
+          <p class="number">{{totalStudents}}</p>
+          <p class="percent">
+            <i class="fa fa-line-chart box-icon"></i>
+          </p>
+        </div>
+      </div>
+
+      <div class="clearfix"></div>
+      <br />
+
+      <!-- <div class="col-div-4-1">
+        <div class="box-1">
+          <div class="content-box-1">
+            <p class="head-1">Overview</p>
+            <br />
+            <div class="m-box active">
+              <p>Member Profit<br /><span class="no-1">Last Months</span></p>
+              <span class="no">+2343</span>
+            </div>
+
+            <div class="m-box">
+              <p>Member Profit<br /><span class="no-1">Last Months</span></p>
+              <span class="no">+2343</span>
+            </div>
+
+            <div class="m-box">
+              <p>Member Profit<br /><span class="no-1">Last Months</span></p>
+              <span class="no">+2343</span>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <!-- 
+
+      <div class="col-div-4-1">
+        <div class="box-1">
+          <div class="content-box-1">
+            <p class="head-1">Total Sale <span>View All</span></p>
+
+            <div class="circle-wrap">
+              <div class="circle">
+                <div class="mask full">
+                  <div class="fill"></div>
+                </div>
+                <div class="mask half">
+                  <div class="fill"></div>
+                </div>
+                <div class="inside-circle">70%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div class="col-div-4-1">
+        <div class="box-1">
+          <div class="content-box-1">
+            <p class="head-1">Acitivity <span>View All</span></p>
+            <br />
+            <p class="act-p">
+              <i class="fa fa-circle"></i> Lorem Ipsum is simply dummy text of
+              the printing and typesetting industry.
+            </p>
+            <p class="act-p">
+              <i class="fa fa-circle" style="color: red !important"></i> Lorem
+              Ipsum is simply dummy text of the printing and typesetting
+              industry.
+            </p>
+            <p class="act-p">
+              <i class="fa fa-circle" style="color: green !important"></i> Lorem
+              Ipsum is simply dummy text of the printing and typesetting
+              industry.
+            </p>
+            <p class="act-p">
+              <i class="fa fa-circle"></i> Lorem Ipsum is simply dummy text of
+              the printing and typesetting industry.
+            </p>
+          </div>
+        </div>
+      </div> -->
+    </div>
   </body>
 </html>
