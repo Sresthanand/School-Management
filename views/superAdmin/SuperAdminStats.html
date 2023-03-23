@@ -14,17 +14,14 @@
   </head>
 
   <body>
-
     <div class="head">
       <div class="col-div-6">
         <p class="nav">Analytics Dashboard</p>
       </div>
-
       <div class="clearfix"></div>
     </div>
-    <div id="main">
-    
 
+    <div id="main">
       <div class="clearfix"></div>
       <br />
 
@@ -67,31 +64,91 @@
 
       <div class="clearfix"></div>
       <br />
+    </div>
 
-      <!-- <div class="col-div-4-1">
-        <div class="box-1">
-          <div class="content-box-1">
-            <p class="head-1">Overview</p>
-            <br />
-            <div class="m-box active">
-              <p>Member Profit<br /><span class="no-1">Last Months</span></p>
-              <span class="no">+2343</span>
-            </div>
+    <div class="statsStyle">
+      
+      <div class="box-1">
+        <div class="content-box-1">
+          <p class="head-1">Recent Registrations</p>
+          <br />
 
-            <div class="m-box">
-              <p>Member Profit<br /><span class="no-1">Last Months</span></p>
-              <span class="no">+2343</span>
-            </div>
+          <div class="m-box active">
+            <p>
+              {{latestSchoolName}}<br /><span class="no-1"
+                >{{latestSchoolCreatedAt | date:'h:mm a'}}</span
+              >
+            </p>
+            <span class="no">{{latestSchoolCreatedAt | date:'MMM d, y'}}</span>
+          </div>
 
-            <div class="m-box">
-              <p>Member Profit<br /><span class="no-1">Last Months</span></p>
-              <span class="no">+2343</span>
-            </div>
+          <div class="m-box">
+            <p>
+              {{latestBranchschoolName}} {{latestBranchLocation}}<br />
+              <span class="no-1"
+                >{{latestBranchCreatedAt | date:'h:mm a'}}</span
+              >
+            </p>
+            <span class="no">{{latestBranchCreatedAt | date:'MMM d, y'}}</span>
+          </div>
+
+          <div class="m-box active">
+            <p>
+              {{latesCoordinatorName}}<br /><span class="no-1"
+                >{{latestCoordinatorCreatedAt | date:'h:mm a'}}</span
+              >
+            </p>
+            <span class="no"
+              >{{latestCoordinatorCreatedAt | date:'MMM d, y'}}</span
+            >
+          </div>
+
+          <div class="m-box">
+            <p>
+              {{latestStudentName}}<br /><span class="no-1"
+                >{{latestStudentCreatedAt | date:'h:mm a'}}</span
+              >
+            </p>
+            <span class="no">{{latestStudentCreatedAt | date:'MMM d, y'}}</span>
           </div>
         </div>
-      </div> -->
-      <!-- 
+      </div>
 
+      <div class="pie" ng-controller="lineChart">
+        <canvas
+          id="pie"
+          class="chart chart-pie"
+          chart-data="data"
+          chart-labels="labels"
+          chart-options="options"
+          chart-colors="colors"
+        >
+        </canvas>
+        <span>
+          <div style="margin-left: 80px; margin-top: 20px">
+            Count of Active and Inactive Schools
+          </div>
+        </span>
+      </div>
+
+      <div class="pie" ng-controller="chartController">
+        <canvas
+          id="line"
+          class="chart chart-line"
+          chart-data="data"
+          chart-labels="labels"
+          chart-series="series"
+          chart-options="options"
+          chart-colors="colors"
+        ></canvas>
+        <span>
+          <div style="margin-left: 100px; margin-top: 20px">
+            School Registrations
+          </div>
+        </span>
+      </div>
+    </div>
+    <!--     
       <div class="col-div-4-1">
         <div class="box-1">
           <div class="content-box-1">
@@ -112,7 +169,7 @@
         </div>
       </div> -->
 
-      <!-- <div class="col-div-4-1">
+    <!-- <div class="col-div-4-1">
         <div class="box-1">
           <div class="content-box-1">
             <p class="head-1">Acitivity <span>View All</span></p>
@@ -138,6 +195,5 @@
           </div>
         </div>
       </div> -->
-    </div>
   </body>
 </html>

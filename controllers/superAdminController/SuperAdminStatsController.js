@@ -20,6 +20,8 @@ mySchoolApp.controller(
       $state.go("login");
     };
 
+    //total registrations
+
     $http({
       method: "GET",
       url: "http://localhost:5000/api/superadmin/total",
@@ -37,6 +39,40 @@ mySchoolApp.controller(
         $scope.totalCoordinators = response.data.totalCoordinators;
 
         $scope.totalStudents = response.data.totalStudents;
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+
+    //latest registrations
+
+    $http({
+      method: "GET",
+      url: "http://localhost:5000/api/superadmin/latest",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then(function (response) {
+        // console.log("Hi i am from get latest front end");
+        console.log(response);
+
+        $scope.latestBranchCreatedAt = response.data.latestBranch[0].createdAt;
+        $scope.latestBranchLocation = response.data.latestBranch[0].location;
+        $scope.latestBranchschoolName =
+          response.data.latestBranch[0].schoolName;
+
+        $scope.latestCoordinatorCreatedAt =
+          response.data.latestCoordinator[0].createdAt;
+        $scope.latesCoordinatorName = response.data.latestCoordinator[0].name;
+
+        $scope.latestSchoolCreatedAt = response.data.latestSchool[0].createdAt;
+        $scope.latestSchoolName = response.data.latestSchool[0].name;
+
+        $scope.latestStudentCreatedAt =
+          response.data.latestStudent[0].createdAt;
+        $scope.latestStudentName = response.data.latestStudent[0].name;
       })
       .catch(function (err) {
         console.log(err);

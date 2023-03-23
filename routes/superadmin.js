@@ -198,14 +198,14 @@ router.put(
   }
 );
 
-// Define API endpoint
+//STATS ROUTES
 router.get(
   "/total",
   authenticateRequest,
   checkUserRole(["super-admin"]),
   function (req, res) {
     var schoolCount, branchCount, coordinatorCount, studentCount;
-    
+
     SchoolModel.aggregate(
       [
         {
@@ -271,6 +271,173 @@ router.get(
   }
 );
 
-module.exports = router;
+router.get(
+  "/latest",
+  authenticateRequest,
+  checkUserRole(["super-admin"]),
+  function (req, res) {
+    var latestSchool, latestBranch, latestCoordinator, latestStudent;
+    SchoolModel.aggregate(
+      [
+        { $sort: { createdAt: -1 } },
+        { $group: { _id: null, latest: { $first: "$$ROOT" } } },
+        {
+          $project: {
+            _id: 0,
+            name: "$latest.name",
+            createdAt: "$latest.createdAt",
+          },
+        },
+      ],
+      function (err, result) {
+        if (err) throw err;
+        latestSchool = result;
+        BranchModel.aggregate(
+          [
+            { $sort: { createdAt: -1 } },
+            { $group: { _id: null, latest: { $first: "$$ROOT" } } },
+            {
+              $project: {
+                _id: 0,
+                location: "$latest.location",
+                schoolName: "$latest.school.name",
+                createdAt: "$latest.createdAt",
+              },
+            },
+          ],
+          function (err, result) {
+            if (err) throw err;
+            latestBranch = result;
+            CoordinatorModel.aggregate(
+              [
+                { $sort: { createdAt: -1 } },
+                { $group: { _id: null, latest: { $first: "$$ROOT" } } },
+                {
+                  $project: {
+                    _id: 0,
+                    name: "$latest.name",
+                    schoolName: "$latest.school.name",
+                    branchLocation: "$latest.branch.location",
+                    createdAt: "$latest.createdAt",
+                  },
+                },
+              ],
+              function (err, result) {
+                if (err) throw err;
+                latestCoordinator = result;
+                StudentModel.aggregate(
+                  [
+                    { $sort: { createdAt: -1 } },
+                    { $group: { _id: null, latest: { $first: "$$ROOT" } } },
+                    {
+                      $project: {
+                        _id: 0,
+                        name: "$latest.name",
+                        schoolName: "$latest.school.name",
+                        branchLocation: "$latest.branch.location",
+                        coordinatorName: "$latest.coordinator.name",
+                        createdAt: "$latest.createdAt",
+                      },
+                    },
+                  ],
+                  function (err, result) {
+                    if (err) throw err;
+                    latestStudent = result;
+                    res.json({
+                      latestSchool: latestSchool,
+                      latestBranch: latestBranch,
+                      latestCoordinator: latestCoordinator,
+                      latestStudent: latestStudent,
+                    });
+                  }
+                );
+              }
+            );
+          }
+        );
+      }
+    );
+  }
+);
 
-//now here also with total number of scools return total nuymber of branches , total number of coordinators, total numbe of students, i have imported there models already
+router.get(
+  "/activeInactiveSchools",
+  authenticateRequest,
+  checkUserRole(["super-admin"]),
+  function (req, res) {
+    var activeCount, inactiveCount;
+    SchoolModel.aggregate(
+      [
+        {
+          $group: {
+            _id: "$isDelete",
+            count: { $sum: 1 },
+          },
+        },
+      ],
+      function (err, result) {
+        if (err) throw err;
+        result.forEach((item) => {
+          if (item._id === "false") {
+            activeCount = item.count;
+          } else if (item._id === "true") {
+            inactiveCount = item.count;
+          }
+        });
+        res.json({
+          activeSchools: activeCount,
+          inactiveSchools: inactiveCount,
+        });
+      }
+    );
+  }
+);
+
+router.get(
+  "/schoolRegistrationsOverPeriodOfTime",
+  authenticateRequest,
+  checkUserRole(["super-admin"]),
+  function (req, res) {
+    var startDate = new Date("2023-02-01T00:00:00.000Z"); // start of time period
+    var endDate = new Date(); // end of time period (current date)
+
+    SchoolModel.aggregate(
+      [
+        {
+          $match: {
+            createdAt: {
+              $gte: startDate,
+              $lte: endDate,
+            },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $sort: { _id: 1 },
+        },
+      ],
+      function (err, result) {
+        if (err) throw err;
+        var dates = [],
+          counts = [];
+        result.forEach((item) => {
+          dates.push(item._id);
+          counts.push(item.count);
+        });
+        res.json({
+          dates: dates,
+          counts: counts,
+        });
+      }
+    );
+  }
+);
+
+module.exports = router;

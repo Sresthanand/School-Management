@@ -8,11 +8,12 @@
       href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet"
-    href="css\superAdminStyleSheet\SchoolRegisterForm.css"/> 
-    <link rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / >
-
-    <link rel="stylesheet" href="css\schoolStyleSheet\schoolDashboard.css"/ >
+    <link
+      rel="stylesheet"
+      href="css\superAdminStyleSheet\SchoolRegisterForm.css"
+    />
+    <link rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / > <link
+    rel="stylesheet" href="css\schoolStyleSheet\schoolDashboard.css"/ >
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
@@ -34,8 +35,6 @@
         opacity: 1;
       }
 
-
-      
       .loader {
         border: 16px solid #f3f3f3;
         border-top: 16px solid #3498db;
@@ -72,7 +71,6 @@
         align-items: center;
         justify-content: center;
       }
-
     </style>
   </head>
   <body>
@@ -110,14 +108,25 @@
           </a>
           <span class="tooltip">My Branches</span>
         </li>
+
+        <li>
+          <a ui-sref="SchoolDashboard.stats">
+            <i class="bx bx-pie-chart-alt-2"></i>
+            <span class="links_name">Analytics</span>
+          </a>
+          <span class="tooltip">Analytics</span>
+        </li>
       </ul>
     </div>
 
     <ui-view ng-show="currentRoute === 'SchoolDashboard.branches'"></ui-view>
+    
+    <ui-view ng-show="currentRoute === 'SchoolDashboard.stats'"></ui-view>
+
 
     <section
       class="home-section"
-      ng-hide="currentRoute === 'SchoolDashboard.branches'"
+      ng-hide="currentRoute === 'SchoolDashboard.branches' || currentRoute ==='SchoolDashboard.stats' "
     >
       <div class="text">Please Register Your Branch!</div>
 
@@ -214,13 +223,13 @@
                     <i class="fa-solid fa-image"></i>
                   </span>
                   <input
-                  type="file"
-                  name="file"
-                  class="fileInput"
-                  file-model="file"
-                  accept=".png, .jpeg, .jpg, .svg"
-                  id="file"
-                  required                  
+                    type="file"
+                    name="file"
+                    class="fileInput"
+                    file-model="file"
+                    accept=".png, .jpeg, .jpg, .svg"
+                    id="file"
+                    required
                   />
                 </div>
               </div>

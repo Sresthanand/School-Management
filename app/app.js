@@ -2,6 +2,7 @@ var mySchoolApp = angular.module("mySchoolApp", [
   "ui.router",
   "angular-jwt",
   "ng-file-model",
+  "chart.js",
 ]);
 
 mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
@@ -98,6 +99,26 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     url: "/mybranches",
     templateUrl: "views/school/mybranches.html",
     controller: "BranchesController",
+    resolve: {
+      auth: function ($q, $state, jwtHelper) {
+        var token = localStorage.getItem("token");
+        if (token) {
+          var payload = jwtHelper.decodeToken(token);
+          if (payload.role === "school") {
+            return $q.when();
+          }
+        }
+        return $q.reject("Not Authorized");
+      },
+    },
+  });
+
+  // Define the nested state 2 for schools
+  $stateProvider.state("SchoolDashboard.stats", {
+    //done //factories and servicecs later*
+    url: "/stats",
+    templateUrl: "views/school/schoolDashboardStats.html",
+    controller: "schoolDashboardStatsController",
     resolve: {
       auth: function ($q, $state, jwtHelper) {
         var token = localStorage.getItem("token");
@@ -230,7 +251,7 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
       },
     },
   });
-   
+
   // Define the nested state 4 for coordinators
   $stateProvider.state("Coordinator.studentMarks", {
     //done //factories and servicecs later*
@@ -251,25 +272,25 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     },
   });
 
-    // Define the nested state 4 for coordinators
-    $stateProvider.state("Coordinator.studentAttendance", {
-      //done //factories and servicecs later*
-      url: "/studentAttendance",
-      templateUrl: "views/coordinators/StudentAttendance.html",
-      controller: "AttendanceController",
-      resolve: {
-        auth: function ($q, $state, jwtHelper) {
-          var token = localStorage.getItem("token");
-          if (token) {
-            var payload = jwtHelper.decodeToken(token);
-            if (payload.role === "coordinator") {
-              return $q.when();
-            }
+  // Define the nested state 4 for coordinators
+  $stateProvider.state("Coordinator.studentAttendance", {
+    //done //factories and servicecs later*
+    url: "/studentAttendance",
+    templateUrl: "views/coordinators/StudentAttendance.html",
+    controller: "AttendanceController",
+    resolve: {
+      auth: function ($q, $state, jwtHelper) {
+        var token = localStorage.getItem("token");
+        if (token) {
+          var payload = jwtHelper.decodeToken(token);
+          if (payload.role === "coordinator") {
+            return $q.when();
           }
-          return $q.reject("Not Authorized");
-        },
+        }
+        return $q.reject("Not Authorized");
       },
-    });
+    },
+  });
 
   $stateProvider.state("StudentDashBoard", {
     //done

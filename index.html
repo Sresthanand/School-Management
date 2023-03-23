@@ -37,10 +37,13 @@
     <!-- superAdmin Controller -->
     <script src="controllers/superAdminController/superAdminDashboardController.js"></script>
     <script src="controllers/superAdminController/SuperAdminStatsController.js"></script>
+
     <!-- my school controller -->
     <script src="controllers/schoolController/myschoolsController.js"></script>
     <!-- school dashboard controller -->
     <script src="controllers/schoolDashboardController/schoolDashboardController.js"></script>
+    <!-- school dashboard stats controller -->
+    <script src="controllers/schoolDashboardStatsController/schoolDashboardStatsController.js"></script>
     <!-- school branch controller -->
     <script src="controllers/branchController/BranchesController.js"></script>
     <!-- coordinator dashboard controller -->
@@ -90,6 +93,20 @@
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossorigin="anonymous"
     />
+
+    <!------------------------------- Chart Js CDN ---------------------------->
+    <script src="node_modules/chart.js/dist/Chart.min.js"></script>
+    <script src="node_modules/angular-chart.js/dist/angular-chart.min.js"></script>
+
+    <!------------------------------- Chart Js Controllers ---------------------------->
+    <script src="controllers/superAdminController/linechartcontroller.js"></script>
+    <script src="controllers/superAdminController/chartController.js"></script>
+
+    <script src="controllers/schoolDashboardStatsController/BranchStatsActiveInactiveController.js"></script>
+    <script src="controllers/schoolDashboardStatsController/RegionWiseStatsController.js"></script>
+
+    <script src="controllers/schoolDashboardStatsController/BranchesRegistrationOverPeriodOfTimeController.js"></script>
+
   </head>
   <body>
     <div>
@@ -101,20 +118,6 @@
       window.location.href = "/#!/login";
     </script>
 
-    <!-- <script>
-      window.addEventListener("hashchange", function () {
-        localStorage.setItem("currentRoute", window.location.hash);
-      });
-      window.addEventListener("load", function () {
-        var currentRoute = localStorage.getItem("currentRoute");
-
-        if (currentRoute) {
-          window.location.hash = currentRoute;
-        } else {
-          window.location.hash = "/#!/login";
-        }
-      });
-    </script> -->
     <!------------------------------- Bootrstrap JavaScript ---------------------------->
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"

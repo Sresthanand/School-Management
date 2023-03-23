@@ -183,4 +183,220 @@ router.put(
   }
 );
 
+//Stats Route
+
+router.get(
+  "/branchesCount",
+  authenticateRequest,
+  checkUserRole(["school"]),
+  function (req, res) {
+    const userId = req.user.id;
+
+    SchoolModel.findOne({ "userId.id": userId }, { _id: 1 }).exec(function (
+      err,
+      school
+    ) {
+      if (err) throw err;
+      if (!school) {
+        return res.status(404).json({ message: "School not found" });
+      }
+      const schoolId = school._id;
+      BranchModel.aggregate(
+        [
+          { $match: { "school.id": schoolId, isDelete: "false" } },
+          {
+            $group: {
+              _id: "$school.id",
+              count: { $sum: 1 },
+            },
+          },
+        ],
+        function (err, result) {
+          if (err) throw err;
+          const count = result.length > 0 ? result[0].count : 0;
+          res.json({ count: count });
+        }
+      );
+    });
+  }
+);
+
+router.get(
+  "/branchLocationCount",
+  authenticateRequest,
+  checkUserRole(["school"]),
+  function (req, res) {
+    const userId = req.user.id;
+
+    SchoolModel.findOne({ "userId.id": userId }, { _id: 1 }).exec(function (
+      err,
+      school
+    ) {
+      if (err) throw err;
+      if (!school) {
+        return res.status(404).json({ message: "School not found" });
+      }
+      const schoolId = school._id;
+
+      BranchModel.aggregate([
+        {
+          $match: {
+            "school.id": schoolId,
+            isDelete: "false",
+          },
+        },
+        {
+          $group: {
+            _id: "$location",
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            location: "$_id",
+            count: 1,
+          },
+        },
+      ]).exec(function (err, branches) {
+        if (err) throw err;
+
+        const locations = branches.map((branch) => branch.location);
+        const counts = branches.map((branch) => branch.count);
+
+        return res.status(200).json({ locations, counts });
+      });
+    });
+  }
+);
+
+router.get(
+  "/activeInactivebranches",
+  authenticateRequest,
+  checkUserRole(["school"]),
+  function (req, res) {
+    const userId = req.user.id;
+
+    SchoolModel.findOne(
+      { "userId.id": userId },
+      { _id: 1 },
+      function (err, school) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: "Internal server error" });
+        }
+        if (!school) {
+          return res.status(404).json({ message: "School not found" });
+        }
+        const schoolId = school._id;
+
+        console.log("schoolId" + schoolId);
+
+        BranchModel.aggregate(
+          [
+            {
+              $match: { "school.id": schoolId },
+            },
+            {
+              $group: {
+                _id: "$isDelete",
+                count: { $sum: 1 },
+              },
+            },
+          ],
+          function (err, result) {
+            if (err) {
+              console.error(err);
+              return res.status(500).json({ message: "Internal server error" });
+            }
+
+            let activeBranchCount = 0;
+            let inactiveBranchCount = 0;
+
+            result.forEach((item) => {
+              if (item._id === "false") {
+                activeBranchCount = item.count;
+              } else if (item._id === "true") {
+                inactiveBranchCount = item.count;
+              }
+            });
+
+            return res.json({ activeBranchCount, inactiveBranchCount });
+          }
+        );
+      }
+    );
+  }
+);
+
+router.get(
+  "/branchRegistrationsOverPeriodOfTime",
+  authenticateRequest,
+  checkUserRole(["school"]),
+  function (req, res) {
+    var startDate = new Date("2023-02-01T00:00:00.000Z"); // start of time period
+    var endDate = new Date(); // end of time period (current date)
+
+    const userId = req.user.id;
+
+    SchoolModel.findOne(
+      { "userId.id": userId },
+      { _id: 1 },
+      function (err, school) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: "Internal server error" });
+        }
+        if (!school) {
+          return res.status(404).json({ message: "School not found" });
+        }
+        const schoolId = school._id;
+
+        console.log("schoolId" + schoolId);
+
+        BranchModel.aggregate(
+          [
+            {
+              $match: {
+                "school.id": schoolId,
+                createdAt: {
+                  $gte: startDate,
+                  $lte: endDate,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+                },
+                count: { $sum: 1 },
+              },
+            },
+            {
+              $sort: { _id: 1 },
+            },
+          ],
+          function (err, result) {
+            if (err) {
+              console.error(err);
+              return res.status(500).json({ message: "Internal server error" });
+            }
+            var dates = [],
+              counts = [];
+            result.forEach((item) => {
+              dates.push(item._id);
+              counts.push(item.count);
+            });
+            res.json({
+              dates: dates,
+              counts: counts,
+            });
+          }
+        );
+      }
+    );
+  }
+);
+
 module.exports = router;

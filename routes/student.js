@@ -18,6 +18,13 @@ const { AttendanceModel } = require("../models/attendance");
 const job = new CronJob("0 0 * * *", markAttendance); //every mid night
 job.start();
 
+const options = {
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+  timeZone: "Asia/Kolkata",
+};
+
 const {
   authenticateRequest,
   checkUserRole,
@@ -273,8 +280,12 @@ router.put("/markAttendance/:id", (req, res) => {
   console.log("hi i am from mark attendance");
 
   console.log("StudentId " + studentId);
+  //const currentDate = new Date().toISOString().split("T")[0];
+  const currentDate = new Date().toLocaleDateString("en-US");
+  console.log(currentDate);
 
-  const currentDate = new Date().toISOString().split("T")[0];
+  //const currentDate = new Date().toLocaleString("en-IN", options);
+  // console.log(currentDate);
 
   AttendanceModel.findOne(
     { "student.id": studentId, createdAt: { $gte: currentDate } },
@@ -284,12 +295,16 @@ router.put("/markAttendance/:id", (req, res) => {
         return res.status(500).send("Internal Server Error");
       }
 
+      console.log("Attendance" + attendance);
+
       if (!attendance) {
         return res.status(404).send("Attendance Not Found");
       }
 
       if (attendance.status === "present") {
-        console.log("i will run my attendance has already been marked for the day")
+        console.log(
+          "i will run my attendance has already been marked for the day"
+        );
         return res.status(400).send("Attendance already marked for today");
       }
 
