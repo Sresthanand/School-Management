@@ -127,7 +127,7 @@ router.get(
         console.log(branchId);
 
         CoordinatorModel.find(
-          { "branch.id": branchId, isDelete: false },
+          { "branch.id": branchId, isDelete: "false" }, //changed "false"
           {
             name: 1,
             image: 1,
@@ -207,6 +207,195 @@ router.put(
           error: err,
         });
       });
+  }
+);
+
+//Stats Controller
+
+router.get(
+  "/coordinatorsCount",
+  authenticateRequest,
+  checkUserRole(["branch"]),
+  function (req, res) {
+    const userId = req.user.id;
+
+    BranchModel.findOne({ "userId.id": userId }, function (err, branch) {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!branch) {
+        console.log("No branch found for this user");
+        res.send({
+          success: false,
+          message: "No branch found for this user",
+        });
+      } else {
+        const branchId = branch._id;
+        console.log(branch);
+        console.log(branchId);
+
+        CoordinatorModel.aggregate(
+          [
+            { $match: { "branch.id": branchId, isDelete: "false" } },
+            {
+              $group: {
+                _id: "$branch.id",
+                count: { $sum: 1 },
+              },
+            },
+          ],
+          function (err, result) {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else {
+              const count = result.length > 0 ? result[0].count : 0;
+              res.json({ count: count });
+            }
+          }
+        );
+      }
+    });
+  }
+);
+
+router.get(
+  "/coordinatorInactiveActiveCount",
+  authenticateRequest,
+  checkUserRole(["branch"]),
+  function (req, res) {
+    const userId = req.user.id;
+
+    BranchModel.findOne({ "userId.id": userId }, function (err, branch) {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!branch) {
+        console.log("No branch found for this user");
+        res.send({
+          success: false,
+          message: "No branch found for this user",
+        });
+      } else {
+        const branchId = branch._id;
+        console.log(branch);
+        console.log(branchId);
+
+        CoordinatorModel.aggregate([
+          { $match: { "branch.id": branchId } },
+          {
+            $group: {
+              _id: "$isDelete",
+              count: { $sum: 1 },
+            },
+          },
+        ]).exec(function (err, result) {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ message: "Internal server error" });
+          }
+
+          let activeCoordinatorCount = 0;
+          let inactiveCoordinatorCount = 0;
+
+          result.forEach((item) => {
+            if (item._id === "false") {
+              activeCoordinatorCount = item.count;
+            } else if (item._id === "true") {
+              inactiveCoordinatorCount = item.count;
+            }
+          });
+
+          return res.json({ activeCoordinatorCount, inactiveCoordinatorCount });
+        });
+      }
+    });
+  }
+);
+
+router.get(
+  "/coordinatorsRegisteredOverPeriodOfTime",
+  authenticateRequest,
+  checkUserRole(["branch"]),
+  function (req, res) {
+
+    const userId = req.user.id;
+    const startDate = new Date("2023-02-01T00:00:00.000Z"); // start of time period
+    const endDate = new Date(); // end of time period (current date)
+
+    BranchModel.findOne({ "userId.id": userId }, function (err, branch) {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!branch) {
+        console.log("No branch found for this user");
+        res.send({
+          success: false,
+          message: "No branch found for this user",
+        });
+      } else {
+        const branchId = branch._id;
+        console.log(branch);
+        console.log(branchId);
+
+        CoordinatorModel.aggregate(
+          [
+            {
+              $match: {
+                "branch.id": branchId,
+                createdAt: {
+                  $gte: startDate,
+                  $lte: endDate,
+                },
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+                },
+                count: { $sum: 1 },
+              },
+            },
+            {
+              $sort: { _id: 1 },
+            },
+          ],
+          function (err, result) {
+            if (err) {
+              console.error(err);
+              return res.status(500).json({ message: "Internal server error" });
+            }
+            var dates = [],
+              counts = [];
+            result.forEach((item) => {
+              dates.push(item._id);
+              counts.push(item.count);
+            });
+            res.json({
+              dates: dates,
+              counts: counts,
+            });
+          }
+        );
+      }
+    });
   }
 );
 

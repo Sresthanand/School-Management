@@ -596,4 +596,551 @@ router.get(
   }
 );
 
+//Coordinator Stats
+
+router.get(
+  "/totalStudents",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const coordinatorId = req.user.id;
+
+    CoordinatorModel.findOne(
+      { "userId.id": coordinatorId },
+      (err, coordinator) => {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else if (!coordinator) {
+          console.log("No coordinator found for this user");
+          res.send({
+            success: false,
+            message: "No coordinator found for this user",
+          });
+        } else {
+          StudentModel.aggregate([
+            {
+              $match: {
+                $and: [
+                  { "coordinator.id": coordinator._id },
+                  { isDelete: "false" },
+                ],
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                count: { $sum: 1 },
+              },
+            },
+          ]).exec((err, result) => {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else {
+              const count = result.length > 0 ? result[0].count : 0;
+              res.send({
+                success: true,
+                message: "Total students found",
+                count: count,
+              });
+            }
+          });
+        }
+      }
+    );
+  }
+);
+
+router.get(
+  "/topmarkscored",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const coordinatorId = req.user.id;
+
+    CoordinatorModel.findOne(
+      { "userId.id": coordinatorId },
+      (err, coordinator) => {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else if (!coordinator) {
+          console.log("No coordinator found for this user");
+          res.send({
+            success: false,
+            message: "No coordinator found for this user",
+          });
+        } else {
+          MarksModel.aggregate([
+            {
+              $match: {
+                "coordinator.id": coordinator._id,
+              },
+            },
+            {
+              $addFields: {
+                totalMarks: {
+                  $sum: [
+                    "$subject1.totalMarks",
+                    "$subject2.totalMarks",
+                    "$subject3.totalMarks",
+                    "$subject4.totalMarks",
+                    "$subject5.totalMarks",
+                  ],
+                },
+                obtainedMarks: {
+                  $sum: [
+                    "$subject1.marksObtained",
+                    "$subject2.marksObtained",
+                    "$subject3.marksObtained",
+                    "$subject4.marksObtained",
+                    "$subject5.marksObtained",
+                  ],
+                },
+                studentName: "$student.name",
+              },
+            },
+            {
+              $addFields: {
+                percentage: {
+                  $multiply: [
+                    { $divide: ["$obtainedMarks", "$totalMarks"] },
+                    100,
+                  ],
+                },
+              },
+            },
+            {
+              $sort: {
+                percentage: -1,
+              },
+            },
+            {
+              $limit: 5,
+            },
+            {
+              $project: {
+                _id: 0,
+                name: "$studentName",
+                percentage: {
+                  $round: ["$percentage", 2],
+                },
+              },
+            },
+          ]).exec((err, topStudents) => {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else {
+              res.send({
+                success: true,
+                message: "Top 5 students retrieved successfully",
+                data: topStudents,
+              });
+            }
+          });
+        }
+      }
+    );
+  }
+);
+
+router.get(
+  "/genderCount",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const coordinatorId = req.user.id;
+
+    CoordinatorModel.findOne(
+      { "userId.id": coordinatorId },
+      (err, coordinator) => {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else if (!coordinator) {
+          console.log("No coordinator found for this user");
+          res.send({
+            success: false,
+            message: "No coordinator found for this user",
+          });
+        } else {
+          StudentModel.aggregate([
+            {
+              $match: {
+                $and: [
+                  { "coordinator.id": coordinator._id },
+                  { isDelete: "false" },
+                ],
+              },
+            },
+            {
+              $group: {
+                _id: "$gender",
+                count: { $sum: 1 },
+              },
+            },
+          ]).exec((err, result) => {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else {
+              let countArr = [0, 0];
+              result.forEach((item) => {
+                if (item._id === "Male") {
+                  countArr[0] = item.count;
+                } else if (item._id === "Female") {
+                  countArr[1] = item.count;
+                }
+              });
+              res.send({
+                success: true,
+                message: "Gender count retrieved successfully",
+                countArr: countArr,
+              });
+            }
+          });
+        }
+      }
+    );
+  }
+);
+
+router.get(
+  "/classWiseCount",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const coordinatorId = req.user.id;
+
+    CoordinatorModel.findOne(
+      { "userId.id": coordinatorId },
+      (err, coordinator) => {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else if (!coordinator) {
+          console.log("No coordinator found for this user");
+          res.send({
+            success: false,
+            message: "No coordinator found for this user",
+          });
+        } else {
+          StudentModel.aggregate([
+            {
+              $match: {
+                $and: [
+                  { "coordinator.id": coordinator._id },
+                  { isDelete: "false" },
+                ],
+              },
+            },
+            {
+              $group: {
+                _id: { $toInt: "$class" },
+                count: { $sum: 1 },
+              },
+            },
+          ]).exec((err, students) => {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else {
+              const countOfStudents = new Array(12).fill(0);
+              students.forEach((student) => {
+                countOfStudents[student._id - 1] = student.count;
+              });
+              res.send({
+                success: true,
+                message: "Count of students by class",
+                countOfStudents,
+              });
+            }
+          });
+        }
+      }
+    );
+  }
+);
+
+router.get(
+  "/studnetsActiveInactiveCount",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const coordinatorId = req.user.id;
+
+    CoordinatorModel.findOne(
+      { "userId.id": coordinatorId },
+      (err, coordinator) => {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else if (!coordinator) {
+          console.log("No coordinator found for this user");
+          res.send({
+            success: false,
+            message: "No coordinator found for this user",
+          });
+        } else {
+          StudentModel.aggregate(
+            [
+              {
+                $match: {
+                  $and: [{ "coordinator.id": coordinator._id }],
+                },
+              },
+              {
+                $group: {
+                  _id: "$isDelete",
+                  count: { $sum: 1 },
+                },
+              },
+            ],
+            function (err, result) {
+              if (err) {
+                console.error(err);
+                return res
+                  .status(500)
+                  .json({ message: "Internal server error" });
+              }
+
+              let activeStudentsCount = 0;
+              let inActiveStudentsCount = 0;
+
+              result.forEach((item) => {
+                if (item._id === "false") {
+                  activeStudentsCount = item.count;
+                } else if (item._id === "true") {
+                  inActiveStudentsCount = item.count;
+                }
+              });
+
+              return res.json({ activeStudentsCount, inActiveStudentsCount });
+            }
+          );
+        }
+      }
+    );
+  }
+);
+
+router.get(
+  "/studentsRegistrationsOverPeriodOfTime",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  function (req, res) {
+    var startDate = new Date("2023-02-01T00:00:00.000Z"); // start of time period
+    var endDate = new Date(); // end of time period (current date)
+
+    const coordinatorId = req.user.id;
+
+    CoordinatorModel.findOne(
+      { "userId.id": coordinatorId },
+      function (err, coordinator) {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else if (!coordinator) {
+          console.log("No coordinator found for this user");
+          res.send({
+            success: false,
+            message: "No coordinator found for this user",
+          });
+        } else {
+          StudentModel.aggregate(
+            [
+              {
+                $match: {
+                  $and: [
+                    { "coordinator.id": coordinator._id },
+                    { createdAt: { $gte: startDate, $lte: endDate } },
+                  ],
+                },
+              },
+              {
+                $group: {
+                  _id: {
+                    $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+                  },
+                  count: { $sum: 1 },
+                },
+              },
+              {
+                $sort: { _id: 1 },
+              },
+            ],
+            function (err, result) {
+              if (err) {
+                console.error(err);
+                return res
+                  .status(500)
+                  .json({ message: "Internal server error" });
+              }
+              var dates = [],
+                counts = [];
+              result.forEach(function (item) {
+                dates.push(item._id);
+                counts.push(item.count);
+              });
+              res.json({
+                dates: dates,
+                counts: counts,
+              });
+            }
+          );
+        }
+      }
+    );
+  }
+);
+
+router.get(
+  "/attendanceCount",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  function (req, res) {
+    const coordinatorId = req.user.id;
+
+    CoordinatorModel.findOne(
+      { "userId.id": coordinatorId },
+      function (err, coordinator) {
+        if (err) {
+          console.log(err);
+          res.send({
+            success: false,
+            message: "Something went wrong",
+            error: err,
+          });
+        } else if (!coordinator) {
+          console.log("No coordinator found for this user");
+          res.send({
+            success: false,
+            message: "No coordinator found for this user",
+          });
+        } else {
+          AttendanceModel.aggregate(
+            [
+              { $match: { "coordinator.id": coordinator._id } },
+              {
+                $project: {
+                  createdAt: {
+                    $dateToString: {
+                      date: {
+                        $add: ["$createdAt", 19800000],
+                      },
+                      format: "%Y-%m-%d",
+                      timezone: "+05:30",
+                    },
+                  },
+                  status: 1,
+                },
+              },
+              {
+                $group: {
+                  _id: {
+                    date: "$createdAt",
+                  },
+                  present: {
+                    $sum: {
+                      $cond: {
+                        if: { $eq: ["$status", "present"] },
+                        then: 1,
+                        else: 0,
+                      },
+                    },
+                  },
+                  absent: {
+                    $sum: {
+                      $cond: {
+                        if: { $eq: ["$status", "absent"] },
+                        then: 1,
+                        else: 0,
+                      },
+                    },
+                  },
+                },
+              },
+              { $sort: { "_id.date": 1 } },
+            ],
+            function (err, result) {
+              if (err) {
+                console.log(err);
+                res.send({
+                  success: false,
+                  message: "Something went wrong",
+                  error: err,
+                });
+              } else {
+                let dates = [];
+                let presentAttendanceCounts = [];
+                let absentAttendanceCounts = [];
+
+                result.forEach(function (attendance) {
+                  dates.push(attendance._id.date);
+                  presentAttendanceCounts.push(attendance.present);
+                  absentAttendanceCounts.push(attendance.absent);
+                });
+
+                const attendanceCounts = [
+                  presentAttendanceCounts,
+                  absentAttendanceCounts,
+                ];
+
+                res.send({
+                  success: true,
+                  message: "Attendance counts retrieved successfully",
+                  attendanceCounts: attendanceCounts,
+                  dates: dates,
+                });
+              }
+            }
+          );
+        }
+      }
+    );
+  }
+);
+
 module.exports = router;

@@ -173,6 +173,26 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     },
   });
 
+  // Define the nested state 2 for bracnhes
+  $stateProvider.state("SchoolBranchDashboard.stats", {
+    //done //factories and servicecs later*
+    url: "/stats",
+    templateUrl: "views/branch/SchoolBranchStats.html",
+    controller: "SchoolBranchStatsController",
+    resolve: {
+      auth: function ($q, $state, jwtHelper) {
+        var token = localStorage.getItem("token");
+        if (token) {
+          var payload = jwtHelper.decodeToken(token);
+          if (payload.role === "branch") {
+            return $q.when();
+          }
+        }
+        return $q.reject("Not Authorized");
+      },
+    },
+  });
+
   $stateProvider.state("Coordinator", {
     //done //factories and servicecs later*
     url: "/coordinatorDashboard",
@@ -278,6 +298,26 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     url: "/studentAttendance",
     templateUrl: "views/coordinators/StudentAttendance.html",
     controller: "AttendanceController",
+    resolve: {
+      auth: function ($q, $state, jwtHelper) {
+        var token = localStorage.getItem("token");
+        if (token) {
+          var payload = jwtHelper.decodeToken(token);
+          if (payload.role === "coordinator") {
+            return $q.when();
+          }
+        }
+        return $q.reject("Not Authorized");
+      },
+    },
+  });
+
+  // Define the nested state 4 for coordinators
+  $stateProvider.state("Coordinator.analytics", {
+    //done //factories and servicecs later*
+    url: "/stats",
+    templateUrl: "views/coordinators/CoordinatorStats.html",
+    controller: "CoordinatorStatsController",
     resolve: {
       auth: function ($q, $state, jwtHelper) {
         var token = localStorage.getItem("token");

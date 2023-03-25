@@ -9,11 +9,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet"
-    href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > 
-   
-    <link rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / >
-
-    <link rel="stylesheet" href="css\branchStyleSheet\branchDashboard.css"/ >
+    href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > <link
+    rel="stylesheet" href="css\superAdminStyleSheet\NavBar.css" / > <link
+    rel="stylesheet" href="css\branchStyleSheet\branchDashboard.css"/ >
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
@@ -107,6 +105,14 @@
           </a>
           <span class="tooltip">Coordinator's</span>
         </li>
+
+        <li>
+          <a ui-sref="SchoolBranchDashboard.stats">
+            <i class="bx bx-pie-chart-alt-2"></i>
+            <span class="links_name">Analytics</span>
+          </a>
+          <span class="tooltip">Analytics</span>
+        </li>
       </ul>
     </div>
 
@@ -114,9 +120,13 @@
       ng-show="currentRoute === 'SchoolBranchDashboard.coordinators'"
     ></ui-view>
 
+    <ui-view
+      ng-show="currentRoute === 'SchoolBranchDashboard.stats'"
+    ></ui-view>
+
     <section
       class="home-section"
-      ng-hide="currentRoute === 'SchoolBranchDashboard.coordinators'"
+      ng-hide="currentRoute === 'SchoolBranchDashboard.coordinators' || currentRoute === 'SchoolBranchDashboard.stats'"
     >
       <h1 class="text"></h1>
 

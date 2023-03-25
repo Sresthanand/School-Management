@@ -158,6 +158,14 @@
           </a>
           <span class="tooltip">Attendance</span>
         </li>
+
+        <li>
+          <a ui-sref="Coordinator.analytics">
+            <i class="bx bx-pie-chart-alt-2"></i>
+            <span class="links_name">Analytics</span>
+          </a>
+          <span class="tooltip">Analytics</span>
+        </li>
       </ul>
     </div>
 
@@ -175,9 +183,11 @@
       ng-show="currentRoute === 'Coordinator.studentAttendance'"
     ></ui-view>
 
+    <ui-view ng-show="currentRoute === 'Coordinator.analytics'"></ui-view>
+
     <section
       class="home-section"
-      ng-hide="currentRoute === 'Coordinator.students' || currentRoute==='Coordinator.studentMarks'|| currentRoute === 'Coordinator.examschedule'|| currentRoute ==='Coordinator.sendNotifications' || currentRoute ==='Coordinator.studentAttendance'"
+      ng-hide="currentRoute === 'Coordinator.students' || currentRoute==='Coordinator.studentMarks'|| currentRoute === 'Coordinator.examschedule'|| currentRoute ==='Coordinator.sendNotifications' || currentRoute ==='Coordinator.studentAttendance'|| currentRoute ==='Coordinator.analytics'"
     >
       <div class="text"></div>
 
