@@ -96,7 +96,7 @@
   color: red;
 }
 
-body{
+body {
   background-color: aliceblue;
 }
 
@@ -138,7 +138,6 @@ body{
   cursor: pointer;
   font-size: 20px;
 }
-
 
 .wrap {
   width: 50%;
@@ -183,10 +182,35 @@ body{
     0 0 8px rgba(102, 175, 233, 0.6);
 }
 
-
 .resetButton {
   background-color: #ffcccc;
   color: #8b0000;
   margin-left: 10px;
   width: 20%;
+}
+
+.paginationMain {
+  background-color: lightblue;
+  position: absolute;
+  left: 45%;
+  /* bottom: 20px; */
+  transform: translate(10px, 10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border-radius: 20px; */
+  padding: 7px;
+}
+
+.page-numbers {
+  background-color: #00b4cc;
+  margin: 0 10px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.page-numbers.active {
+  background-color: navy;
 }

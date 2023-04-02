@@ -2,9 +2,13 @@ const express = require("express");
 const router = express.Router();
 const { hashSync, compareSync } = require("bcrypt");
 
+const mongoose = require("mongoose");
+
 const { UserModel } = require("../models/user");
 const { SchoolModel } = require("../models/school");
 const { BranchModel } = require("../models/branch");
+const { CoordinatorModel } = require("../models/coordinator");
+const { StudentModel } = require("../models/student");
 
 const {
   authenticateRequest,
@@ -79,12 +83,74 @@ router.post(
   }
 );
 
+// router.get(
+//   "/getBranches",
+//   authenticateRequest,
+//   checkUserRole(["school"]),
+//   (req, res) => {
+//     console.log("Hi, I am from get branches!");
+
+//     const userId = req.user.id;
+
+//     SchoolModel.findOne({ "userId.id": userId }, (err, school) => {
+//       if (err) {
+//         console.log(err);
+//         res.send({
+//           success: false,
+//           message: "Something went wrong",
+//           error: err,
+//         });
+//       } else if (!school) {
+//         console.log("No school found for this user");
+//         res.send({
+//           success: false,
+//           message: "No school found for this user",
+//         });
+//       } else {
+//         const schoolId = school._id;
+//         console.log(school);
+//         console.log(schoolId);
+
+//         BranchModel.find(
+//           { "school.id": schoolId, isDelete: false },
+//           { location: 1, "school.id": 1, "school.name": 1, _id: 1, image: 1 },
+//           (err, branches) => {
+//             if (err) {
+//               console.log(err);
+//               res.send({
+//                 success: false,
+//                 message: "Something went wrong",
+//                 error: err,
+//               });
+//             } else {
+//               res.send({
+//                 success: true,
+//                 message: "Branches fetched successfully",
+//                 branches: branches,
+//               });
+//             }
+//           }
+//         );
+//       }
+//     });
+//   }
+// );
+
 router.get(
   "/getBranches",
   authenticateRequest,
   checkUserRole(["school"]),
   (req, res) => {
     console.log("Hi, I am from get branches!");
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const skip = (page - 1) * limit;
+
+    const location =
+      req.query.location !== "undefined" ? req.query.location : "";
+
+    console.log("Location " + location);
 
     const userId = req.user.id;
 
@@ -104,12 +170,19 @@ router.get(
         });
       } else {
         const schoolId = school._id;
-        console.log(school);
-        console.log(schoolId);
+        // console.log(school);
+        // console.log(schoolId);
+
+        let filter = { "school.id": schoolId, isDelete: false };
+
+        if (location) {
+          filter.$or = [{ location: { $regex: location, $options: "i" } }];
+        }
 
         BranchModel.find(
-          { "school.id": schoolId, isDelete: false },
+          filter,
           { location: 1, "school.id": 1, "school.name": 1, _id: 1, image: 1 },
+          { skip: skip, limit: limit },
           (err, branches) => {
             if (err) {
               console.log(err);
@@ -119,10 +192,23 @@ router.get(
                 error: err,
               });
             } else {
-              res.send({
-                success: true,
-                message: "Branches fetched successfully",
-                branches: branches,
+              BranchModel.countDocuments(filter, (err, count) => {
+                if (err) {
+                  console.log(err);
+                  res.send({
+                    success: false,
+                    message: "Something went wrong",
+                    error: err,
+                  });
+                } else {
+                  const totalPages = Math.ceil(count / limit);
+                  res.send({
+                    success: true,
+                    message: "Branches fetched successfully",
+                    branches: branches,
+                    totalPages: totalPages,
+                  });
+                }
               });
             }
           }
@@ -180,6 +266,67 @@ router.put(
           error: err,
         });
       });
+  }
+);
+
+router.put(
+  "/updateBranch/:id",
+  authenticateRequest,
+  checkUserRole(["school"]),
+  (req, res) => {
+    const id = mongoose.Types.ObjectId(req.params.id);
+    const newLocation = req.body.name;
+
+    console.log("Hi, I am from update branch API.");
+
+    console.log(id + newLocation);
+
+    if (!newLocation) {
+      return res.status(400).json({
+        success: false,
+        message: "New Branch Location is required",
+      });
+    }
+
+    mongoose.startSession().then(function (session) {
+      session.startTransaction();
+
+      Promise.all([
+        BranchModel.findOneAndUpdate(
+          { _id: id },
+          { location: newLocation },
+          { new: true }
+        ),
+
+        CoordinatorModel.updateMany(
+          { "branch.id": id },
+          { "branch.location": newLocation }
+        ),
+
+        StudentModel.updateMany(
+          { "branch.id": id },
+          { "branch.location": newLocation }
+        ),
+      ])
+        .then(function (results) {
+          res.status(200).json({
+            success: true,
+            message: "Branch and related models updated successfully",
+            results: results,
+          });
+          session.commitTransaction();
+          session.endSession();
+        })
+        .catch(function (error) {
+          session.abortTransaction();
+          res.status(500).json({
+            success: false,
+            message: "Error updating Branch and related models",
+            error: error,
+          });
+          session.endSession();
+        });
+    });
   }
 );
 

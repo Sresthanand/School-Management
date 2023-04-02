@@ -71,6 +71,30 @@
         align-items: center;
         justify-content: center;
       }
+
+      .toast {
+        position: fixed;
+        top: 60px;
+        right: 60px;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 2s ease-out;
+      }
+
+      .toast.success {
+        background-color: green;
+      }
+
+      .toast.error {
+        background-color: red;
+      }
+
+      .toast.show {
+        opacity: 1;
+      }
     </style>
   </head>
   <body>
@@ -120,15 +144,21 @@
     </div>
 
     <ui-view ng-show="currentRoute === 'SchoolDashboard.branches'"></ui-view>
-    
-    <ui-view ng-show="currentRoute === 'SchoolDashboard.stats'"></ui-view>
 
+    <ui-view ng-show="currentRoute === 'SchoolDashboard.stats'"></ui-view>
 
     <section
       class="home-section"
       ng-hide="currentRoute === 'SchoolDashboard.branches' || currentRoute ==='SchoolDashboard.stats' "
     >
       <div class="text">Please Register Your Branch!</div>
+
+      <div
+        class="toast"
+        ng-class="{'show': showToast, 'success': toastColor === 'green', 'error': toastColor === 'red'}"
+      >
+        {{toastMessage}}
+      </div>
 
       <div class="wrapper">
         <div class="r_form_wrap">

@@ -20,25 +20,42 @@ mySchoolApp.directive("fileModel", [
 
 mySchoolApp.controller(
   "coordinatorDashboardController",
-  function ($scope, $state, jwtHelper, $http, $rootScope) {
-    var token = localStorage.getItem("token");
+  function (
+    $scope,
+    $state,
+    jwtHelper,
+    $http,
+    $rootScope,
+    $timeout,
+
+    AuthService,
+    RouteChangeService,
+
+    StudentImageUploadService,
+    studentService
+  ) {
     console.log("Hi i am coordinator controller!");
 
-    $scope.$watch("$root.$state.current.name", function (newValue, oldValue) {
-      if (newValue !== oldValue) {
-        $rootScope.currentRoute = newValue;
-      }
-    });
-    if (!token || jwtHelper.isTokenExpired(token)) {
-      $state.go("login");
-    }
+    $scope.$watch("$root.$state.current.name", RouteChangeService.setRoute);
+
+    var token = localStorage.getItem("token");
+
+    AuthService.checkTokenValidity(token);
 
     $scope.logout = function () {
+      console.log("Hi i am Logout!");
       localStorage.removeItem("token");
       $state.go("login");
     };
 
     $scope.loading = false;
+
+    $scope.showToast = true;
+    $scope.toastMessage = "Hello! Welcome to Coordinator Dashboard!";
+    $scope.toastColor = "green";
+    $timeout(function () {
+      $scope.showToast = false;
+    }, 2000);
 
     $scope.studentRegister = function () {
       $scope.loading = true;
@@ -50,62 +67,54 @@ mySchoolApp.controller(
       const gender = $scope.gender;
       const enrollmentNumber = $scope.enrollmentNumber;
 
-      // Use FormData to construct the request body for image upload
-      const fd = new FormData();
-      fd.append("file", $scope.file);
-
-      // Call the image upload API
-      $http({
-        method: "POST",
-        url: "http://localhost:5000/api/upload/uploadImage",
-        data: fd,
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": undefined,
-        },
-      })
+      StudentImageUploadService.uploadImage(token, $scope.file, $http)
         .then(function (uploadResponse) {
           console.log("Image uploaded successfully");
           console.log(uploadResponse);
 
-          const requestData = {
-            information: {
+          studentService
+            .registerStudent(
+              token,
+              username,
+              password,
               name,
               classofstudent,
               gender,
               enrollmentNumber,
-              image: uploadResponse.data.Location,
-            },
-            username,
-            password,
-          };
-
-          $http({
-            method: "POST",
-            url: "http://localhost:5000/api/coordinator/studentRegister",
-            headers: {
-              Authorization: "Bearer " + token,
-              "Content-Type": "application/json",
-            },
-            data: requestData,
-          })
-            .then((response) => {
-              console.log("User created successfully:", response.data.user);
-              console.log(
-                "student created successfully:",
-                response.data.information
-              );
+              uploadResponse.data.Location
+            )
+            .then(function (registerResponse) {
+              console.log("Student created successfully");
+              console.log(registerResponse);
               $scope.loading = false;
-              alert("Student Created Successfully");
+              //alert("Student Created Successfully");
+              $scope.showToast = true;
+              $scope.toastMessage = "Student Created Successfully";
+              $scope.toastColor = "green";
+              $timeout(function () {
+                $scope.showToast = false;
+              }, 3000);
             })
-            .catch((error) => {
-              console.error("Error in registration:", error.data);
-              alert("Something Went Wrong!");
+            .catch(function (registerError) {
+              console.error("Error in registration:", registerError.data);
+              //alert("Something Went Wrong!");
+              $scope.showToast = true;
+              $scope.toastMessage = "Something went wrong";
+              $scope.toastColor = "red";
+              $timeout(function () {
+                $scope.showToast = false;
+              }, 3000);
             });
         })
         .catch(function (uploadError) {
           console.error("Error in image upload:", uploadError.data);
-          alert("Something went wrong with image upload");
+          // alert("Something went wrong with image upload");
+          $scope.showToast = true;
+          $scope.toastMessage = "Something went wrong with image Upload";
+          $scope.toastColor = "red";
+          $timeout(function () {
+            $scope.showToast = false;
+          }, 3000);
         })
         .finally(function () {
           $scope.loading = false;
@@ -113,58 +122,3 @@ mySchoolApp.controller(
     };
   }
 );
-
-// $scope.studentRegister = function () {
-//   console.log("hi i am student !!!!!!!!!!!!!!!");
-//   const name = $scope.name;
-//   const username = $scope.username;
-//   const password = $scope.password;
-//   const classofstudent = $scope.class;
-//   const gender = $scope.gender;
-//   const enrollmentNumber = $scope.enrollmentNumber;
-
-//   console.log("Hey yyyyyyyyyysadfihoasfhlao");
-//   console.log(
-//     name + username + password + classofstudent + gender + enrollmentNumber
-//   );
-
-//   console.log("Name " + name);
-//   console.log("username " + username);
-//   console.log("password " + password);
-//   console.log("classofstudent " + classofstudent);
-//   console.log("gender " + gender);
-//   console.log("enrollmentNumber " + enrollmentNumber);
-
-//   const requestData = {
-//     information: {
-//       name,
-//       classofstudent,
-//       gender,
-//       enrollmentNumber,
-//     },
-//     username,
-//     password,
-//   };
-
-//   $http({
-//     method: "POST",
-//     url: "http://localhost:5000/studentRegister",
-//     headers: {
-//       Authorization: "Bearer " + token,
-//       "Content-Type": "application/json",
-//     },
-//     data: requestData,
-//   })
-//     .then((response) => {
-//       console.log("User created successfully:", response.data.user);
-//       console.log(
-//         "student created successfully:",
-//         response.data.information
-//       );
-//       alert("student Created Succesfully");
-//     })
-//     .catch((error) => {
-//       console.error("Error in registration:", error.data);
-//       alert("Something Went Wrong!");
-//     });
-// };

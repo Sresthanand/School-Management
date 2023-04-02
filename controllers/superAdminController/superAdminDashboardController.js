@@ -23,11 +23,14 @@ mySchoolApp.controller(
   function (
     $scope,
     $state,
+    $http,
+    $timeout,
+
     AuthService,
-    SchoolService,
-    SchoolImageUploadService,
     RouteChangeService,
-    $http
+
+    SchoolService,
+    SchoolImageUploadService
   ) {
     console.log("Hi i am superadmindashboard controller!");
 
@@ -43,35 +46,17 @@ mySchoolApp.controller(
       $state.go("login");
     };
 
-    // SchoolImageUploadService.uploadImage($scope.file , $http)
-
-    // $scope.registerSchool = function () {
-    //   console.log("Hi i am registerSchool starting")
-    //   console.log($scope.file);
-    //   console.log("Hi i am registerSchool")
-
-    //   SchoolService.registerSchool(
-    //     token,
-    //     $scope.username,
-    //     $scope.password,
-    //     $scope.schoolName,
-    //     $scope.file
-    //   ).then(
-    //     function (response) {
-    //       console.log(response);
-    //       alert("School created successfully");
-    //     },
-    //     function (error) {
-    //       console.log(error);
-    //       alert("Something went wrong");
-    //     }
-    //   );
-    // };
     $scope.loading = false;
+
+    $scope.showToast = true;
+    $scope.toastMessage = "Hello! Welcome to Super Admin Dashboard!";
+    $scope.toastColor = "green";
+    $timeout(function () {
+      $scope.showToast = false;
+    }, 2000);
 
     $scope.registerSchool = function () {
       $scope.loading = true;
-
       SchoolImageUploadService.uploadImage(token, $scope.file, $http)
         .then(function (uploadResponse) {
           SchoolService.registerSchool(
@@ -83,16 +68,37 @@ mySchoolApp.controller(
           )
             .then(function (registerResponse) {
               $scope.loading = false;
-              alert("School created successfully");
+
+              $scope.showToast = true;
+              $scope.toastMessage = "School created successfully";
+              $scope.toastColor = "green";
+              $timeout(function () {
+                $scope.showToast = false;
+              }, 3000);
             })
             .catch(function (registerError) {
               console.log(registerError);
-              alert("Something went wrong with school registration");
+              $scope.loading = false;
+
+              $scope.showToast = true;
+              $scope.toastMessage =
+                "Something went wrong with school registration";
+              $scope.toastColor = "red";
+              $timeout(function () {
+                $scope.showToast = false;
+              }, 3000);
             });
         })
         .catch(function (uploadError) {
           console.log(uploadError);
-          alert("Something went wrong with image upload");
+          $scope.loading = false;
+
+          $scope.showToast = true;
+          $scope.toastMessage = "Something went wrong with Image upload";
+          $scope.toastColor = "red";
+          $timeout(function () {
+            $scope.showToast = false;
+          }, 3000);
         })
         .finally(function () {
           $scope.loading = false;

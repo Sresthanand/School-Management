@@ -68,6 +68,30 @@
         align-items: center;
         justify-content: center;
       }
+
+      .toast {
+        position: fixed;
+        top: 60px;
+        right: 60px;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 2s ease-out;
+      }
+
+      .toast.success {
+        background-color: green;
+      }
+
+      .toast.error {
+        background-color: red;
+      }
+
+      .toast.show {
+        opacity: 1;
+      }
     </style>
   </head>
   <body>
@@ -120,15 +144,20 @@
       ng-show="currentRoute === 'SchoolBranchDashboard.coordinators'"
     ></ui-view>
 
-    <ui-view
-      ng-show="currentRoute === 'SchoolBranchDashboard.stats'"
-    ></ui-view>
+    <ui-view ng-show="currentRoute === 'SchoolBranchDashboard.stats'"></ui-view>
 
     <section
       class="home-section"
       ng-hide="currentRoute === 'SchoolBranchDashboard.coordinators' || currentRoute === 'SchoolBranchDashboard.stats'"
     >
       <h1 class="text"></h1>
+
+      <div
+        class="toast"
+        ng-class="{'show': showToast, 'success': toastColor === 'green', 'error': toastColor === 'red'}"
+      >
+        {{toastMessage}}
+      </div>
 
       <div class="wrapper">
         <div class="r_form_wrap">

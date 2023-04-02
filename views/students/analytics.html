@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard Stats</title>
+
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp"
+      rel="stylesheet"
+    />
+
+    <link rel="shortcut icon" href="./images/logo.png" />
+
+    <link
+      rel="stylesheet"
+      href="css\studentStyleSheet\studentDashboardstats.css"
+    />
+
+    <style>
+      button {
+        background-color: #4caf50; /* Green background color */
+        border: none; /* Remove border */
+        color: white; /* White text color */
+        padding: 6px 12px; /* Add padding */
+        text-align: center; /* Center text */
+        text-decoration: none; /* Remove underline */
+        display: inline-block; /* Make it a block element */
+        font-size: 16px; /* Set font size */
+        border-radius: 8px; /* Add rounded corners */
+        cursor: pointer; /* Add pointer cursor on hover */
+        transition: background-color 0.3s; 
+      }
+
+      button:hover {
+        background-color: #3e8e41; /* Darker green background on hover */
+      }
+
+      header {
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="dashboard">
+      <div class="dash-content">
+        <div class="overview">
+          <div class="title">
+            <!-- <i class="uil uil-tachometer-fast-alt"></i> -->
+            <span class="text">Student Analytics</span>
+          </div>
+
+          <div class="boxes">
+            <div class="box box1">
+              <!-- <i class="uil uil-thumbs-up"></i> -->
+              <span class="text">Maximum Marks</span>
+              <span class="text">{{highestMarksSubjectName}}</span>
+              <span class="number">{{highestMarks}}</span>
+            </div>
+            <div class="box box2">
+              <!-- <i class="uil uil-comments"></i> -->
+              <span class="text">Minimum Marks</span>
+              <span class="text">{{lowestMarksSubjectName}}</span>
+              <span class="number">{{lowestMarks}}</span>
+            </div>
+            <div class="box box3">
+              <!-- <i class="uil uil-share"></i> -->
+              <span class="text">Percentage Secured</span>
+              <span class="number">{{percentage}} % </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-content">
+        <div class="overview">
+          <div class="boxes">
+            <div class="box box1">
+              <!-- <i class="uil uil-thumbs-up"></i> -->
+              <span class="text">Percentile</span>
+              <span class="number">{{percentile}}</span>
+            </div>
+            <div class="box box2">
+              <!-- <i class="uil uil-comments"></i> -->
+              <span class="text">Class Rank</span>
+              <!-- <span class="text">Subject Name</span> -->
+              <span class="number">{{rank}}</span>
+            </div>
+            <div class="box box3">
+              <!-- <i class="uil uil-share"></i> -->
+              <span class="text">CGPA Secured</span>
+              <span class="number">{{cgpa}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-content">
+        <div class="overview">
+          <!-- <div class="title">
+            <i class="uil uil-tachometer-fast-alt"></i>
+            <span class="text">Analytics</span>
+          </div> -->
+
+          <div class="boxes">
+            <div class="box box1">
+              <!-- <i class="uil uil-thumbs-up"></i> -->
+              <span class="text">Overall Grade</span>
+              <span class="number">{{overallGrade}}</span>
+            </div>
+
+            <div class="box box2" ng-controller="marksComparisonController">
+              <canvas
+                id="bubble"
+                class="chart chart-bubble"
+                chart-data="data"
+                chart-labels="labels"
+                chart-options="options"
+              ></canvas>
+              <span>Marks Comparison</span>
+            </div>
+
+            <div class="box box3" ng-controller="subjectGradeController">
+              <canvas
+                id="base"
+                class="chart-base"
+                chart-type="type"
+                chart-data="data"
+                chart-labels="labels"
+              >
+              </canvas>
+              <span>Subject Grades</span>
+              <button ng-click="toggle()">Toggle</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="activity"></div> -->
+    </section>
+
+    >
+  </body>
+</html>

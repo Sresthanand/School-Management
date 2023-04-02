@@ -3,6 +3,8 @@ const router = express.Router();
 const { hashSync, compareSync } = require("bcrypt");
 const { UserModel } = require("../models/user");
 
+const mongoose = require("mongoose");
+
 const { SchoolModel } = require("../models/school");
 const { BranchModel } = require("../models/branch");
 const { CoordinatorModel } = require("../models/coordinator");
@@ -69,17 +71,70 @@ router.post(
   }
 );
 
+// router.get(
+//   "/getAllSchools",
+//   authenticateRequest,
+//   checkUserRole(["super-admin"]),
+//   (req, res) => {
+//     console.log("Hi, I am from get all schools!");
+
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 6;
+
+//     const search = req.query.search !== "undefined" ? req.query.search : "";
+
+//     console.log("search" + search);
+
+//     SchoolModel.find(
+//       { isDelete: false },
+//       { name: 1, _id: 1, image: 1 },
+//       (err, schools) => {
+//         if (err) {
+//           console.log(err);
+//           res.send({
+//             success: false,
+//             message: "Something went wrong",
+//             error: err,
+//           });
+//         } else {
+//           res.send({
+//             success: true,
+//             message: "Schools fetched successfully",
+//             schools: schools,
+//           });
+//         }
+//       }
+//     );
+//   }
+// );
+
 router.get(
   "/getAllSchools",
   authenticateRequest,
   checkUserRole(["super-admin"]),
-  (req, res) => {
+  function (req, res) {
     console.log("Hi, I am from get all schools!");
 
-    SchoolModel.find(
-      { isDelete: false },
-      { name: 1, _id: 1, image: 1 },
-      (err, schools) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+
+    const search = req.query.search !== "undefined" ? req.query.search : "";
+
+    console.log("search" + search);
+
+    const skip = (page - 1) * limit;
+
+    let filter = { isDelete: false };
+
+    if (search) {
+      filter.$or = [{ name: { $regex: search, $options: "i" } }];
+    }
+
+    SchoolModel.find(filter)
+      .select({ name: 1, _id: 1, image: 1 })
+      .skip(skip)
+      .limit(limit)
+      .exec(function (err, schools) {
         if (err) {
           console.log(err);
           res.send({
@@ -88,14 +143,26 @@ router.get(
             error: err,
           });
         } else {
-          res.send({
-            success: true,
-            message: "Schools fetched successfully",
-            schools: schools,
+          SchoolModel.countDocuments(filter).exec(function (err, count) {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else {
+              const totalPages = Math.ceil(count / limit);
+              res.send({
+                success: true,
+                message: "Schools fetched successfully",
+                schools: schools,
+                totalPages: totalPages,
+              });
+            }
           });
         }
-      }
-    );
+      });
   }
 );
 
@@ -103,47 +170,60 @@ router.put(
   "/updateSchool/:id",
   authenticateRequest,
   checkUserRole(["super-admin"]),
-  (req, res) => {
-    // Add your getAllSchools API code here
-    const id = req.params.id;
+  function (req, res) {
+    const id = mongoose.Types.ObjectId(req.params.id);
+    const newName = req.body.name;
 
-    SchoolModel.findById(id)
-      .then((school) => {
-        if (!school) {
-          return res.status(404).json({
-            success: false,
-            message: "School not found",
-          });
-        }
+    console.log(id + newName);
 
-        school.name = req.body.name || school.name; // Update the school name if provided
-
-        school.updatedAt = Date.now();
-
-        school
-          .save()
-          .then((updatedSchool) => {
-            return res.status(200).json({
-              success: true,
-              message: "School updated successfully",
-              school: updatedSchool,
-            });
-          })
-          .catch((err) => {
-            return res.status(500).json({
-              success: false,
-              message: "Error updating school",
-              error: err,
-            });
-          });
-      })
-      .catch((err) => {
-        return res.status(500).json({
-          success: false,
-          message: "Error updating school",
-          error: err,
-        });
+    if (!newName) {
+      return res.status(400).json({
+        success: false,
+        message: "New school name is required",
       });
+    }
+
+    mongoose.startSession().then(function (session) {
+      session.startTransaction();
+
+      Promise.all([
+        SchoolModel.findOneAndUpdate(
+          { _id: id },
+          { name: newName },
+          { new: true }
+        ),
+
+        BranchModel.updateMany({ "school.id": id }, { "school.name": newName }),
+
+        CoordinatorModel.updateMany(
+          { "school.id": id },
+          { "school.name": newName }
+        ),
+
+        StudentModel.updateMany(
+          { "school.id": id },
+          { "school.name": newName }
+        ),
+      ])
+        .then(function (results) {
+          res.status(200).json({
+            success: true,
+            message: "School and related models updated successfully",
+            results: results,
+          });
+          session.commitTransaction();
+          session.endSession();
+        })
+        .catch(function (error) {
+          session.abortTransaction();
+          res.status(500).json({
+            success: false,
+            message: "Error updating school and related models",
+            error: error,
+          });
+          session.endSession();
+        });
+    });
   }
 );
 

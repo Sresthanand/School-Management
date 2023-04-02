@@ -13,16 +13,129 @@ const { MessageModel } = require("../models/message");
 const { MarksModel } = require("../models/marks");
 const { AttendanceModel } = require("../models/attendance");
 
+
+
+
 const {
   authenticateRequest,
   checkUserRole,
 } = require("../middleware/middleware");
 
+// router.post(
+//   "/studentRegister",
+//   authenticateRequest,
+//   checkUserRole(["coordinator"]),
+//   (req, res) => {
+//     const user = new UserModel({
+//       username: req.body.username,
+//       password: hashSync(req.body.password, 10),
+//       role: "student",
+//     });
+
+//     user
+//       .save()
+//       .then((user) => {
+//         CoordinatorModel.findOne({ "userId.id": req.user.id })
+//           .then((coordinator) => {
+//             BranchModel.findOne({ _id: coordinator.branch.id })
+//               .then((branch) => {
+//                 console.log("Hellooo school");
+//                 console.log(branch);
+//                 SchoolModel.findOne({ _id: branch.school.id })
+//                   .then((school) => {
+//                     console.log("Hellooo school");
+//                     console.log(school);
+//                     const student = new StudentModel({
+//                       name: req.body.information.name,
+//                       class: req.body.information.classofstudent,
+//                       gender: req.body.information.gender,
+//                       enrollmentNumber: req.body.information.enrollmentNumber,
+//                       image: req.body.information.image,
+//                       isDelete: false,
+//                       userId: {
+//                         id: user._id,
+//                         username: user.username,
+//                       },
+//                       school: {
+//                         id: school._id,
+//                         name: school.name,
+//                       },
+//                       branch: {
+//                         id: branch._id,
+//                         location: branch.location, //location
+//                       },
+//                       coordinator: {
+//                         id: coordinator._id,
+//                         name: coordinator.name,
+//                       },
+//                     });
+//                     student.save().then((student) => {
+//                       res.send({
+//                         success: true,
+//                         message: "User created successfully",
+//                         user: {
+//                           id: user._id,
+//                           username: user.username,
+//                           role: user.role,
+//                         },
+//                         student: {
+//                           id: student._id,
+//                           name: student.name,
+//                           school: {
+//                             id: school._id,
+//                             name: school.name,
+//                           },
+//                           branch: {
+//                             id: branch._id,
+//                             name: branch.name,
+//                           },
+//                           coordinator: {
+//                             id: coordinator._id,
+//                             name: coordinator.name,
+//                           },
+//                         },
+//                       });
+//                     });
+//                   })
+//                   .catch((err) => {
+//                     res.send({
+//                       success: false,
+//                       message: "Something went wrong",
+//                       error: err,
+//                     });
+//                   });
+//               })
+//               .catch((err) => {
+//                 res.send({
+//                   success: false,
+//                   message: "Something went wrong",
+//                   error: err,
+//                 });
+//               });
+//           })
+//           .catch((err) => {
+//             res.send({
+//               success: false,
+//               message: "Something went wrong",
+//               error: err,
+//             });
+//           });
+//       })
+//       .catch((err) => {
+//         res.send({
+//           success: false,
+//           message: "Something went wrong",
+//           error: err,
+//         });
+//       });
+//   }
+// );
+
 router.post(
   "/studentRegister",
   authenticateRequest,
   checkUserRole(["coordinator"]),
-  (req, res) => {
+  function (req, res) {
     const user = new UserModel({
       username: req.body.username,
       password: hashSync(req.body.password, 10),
@@ -31,78 +144,66 @@ router.post(
 
     user
       .save()
-      .then((user) => {
+      .then(function (user) {
         CoordinatorModel.findOne({ "userId.id": req.user.id })
-          .then((coordinator) => {
-            BranchModel.findOne({ _id: coordinator.branch.id })
-              .then((branch) => {
-                console.log("Hellooo school");
-                console.log(branch);
-                SchoolModel.findOne({ _id: branch.school.id })
-                  .then((school) => {
-                    console.log("Hellooo school");
-                    console.log(school);
-                    const student = new StudentModel({
-                      name: req.body.information.name,
-                      class: req.body.information.classofstudent,
-                      gender: req.body.information.gender,
-                      enrollmentNumber: req.body.information.enrollmentNumber,
-                      image: req.body.information.image,
-                      isDelete: false,
-                      userId: {
-                        id: user._id,
-                        username: user.username,
-                      },
-                      school: {
-                        id: school._id,
-                        name: school.name,
-                      },
-                      branch: {
-                        id: branch._id,
-                        location: branch.location, //location
-                      },
-                      coordinator: {
-                        id: coordinator._id,
-                        name: coordinator.name,
-                      },
-                    });
-                    student.save().then((student) => {
-                      res.send({
-                        success: true,
-                        message: "User created successfully",
-                        user: {
-                          id: user._id,
-                          username: user.username,
-                          role: user.role,
-                        },
-                        student: {
-                          id: student._id,
-                          name: student.name,
-                          school: {
-                            id: school._id,
-                            name: school.name,
-                          },
-                          branch: {
-                            id: branch._id,
-                            name: branch.name,
-                          },
-                          coordinator: {
-                            id: coordinator._id,
-                            name: coordinator.name,
-                          },
-                        },
-                      });
-                    });
-                  })
-                  .catch((err) => {
-                    res.send({
-                      success: false,
-                      message: "Something went wrong",
-                      error: err,
-                    });
-                  });
+          .then(function (coordinator) {
+            console.log("Hellooo coordinator");
+            console.log(coordinator);
+            const student = new StudentModel({
+              name: req.body.information.name,
+              class: req.body.information.classofstudent,
+              gender: req.body.information.gender,
+              enrollmentNumber: req.body.information.enrollmentNumber,
+              image: req.body.information.image,
+              isDelete: false,
+              userId: {
+                id: user._id,
+                username: user.username,
+              },
+              school: {
+                id: coordinator.school.id,
+                name: coordinator.school.name,
+              },
+              branch: {
+                id: coordinator.branch.id,
+                location: coordinator.branch.location, //location
+              },
+              coordinator: {
+                id: coordinator._id,
+                name: coordinator.name,
+              },
+            });
+            console.log("Studentttt + " + student);
+            student
+              .save()
+              .then(function (student) {
+                res.send({
+                  success: true,
+                  message: "User created successfully",
+                  user: {
+                    id: user._id,
+                    username: user.username,
+                    role: user.role,
+                  },
+                  student: {
+                    id: student._id,
+                    name: student.name,
+                    school: {
+                      id: coordinator.school.id,
+                      name: coordinator.school.name,
+                    },
+                    branch: {
+                      id: coordinator.branch.id,
+                      name: coordinator.branch.name,
+                    },
+                    coordinator: {
+                      id: coordinator._id,
+                      name: coordinator.name,
+                    },
+                  },
+                });
               })
-              .catch((err) => {
+              .catch(function (err) {
                 res.send({
                   success: false,
                   message: "Something went wrong",
@@ -110,7 +211,7 @@ router.post(
                 });
               });
           })
-          .catch((err) => {
+          .catch(function (err) {
             res.send({
               success: false,
               message: "Something went wrong",
@@ -118,7 +219,7 @@ router.post(
             });
           });
       })
-      .catch((err) => {
+      .catch(function (err) {
         res.send({
           success: false,
           message: "Something went wrong",
@@ -128,12 +229,113 @@ router.post(
   }
 );
 
+// router.get(
+//   "/getStudents",
+//   authenticateRequest,
+//   checkUserRole(["coordinator"]),
+//   (req, res) => {
+//     const coordinatorId = req.user.id;
+
+//     CoordinatorModel.findOne(
+//       { "userId.id": coordinatorId },
+//       (err, coordinator) => {
+//         if (err) {
+//           console.log(err);
+//           res.send({
+//             success: false,
+//             message: "Something went wrong",
+//             error: err,
+//           });
+//         } else if (!coordinator) {
+//           console.log("No coordinator found for this user");
+//           res.send({
+//             success: false,
+//             message: "No coordinator found for this user",
+//           });
+//         } else {
+//           const coordinatorName = coordinator.name;
+//           const coordinatorId = coordinator._id;
+//           const schoolName = coordinator.school.name;
+//           const schoolId = coordinator.school.id;
+//           const branchName = coordinator.branch.location;
+//           const branchId = coordinator.branch.id;
+
+//           StudentModel.find(
+//             { "coordinator.id": coordinatorId, isDelete: false },
+//             (err, students) => {
+//               if (err) {
+//                 console.log(err);
+//                 res.send({
+//                   success: false,
+//                   message: "Something went wrong",
+//                   error: err,
+//                 });
+//               } else {
+//                 const formattedStudents = students.map((student) => {
+//                   return {
+//                     id: student._id,
+//                     name: student.name,
+//                     class: student.class,
+//                     gender: student.gender,
+//                     enrollmentNumber: student.enrollmentNumber,
+//                     image: student.image,
+//                     coordinator: {
+//                       name: coordinatorName,
+//                       id: coordinatorId,
+//                     },
+//                     school: {
+//                       name: schoolName,
+//                       id: schoolId,
+//                     },
+//                     branch: {
+//                       location: branchName,
+//                       id: branchId,
+//                     },
+//                   };
+//                 });
+
+//                 res.send({
+//                   success: true,
+//                   message: "Students fetched successfully",
+//                   coordinator: {
+//                     name: coordinatorName,
+//                     id: coordinatorId,
+//                     schoolName: schoolName,
+//                     schoolId: schoolId,
+//                     branchName: branchName,
+//                     branchId: branchId,
+//                   },
+//                   students: formattedStudents,
+//                 });
+//               }
+//             }
+//           );
+//         }
+//       }
+//     );
+//   }
+// );
+
 router.get(
   "/getStudents",
   authenticateRequest,
   checkUserRole(["coordinator"]),
   (req, res) => {
     const coordinatorId = req.user.id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+
+    const search = req.query.search !== "undefined" ? req.query.search : "";
+
+    const selectedClass =
+      req.query.class !== "undefined" ? req.query.class.toString() : "";
+
+    const selectedGender =
+      req.query.gender !== "undefined" ? req.query.gender.toString() : "";
+
+    console.log("Gender " + selectedGender);
+    console.log("Class" + selectedClass);
+    console.log("search" + search);
 
     CoordinatorModel.findOne(
       { "userId.id": coordinatorId },
@@ -159,9 +361,72 @@ router.get(
           const branchName = coordinator.branch.location;
           const branchId = coordinator.branch.id;
 
-          StudentModel.find(
-            { "coordinator.id": coordinatorId, isDelete: false },
-            (err, students) => {
+          const skip = (page - 1) * limit;
+
+          let filter = {
+            "coordinator.id": coordinatorId,
+            isDelete: false,
+          };
+
+          if (search && !selectedClass && !selectedGender) {
+            filter.$or = [
+              { name: { $regex: search, $options: "i" } },
+              { gender: { $regex: search, $options: "i" } },
+              { enrollmentNumber: { $regex: search, $options: "i" } },
+              { "school.name": { $regex: search, $options: "i" } },
+              { "branch.location": { $regex: search, $options: "i" } },
+              { "coordinator.name": { $regex: search, $options: "i" } },
+              { class: { $regex: search, $options: "i" } },
+            ];
+          } else if (selectedClass && !search && !selectedGender) {
+            filter.class = selectedClass;
+          } else if (selectedGender && !search && !selectedClass) {
+            filter.gender = selectedGender;
+          } else if (search && selectedClass && !selectedGender) {
+            filter.$or = [
+              { name: { $regex: search, $options: "i" } },
+              { gender: { $regex: search, $options: "i" } },
+              { enrollmentNumber: { $regex: search, $options: "i" } },
+              { "school.name": { $regex: search, $options: "i" } },
+              { "branch.location": { $regex: search, $options: "i" } },
+              { "coordinator.name": { $regex: search, $options: "i" } },
+              { class: { $regex: search, $options: "i" } },
+              { class: selectedClass },
+            ];
+          } else if (search && selectedGender && !selectedClass) {
+            filter.$or = [
+              { name: { $regex: search, $options: "i" } },
+              { gender: { $regex: search, $options: "i" } },
+              { enrollmentNumber: { $regex: search, $options: "i" } },
+              { "school.name": { $regex: search, $options: "i" } },
+              { "branch.location": { $regex: search, $options: "i" } },
+              { "coordinator.name": { $regex: search, $options: "i" } },
+              { gender: selectedGender },
+            ];
+          } else if (selectedClass && selectedGender && !search) {
+            filter.class = selectedClass;
+            filter.gender = selectedGender;
+          } else if (search && selectedClass && selectedGender) {
+            filter.$or = [
+              { name: { $regex: search, $options: "i" } },
+              { gender: { $regex: search, $options: "i" } },
+              { enrollmentNumber: { $regex: search, $options: "i" } },
+              { "school.name": { $regex: search, $options: "i" } },
+              { "branch.location": { $regex: search, $options: "i" } },
+              { "coordinator.name": { $regex: search, $options: "i" } },
+              { class: { $regex: search, $options: "i" } },
+              { class: selectedClass },
+              { gender: selectedGender },
+            ];
+          } else if (selectedGender && selectedClass && !search) {
+            filter.class = selectedClass;
+            filter.gender = selectedGender;
+          }
+
+          StudentModel.find(filter)
+            .skip(skip)
+            .limit(limit)
+            .exec((err, students) => {
               if (err) {
                 console.log(err);
                 res.send({
@@ -193,22 +458,33 @@ router.get(
                   };
                 });
 
-                res.send({
-                  success: true,
-                  message: "Students fetched successfully",
-                  coordinator: {
-                    name: coordinatorName,
-                    id: coordinatorId,
-                    schoolName: schoolName,
-                    schoolId: schoolId,
-                    branchName: branchName,
-                    branchId: branchId,
-                  },
-                  students: formattedStudents,
+                StudentModel.countDocuments(filter, (err, count) => {
+                  if (err) {
+                    console.log(err);
+                    res.send({
+                      success: false,
+                      message: "Something went wrong",
+                      error: err,
+                    });
+                  } else {
+                    res.send({
+                      success: true,
+                      message: "Students fetched successfully",
+                      coordinator: {
+                        name: coordinatorName,
+                        id: coordinatorId,
+                        schoolName: schoolName,
+                        schoolId: schoolId,
+                        branchName: branchName,
+                        branchId: branchId,
+                      },
+                      students: formattedStudents,
+                      totalPages: Math.ceil(count / limit),
+                    });
+                  }
                 });
               }
-            }
-          );
+            });
         }
       }
     );
@@ -385,6 +661,7 @@ router.post(
           // Get the student's id and name from the request body
           const studentId = req.body.studentId;
           const studentName = req.body.studentName;
+          const studentClass = req.body.studentClass;
 
           // Create a new marks object using the request body
           const newMarks = new MarksModel({
@@ -395,7 +672,9 @@ router.post(
             student: {
               id: studentId,
               name: studentName,
+              class: studentClass,
             },
+            isDelete: "false",
             subject1: {
               name: req.body.subject1.name,
               marksObtained: req.body.subject1.marks,
@@ -476,6 +755,7 @@ router.get(
           MarksModel.find(
             {
               "coordinator.id": coordinator._id,
+              isDelete: "false",
             },
             (err, marks) => {
               if (err) {
@@ -593,6 +873,127 @@ router.get(
         }
       }
     );
+  }
+);
+
+router.put(
+  "/deletMarks/:id",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const id = req.params.id;
+
+    console.log("Hi, I am from delete marks API.");
+    console.log(id);
+
+    MarksModel.findById(id)
+      .then((marks) => {
+        if (!marks) {
+          return res.status(404).json({
+            success: false,
+            message: "Marks not found",
+          });
+        }
+
+        // Set isDelete property to true
+        marks.isDelete = "true";
+
+        marks.updatedAt = Date.now();
+
+        marks
+          .save()
+          .then((updatedMarks) => {
+            return res.status(200).json({
+              success: true,
+              message: "Marks updated successfully",
+              marks: updatedMarks,
+            });
+          })
+          .catch((err) => {
+            return res.status(500).json({
+              success: false,
+              message: "Error updating marks",
+              error: err,
+            });
+          });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          success: false,
+          message: "Error updating marks",
+          error: err,
+        });
+      });
+  }
+);
+
+router.put(
+  "/updateMarks/:id",
+  authenticateRequest,
+  checkUserRole(["coordinator"]),
+  (req, res) => {
+    const id = req.params.id;
+    const { subject1, subject2, subject3, subject4, subject5 } = req.body;
+
+    console.log("Hi, I am from update marks API.");
+    console.log(id);
+
+    MarksModel.findById(id)
+      .then((marks) => {
+       // console.log(marks + "marks");
+        if (!marks) {
+          return res.status(404).json({
+            success: false,
+            message: "Marks not found",
+          });
+        }
+
+        console.log(req.body);
+
+        marks.subject1.name = subject1.name;
+        marks.subject1.marksObtained = subject1.marks;
+        marks.subject1.totalMarks = subject1.maximumMarks;
+
+        marks.subject2.name = subject2.name;
+        marks.subject2.marksObtained = subject2.marks;
+        marks.subject2.totalMarks = subject2.maximumMarks;
+
+        marks.subject3.name = subject3.name;
+        marks.subject3.marksObtained = subject3.marks;
+        marks.subject3.totalMarks = subject3.maximumMarks;
+
+        marks.subject4.name = subject4.name;
+        marks.subject4.marksObtained = subject4.marks;
+        marks.subject4.totalMarks = subject4.maximumMarks;
+
+        marks.subject5.name = subject5.name;
+        marks.subject5.marksObtained = subject5.marks;
+        marks.subject5.totalMarks = subject5.maximumMarks;
+
+        marks
+          .save()
+          .then((updatedMarks) => {
+            return res.status(200).json({
+              success: true,
+              message: "Marks updated successfully",
+              marks: updatedMarks,
+            });
+          })
+          .catch((err) => {
+            return res.status(500).json({
+              success: false,
+              message: "Error updating marks",
+              error: err,
+            });
+          });
+      })
+      .catch((err) => {
+        return res.status(500).json({
+          success: false,
+          message: "Error updating marks",
+          error: err,
+        });
+      });
   }
 );
 

@@ -6,6 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css\branchStyleSheet\mycoordinators.css" / >
     <title>Document</title>
+
+    <style>
+      .toast {
+        position: fixed;
+        top: 60px;
+        right: 60px;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 2s ease-out;
+      }
+
+      .toast.success {
+        background-color: green;
+      }
+
+      .toast.error {
+        background-color: red;
+      }
+
+      .toast.show {
+        opacity: 1;
+      }
+    </style>
   </head>
   <body>
     <div class="wrap">
@@ -14,40 +40,39 @@
           type="text"
           class="searchTerm"
           placeholder="Search Your Coordinator"
+          ng-model-options="{debounce : 500}"
           ng-model="searchQuery"
+          ng-change="handlePagination()"
         />
         <button type="submit" class="searchButton">
           <i class="fa fa-search"></i>
         </button>
       </div>
+    </div>
 
-      <button type="button" class="resetButton" ng-click="resetFilters()">
-        Reset
-      </button>
+    <div
+      class="toast"
+      ng-class="{'show': showToast, 'success': toastColor === 'green', 'error': toastColor === 'red'}"
+    >
+      {{toastMessage}}
     </div>
 
     <div class="card-container">
-      <div
-        class="card"
-        ng-repeat="coordinator in coordinators | filter:searchQuery"
-      >
-        <img
-          ng-src="{{coordinator.image}}"
-          alt="Placeholder Image"
-        />
+      <div class="card" ng-repeat="coordinator in coordinators">
+        <img ng-src="{{coordinator.image}}" alt="Placeholder Image" />
         <div class="card-info">
           <h2>{{ coordinator.name }}</h2>
           <p>{{ coordinator.branch.location }}</p>
           <p>{{ coordinator.school.name }}</p>
           <div class="card-buttons">
-            <!-- <button
+            <button
               class="edit-button"
               data-toggle="modal"
               data-target="#editModal"
-              ng-click="openEditModal(school)"
+              ng-click="openEditModal(coordinator)"
             >
               Edit
-            </button> -->
+            </button>
 
             <button
               class="delete-button"
@@ -62,6 +87,18 @@
         </div>
       </div>
     </div>
+
+    <div class="paginationMain">
+      <button
+        class="page-numbers"
+        ng-repeat="page in pages"
+        ng-class="{ active: currentPage === page }"
+        ng-click="handlePagination(page)"
+      >
+        {{page}}
+      </button>
+    </div>
+
     <!-- Edit Modal -->
     <div
       class="modal fade"
@@ -87,12 +124,12 @@
           <div class="modal-body">
             <form>
               <div class="form-group">
-                <label for="schoolNameInput">Enter New School Name</label>
+                <label for="schoolNameInput">Enter New Coordinator Name</label>
                 <input
                   type="text"
                   class="form-control"
                   id="schoolNameInput"
-                  ng-model="updatedSchoolName"
+                  ng-model="updatedCoordinatorName"
                 />
               </div>
             </form>
@@ -108,7 +145,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              ng-click="updateSchoolName(updatedSchoolName)"
+              ng-click="updateCoordinatorName(updatedCoordinatorName)"
             >
               Save Changes
             </button>

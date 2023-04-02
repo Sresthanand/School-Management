@@ -17,18 +17,44 @@
         cursor: pointer;
         opacity: 1;
       }
+
+      .toast {
+        position: fixed;
+        top: 60px;
+        right: 60px;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 2s ease-out;
+      }
+
+      .toast.success {
+        background-color: green;
+      }
+
+      .toast.error {
+        background-color: red;
+      }
+
+      .toast.show {
+        opacity: 1;
+      }
     </style>
   </head>
   <body>
-    
     <div class="wrap">
       <div class="search">
         <input
           type="text"
           class="searchTerm"
           placeholder="Search Your Student"
+          ng-model-options="{debounce : 500}"
           ng-model="searchQuery"
+          ng-change="handlePagination()"
         />
+
         <button type="submit" class="searchButton">
           <i class="fa fa-search"></i>
         </button>
@@ -36,8 +62,13 @@
 
       <div class="parent">
         <div class="input_item">
-          <select ng-model="selectedClass">
-            <option value="">class</option>
+          <!-- <label>Class</label> -->
+          <select
+            ng-model="selectedClass"
+            ng-model-options="{debounce : 500}"
+            ng-change="handlePagination()"
+          >
+            <option value="">Class</option>
             <option value="1">I</option>
             <option value="2">II</option>
             <option value="3">III</option>
@@ -56,25 +87,28 @@
 
       <div class="parent2">
         <div class="input_item">
-          <select ng-model="selectedGender">
+          <select
+            ng-model="selectedGender"
+            ng-model-options="{debounce : 500}"
+            ng-change="handlePagination()"
+          >
             <option value="">gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
         </div>
       </div>
-
-      <button type="button" class="resetButton" ng-click="resetFilters()">
-        Reset
-      </button>
     </div>
 
-    <!-- | filter:{class:selectedClass} | filter:genderFilter | filter:searchQuery" -->
+    <div
+      class="toast"
+      ng-class="{'show': showToast, 'success': toastColor === 'green', 'error': toastColor === 'red'}"
+    >
+      {{toastMessage}}
+    </div>
+
     <div class="card-container">
-      <div
-        class="card"
-        ng-repeat="student in students | filter:searchQuery | filter: classFilter| filter:genderFilter"
-      >
+      <div class="card" ng-repeat="student in students">
         <img ng-src="{{student.image}}" alt="Placeholder Image" />
         <div class="card-info">
           <h2>{{ student.name }}</h2>
@@ -99,7 +133,7 @@
               class="delete-button"
               data-toggle="modal"
               data-target="#deleteModal"
-              ng-click="openDeleteModal(student)" 
+              ng-click="openDeleteModal(student)"
             >
               Delete
             </button>
@@ -114,6 +148,17 @@
             </button>
           </div>
         </div>
+      </div>
+
+      <div class="paginationMain">
+        <button
+          class="page-numbers"
+          ng-repeat="page in pages"
+          ng-class="{ active: currentPage === page }"
+          ng-click="handlePagination(page)"
+        >
+          {{page}}
+        </button>
       </div>
     </div>
 

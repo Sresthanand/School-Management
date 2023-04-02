@@ -28,6 +28,7 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
             return $q.when();
           }
         }
+        //  window.location = "/#!/login"
         return $q.reject("Not Authorized");
       },
     },
@@ -68,6 +69,8 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
             return $q.when();
           }
         }
+        //$state.go("login")
+        //// $urlRouterProvider.otherwise("/login");
         return $q.reject("Not Authorized");
       },
     },
@@ -351,11 +354,11 @@ mySchoolApp.config(function ($stateProvider, $urlRouterProvider) {
     },
   });
 
-  $stateProvider.state("StudentDashBoard.Timetable", {
+  $stateProvider.state("StudentDashBoard.Analytics", {
     //done //factories and servicecs later*
-    url: "/timetable",
-    templateUrl: "views/students/TimeTable.html",
-    controller: "TimeTableController",
+    url: "/stats",
+    templateUrl: "views/students/analytics.html",
+    controller: "StudentDashboardStatsController",
     resolve: {
       auth: function ($q, $state, jwtHelper) {
         var token = localStorage.getItem("token");

@@ -11,6 +11,31 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css\studentStyleSheet\StudentHomePage.css" />
+    <style>
+      .toast {
+        position: fixed;
+        top: 60px;
+        right: 60px;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 2s ease-out;
+      }
+
+      .toast.success {
+        background-color: green;
+      }
+
+      .toast.error {
+        background-color: red;
+      }
+
+      .toast.show {
+        opacity: 1;
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -24,26 +49,30 @@
           <h3>Home</h3>
         </a>
 
-
         <a ui-sref="StudentDashBoard.exam">
           <span class="material-icons-sharp">grid_view</span>
           <h3>Examination</h3>
         </a>
 
-        
+        <a ui-sref="StudentDashBoard.Analytics">
+          <span class="material-icons-sharp">query_stats</span>
+          <h3>Analytics</h3>
+        </a>
+
+        <a ng-click="handleStudentReportCard(studentId)">
+          <span class="material-icons-sharp">file_download</span>
+          <h3>Result</h3>
+        </a>
+
         <a ng-click="handleAttendance(studentId)">
           <span class="material-icons-sharp">edit_calendar</span>
           <h3>Attendance</h3>
         </a>
-        
 
-      
         <a ng-click="logout()">
           <span class="material-icons-sharp">logout</span>
           <h3>Logout</h3>
         </a>
-
-      
       </div>
     </header>
 
@@ -51,9 +80,11 @@
 
     <ui-view ng-show="currentRoute === 'StudentDashBoard.exam'"></ui-view>
 
+    <ui-view ng-show="currentRoute === 'StudentDashBoard.Analytics'"></ui-view>
+
     <div
       class="container"
-      ng-hide="currentRoute === 'StudentDashBoard.exam' || currentRoute === 'StudentDashBoard.exam'"
+      ng-hide="currentRoute === 'StudentDashBoard.exam' || currentRoute === 'StudentDashBoard.exam' || currentRoute ==='StudentDashBoard.Analytics' "
     >
       <aside>
         <div class="profile">
@@ -81,6 +112,13 @@
           </div>
         </div>
       </aside>
+
+      <div
+        class="toast"
+        ng-class="{'show': showToast, 'success': toastColor === 'green', 'error': toastColor === 'red'}"
+      >
+        {{toastMessage}}
+      </div>
 
       <main>
         <h1>Marks Scored</h1>
@@ -125,10 +163,6 @@
             </div>
           </div>
         </div>
-
-
-
-        
       </main>
     </div>
   </body>

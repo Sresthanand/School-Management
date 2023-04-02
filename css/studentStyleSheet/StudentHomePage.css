@@ -88,7 +88,7 @@ b{color: var(--color-dark);}
 header h3{font-weight: 500;} 
 header{
     position: fixed;
-    width: 100vw;
+    /* width: 100vw; */
     z-index: 1000;
     background-color: var(--color-background);
 }
@@ -108,8 +108,9 @@ header .navbar{
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 0 3rem;
-    color: var(--color-info);
+    margin-left: 25px;
+    /* padding: 0 3rem; */
+    /* color: var(--color-info); */
 }
 header .navbar a{
     display: flex;
@@ -482,3 +483,10 @@ main .timetable.active .closeBtn{
         padding: 2rem;
     }
 }
+
+
+
+
+
+
+

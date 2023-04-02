@@ -2,7 +2,21 @@
 
 <html lang="en" ng-app="mySchoolApp">
   <head>
-    <title>Posist</title>
+    <link rel="icon" type="image/png" href="assets\school\backpack-gc03adbcdd_1280.png" />
+
+    <title>School Manangement</title>
+
+    <!------------------------------- Toaster ---------------------------->
+
+    <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastassets\school\backpack-gc03adbcdd_1280.pngr.min.js"></script>  
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.2.4.js"></script>
+<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>   
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        -->
+
     <!------------------------------- Angular cdn ---------------------------->
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.0/angular.min.js"
@@ -34,57 +48,99 @@
 
     <!-- Login Controller -->
     <script src="controllers/loginController/loginController.js"></script>
+
     <!-- superAdmin Controller -->
     <script src="controllers/superAdminController/superAdminDashboardController.js"></script>
     <script src="controllers/superAdminController/SuperAdminStatsController.js"></script>
-
     <!-- my school controller -->
-    <script src="controllers/schoolController/myschoolsController.js"></script>
+    <script src="controllers/superAdminController/myschoolsController.js"></script>
+    <!------------------------------- SuperAdmin stats Controllers ---------------------------->
+    <script src="controllers/superAdminController/linechartcontroller.js"></script>
+    <script src="controllers/superAdminController/chartController.js"></script>
+
     <!-- school dashboard controller -->
-    <script src="controllers/schoolDashboardController/schoolDashboardController.js"></script>
+    <script src="controllers/schoolController/schoolDashboardController.js"></script>
     <!-- school dashboard stats controller -->
-    <script src="controllers/schoolDashboardStatsController/schoolDashboardStatsController.js"></script>
+    <script src="controllers/schoolController/schoolDashboardStatsController.js"></script>
     <!-- school branch controller -->
-    <script src="controllers/branchController/BranchesController.js"></script>
+    <script src="controllers/schoolController/BranchesController.js"></script>
+    <!------------------------------- School stats Controllers ---------------------------->
+    <script src="controllers/schoolController/BranchStatsActiveInactiveController.js"></script>
+    <script src="controllers/schoolController/RegionWiseStatsController.js"></script>
+    <script src="controllers/schoolController/BranchesRegistrationOverPeriodOfTimeController.js"></script>
+
+    <!-- school branch dashboard controller -->
+    <script src="controllers/schoolBranchController/schoolBranchDashboardController.js"></script>
+    <!-- my coordinator controller -->
+    <script src="controllers/schoolBranchController/myCoordinatorController.js"></script>
+    <!------------------------------- Branch stats Controllers ---------------------------->
+    <script src="controllers/schoolBranchController/SchoolBranchStatsController.js"></script>
+    <script src="controllers/schoolBranchController/coordinatorAtiveInactiveController.js"></script>
+    <script src="controllers/schoolBranchController/coordinatorRegistration.js"></script>
+
     <!-- coordinator dashboard controller -->
     <script src="controllers/coordinatorController/coordinatorDashboardController.js"></script>
-    <!-- school branch dashboard controller -->
-    <script src="controllers/schoolBranchDashboardController/schoolBranchDashboardController.js"></script>
-    <!-- my coordinator controller -->
-    <script src="controllers/myCoordinatorController/myCoordinatorController.js"></script>
     <!-- my student controller -->
-    <script src="controllers/myStudentController/myStudentController.js"></script>
+    <script src="controllers/coordinatorController/myStudentController.js"></script>
     <!-- exam schedule controller -->
-    <script src="controllers/examScheduleController/examscheduleController.js"></script>
+    <script src="controllers/coordinatorController/examscheduleController.js"></script>
     <!-- Notifications Controller -->
-    <script src="controllers/NotificationController/NotificationController.js"></script>
-    <!-- Attendance controller -->
-    <script src="controllers/AttendanceController/AttendanceController.js"></script>
-    <!-- student dashboard controller -->
-    <script src="controllers/studentDashBoardController/studentDashboardController.js"></script>
-    <script src="controllers/studentDashBoardController/TimeTableController.js"></script>
-    <script src="controllers/studentDashBoardController/ExamController.js"></script>
+    <script src="controllers/coordinatorController/NotificationController.js"></script>
     <!-- student marks controller -->
-    <script src="controllers/StudentMarksController/StudentMarksController.js"></script>
+    <script src="controllers/coordinatorController/StudentMarksController.js"></script>
+    <!-- Attendance controller -->
+    <script src="controllers/coordinatorController/AttendanceController.js"></script>
+    <!------------------------------- Coordinator stats Controllers ---------------------------->
+    <script src="controllers/coordinatorController/CoordinatorStatsController.js"></script>
+    <script src="controllers/coordinatorController/topperChartController.js"></script>
+    <script src="controllers/coordinatorController/genderChartController.js"></script>
+    <script src="controllers/coordinatorController/classWiseStatsController.js"></script>
+    <script src="controllers/coordinatorController/activeInactiveStudentsCountController.js"></script>
+    <script src="controllers/coordinatorController/studentsRegistrationStats.js"></script>
+    <script src="controllers/coordinatorController/AttendanceCount.js"></script>
+
+    <!-- student dashboard controller -->
+    <script src="controllers/studentController/studentDashboardController.js"></script>
+    <script src="controllers/studentController/ExamController.js"></script>
+    <script src="controllers/studentController/StudentDashboardStatsController.js"></script>
+    <script src="controllers/studentController/marksComparisonController.js"></script>
+    <script src="controllers/studentController/subjectGradeController.js"></script>
 
     <!------------------------------- services ---------------------------->
+
+    <!------------------------------- Login services ---------------------------->
     <script src="Services/loginServices/loginService.js"></script>
 
+    <!------------------------------- Super Admin services ---------------------------->
     <script src="Services/superAdminServices/AuthService.js"></script>
     <script src="Services/superAdminServices/SchoolService.js"></script>
     <script src="Services/superAdminServices/uploadImage.js"></script>
+    <script src="Services/superAdminServices/SuperAdminStatsService.js"></script>
+    <script src="Services/superAdminServices/MyschoolService.js"></script>
 
-    <script src="Services/mySchoolServices/MyschoolService.js"></script>
+    <!------------------------------- School services ---------------------------->
+    <script src="Services/schoolServices/BranchService.js"></script>
+    <script src="Services/schoolServices/UploadImage.js"></script>
+    <script src="Services/schoolServices/SchoolStatsService.js"></script>
 
-    <script src="Services/myBranchServices/BranchService.js"></script>
+    <!------------------------------- Branch services ---------------------------->
+    <script src="Services/branchServices/CoordinatorService.js"></script>
+    <script src="Services/branchServices/uploadImage.js"></script>
+    <script src="Services/branchServices/CoordinatorstatsService.js"></script>
 
-    <script src="Services/coordinatorServices/CoordinatorService.js"></script>
+    <!------------------------------- Coordinator services ---------------------------->
+    <script src="Services/coordinatorServices/studentService.js"></script>
+    <script src="Services/coordinatorServices/uploadImage.js"></script>
+    <script src="Services/coordinatorServices/studentStatsService.js"></script>
 
-    <script src="Services/studentServices/studentService.js"></script>
+    <!------------------------------- student dashbord services ---------------------------->
+    <script src="Services/studentDashboardServices/studentDashboardServices.js"></script>
+    <script src="Services/studentDashboardServices/studentDashboardStatsServices.js"></script>
 
     <!------------------------------- factories ---------------------------->
     <script src="Factories/loginFactory/tokenService.js"></script>
     <script src="Factories/superAdminFactories/RouteChangeService.js"></script>
+    <script src="Factories/studentStatsFactories/StudentDashboardStatsFactory.js"></script>
 
     <!------------------------------- Bootstrap css ---------------------------->
     <link
@@ -99,29 +155,6 @@
     <script src="node_modules/angular-chart.js/dist/angular-chart.min.js"></script>
 
     <!------------------------------- Chart Controllers ---------------------------->
-
-    <!------------------------------- SuperAdmin stats Controllers ---------------------------->
-    <script src="controllers/superAdminController/linechartcontroller.js"></script>
-    <script src="controllers/superAdminController/chartController.js"></script>
-
-    <!------------------------------- School stats Controllers ---------------------------->
-    <script src="controllers/schoolDashboardStatsController/BranchStatsActiveInactiveController.js"></script>
-    <script src="controllers/schoolDashboardStatsController/RegionWiseStatsController.js"></script>
-    <script src="controllers/schoolDashboardStatsController/BranchesRegistrationOverPeriodOfTimeController.js"></script>
-
-    <!------------------------------- Branch stats Controllers ---------------------------->
-    <script src="controllers/SchoolBranchStatsController/SchoolBranchStatsController.js"></script>
-    <script src="controllers/SchoolBranchStatsController/coordinatorAtiveInactiveController.js"></script>
-    <script src="controllers/SchoolBranchStatsController/coordinatorRegistration.js"></script>
-
-    <!------------------------------- Coordinator stats Controllers ---------------------------->
-    <script src="controllers/CoordinatorStatsController/CoordinatorStatsController.js"></script>
-    <script src="controllers/CoordinatorStatsController/topperChartController.js"></script>
-    <script src="controllers/CoordinatorStatsController/genderChartController.js"></script>
-    <script src="controllers/CoordinatorStatsController/classWiseStatsController.js"></script>
-    <script src="controllers/CoordinatorStatsController/activeInactiveStudentsCountController.js"></script>
-    <script src="controllers/CoordinatorStatsController/studentsRegistrationStats.js"></script>
-    <script src="controllers/CoordinatorStatsController/AttendanceCount.js"></script>
   </head>
   <body>
     <div>
@@ -129,9 +162,10 @@
       <!-- view>-> to show pages -->
       <ui-view></ui-view>
     </div>
-    <script>
+
+    <!-- <script>
       window.location.href = "/#!/login";
-    </script>
+    </script> -->
 
     <!------------------------------- Bootrstrap JavaScript ---------------------------->
     <script

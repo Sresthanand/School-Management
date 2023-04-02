@@ -8,6 +8,11 @@ const marksSchema = new mongoose.Schema({
   student: {
     id: mongoose.Schema.Types.ObjectId,
     name: String,
+    class: String,
+  },
+  isDelete: {
+    type: String,
+    required: true,
   },
   subject1: {
     name: {

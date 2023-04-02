@@ -18,6 +18,12 @@ const { AttendanceModel } = require("../models/attendance");
 const job = new CronJob("0 0 * * *", markAttendance); //every mid night
 job.start();
 
+//pdf
+const bodyParser = require("body-parser");
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
+const path = require("path");
+
 const options = {
   year: "numeric",
   month: "numeric",
@@ -363,5 +369,404 @@ function markAttendance() {
     });
   });
 }
+
+// router.post("/generateReportCard", (req, res) => {
+//   const studentId = req.body.studentId;
+//   console.log("hi ia m from generate report card api");
+//   console.log(studentId);
+
+//   const doc = new PDFDocument();
+//   const writeStream = fs.createWriteStream("report_card.pdf");
+//   doc.pipe(writeStream);
+//   doc.fontSize(20).text("Hi I am pdf!", 100, 100);
+//   doc.end();
+
+//   writeStream.on("finish", () => {
+//     const file = fs.createReadStream("report_card.pdf");
+//     const stat = fs.statSync("report_card.pdf");
+//     res.setHeader("Content-Length", stat.size);
+//     res.setHeader("Content-Type", "application/pdf");
+//     res.setHeader(
+//       "Content-Disposition",
+//       `attachment; filename="report_card.pdf"`
+//     );
+//     file.pipe(res);
+//   });
+// });
+
+router.post("/generateReportCard", (req, res) => {
+  const studentId = req.body.studentId;
+  console.log("hi ia m from generate report card api");
+  console.log(studentId);
+
+  const doc = new PDFDocument();
+  const writeStream = fs.createWriteStream("report_card.pdf");
+  doc.pipe(writeStream);
+  doc.fontSize(20).text("Hi I am pdf!", 100, 100);
+  doc.end();
+
+  writeStream.on("finish", () => {
+    const file = fs.createReadStream("report_card.pdf");
+    const filePath = "C:/Users/SRESTH/Downloads/report_card.pdf";
+    const writeStream = fs.createWriteStream(filePath);
+    file.pipe(writeStream);
+    res.send("Report card generated and downloaded successfully!");
+  });
+});
+
+//Stats api
+
+router.get(
+  "/getStudentStats",
+  authenticateRequest,
+  checkUserRole(["student"]),
+  function (req, res) {
+    const studentId = req.user.id;
+
+    StudentModel.findOne({ "userId.id": studentId }, function (err, student) {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!student) {
+        console.log("No student found for this user");
+        res.send({
+          success: false,
+          message: "No student found for this user",
+        });
+      } else {
+        MarksModel.aggregate([
+          { $match: { "student.id": student._id, isDelete: "false" } },
+          {
+            $project: {
+              subjectMarks: [
+                "$subject1.marksObtained",
+                "$subject2.marksObtained",
+                "$subject3.marksObtained",
+                "$subject4.marksObtained",
+                "$subject5.marksObtained",
+              ],
+              subjectNames: [
+                "$subject1.name",
+                "$subject2.name",
+                "$subject3.name",
+                "$subject4.name",
+                "$subject5.name",
+              ],
+            },
+          },
+          {
+            $project: {
+              highestMarks: { $max: "$subjectMarks" },
+              lowestMarks: { $min: "$subjectMarks" },
+              highestMarksSubject: {
+                $arrayElemAt: [
+                  "$subjectNames",
+                  {
+                    $indexOfArray: ["$subjectMarks", { $max: "$subjectMarks" }],
+                  },
+                ],
+              },
+              lowestMarksSubject: {
+                $arrayElemAt: [
+                  "$subjectNames",
+                  {
+                    $indexOfArray: ["$subjectMarks", { $min: "$subjectMarks" }],
+                  },
+                ],
+              },
+            },
+          },
+        ]).exec(function (err, result) {
+          if (err) {
+            console.log(err);
+            res.send({
+              success: false,
+              message: "Something went wrong",
+              error: err,
+            });
+          } else if (!result || result.length === 0) {
+            console.log("No marks found for this student");
+            res.send({
+              success: false,
+              message: "No marks found for this student",
+            });
+          } else {
+            res.send({
+              success: true,
+              highestMarks: result[0].highestMarks,
+              highestMarksSubject: result[0].highestMarksSubject,
+              lowestMarks: result[0].lowestMarks,
+              lowestMarksSubject: result[0].lowestMarksSubject,
+            });
+          }
+        });
+      }
+    });
+  }
+);
+
+router.get(
+  "/getStudentPercentage",
+  authenticateRequest,
+  checkUserRole(["student"]),
+  function (req, res) {
+    const studentId = req.user.id;
+
+    StudentModel.findOne({ "userId.id": studentId }, function (err, student) {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!student) {
+        console.log("No student found for this user");
+        res.send({
+          success: false,
+          message: "No student found for this user",
+        });
+      } else {
+        MarksModel.aggregate([
+          {
+            $match: {
+              "student.id": student._id,
+              isDelete: "false",
+            },
+          },
+          {
+            $group: {
+              _id: "$student.id",
+              totalMarks: {
+                $sum: {
+                  $add: [
+                    "$subject1.marksObtained",
+                    "$subject2.marksObtained",
+                    "$subject3.marksObtained",
+                    "$subject4.marksObtained",
+                    "$subject5.marksObtained",
+                  ],
+                },
+              },
+              totalMaxMarks: {
+                $sum: {
+                  $add: [
+                    "$subject1.totalMarks",
+                    "$subject2.totalMarks",
+                    "$subject3.totalMarks",
+                    "$subject4.totalMarks",
+                    "$subject5.totalMarks",
+                  ],
+                },
+              },
+            },
+          },
+        ]).exec(function (err, result) {
+          if (err) {
+            console.log(err);
+            res.send({
+              success: false,
+              message: "Something went wrong",
+              error: err,
+            });
+          } else if (result.length == 0) {
+            console.log("No marks found for this student");
+            res.send({
+              success: false,
+              message: "No marks found for this student",
+            });
+          } else {
+            const percentage =
+              (result[0].totalMarks / result[0].totalMaxMarks) * 100;
+
+            res.send({
+              success: true,
+              percentage: percentage.toFixed(2),
+            });
+          }
+        });
+      }
+    });
+  }
+);
+
+router.get(
+  "/getStudentRank",
+  authenticateRequest,
+  checkUserRole(["student"]),
+  function (req, res) {
+    const studentId = req.user.id;
+
+    StudentModel.findOne({ "userId.id": studentId }, function (err, student) {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!student) {
+        console.log("No student found for this user");
+        res.send({
+          success: false,
+          message: "No student found for this user",
+        });
+      } else {
+        MarksModel.aggregate([
+          {
+            $match: {
+              "coordinator.id": student.coordinator.id,
+              "student.class": student.class,
+              isDelete: "false",
+            },
+          },
+          {
+            $group: {
+              _id: "$student.id",
+              totalMarks: {
+                $sum: {
+                  $add: [
+                    "$subject1.marksObtained",
+                    "$subject2.marksObtained",
+                    "$subject3.marksObtained",
+                    "$subject4.marksObtained",
+                    "$subject5.marksObtained",
+                  ],
+                },
+              },
+              totalMaxMarks: {
+                $sum: {
+                  $add: [
+                    "$subject1.totalMarks",
+                    "$subject2.totalMarks",
+                    "$subject3.totalMarks",
+                    "$subject4.totalMarks",
+                    "$subject5.totalMarks",
+                  ],
+                },
+              },
+            },
+          },
+        ]).exec((err, result) => {
+          result.forEach((obj, index) => {
+            console.log(`Object ${index}:`, obj);
+          });
+
+          if (err) {
+            console.log(err);
+            res.send({
+              success: false,
+              message: "Something went wrong",
+              error: err,
+            });
+          } else {
+            const percentages = result.map((r) => {
+              const percent = (r.totalMarks / r.totalMaxMarks) * 100;
+              return { studentId: r._id, percentage: percent };
+            });
+            const studentPercentage = percentages.find(
+              (p) => p.studentId.toString() === student._id.toString()
+            );
+            const sortedPercentages = percentages.sort(
+              (a, b) => b.percentage - a.percentage
+            );
+
+            const studentRank =
+              sortedPercentages.findIndex(
+                (p) => p.studentId.toString() === student._id.toString()
+              ) + 1;
+
+            const allPercentages = sortedPercentages.map((p) => ({
+              percentage: p.percentage,
+            }));
+
+            const N = percentages.length;
+
+            const percentile = ((N - studentRank + 0.5) / N) * 100;
+
+            res.send({
+              success: true,
+              message: "Student rank fetched successfully",
+              rank: studentRank,
+              percentages: allPercentages,
+              percentile: percentile,
+            });
+          }
+        });
+      }
+    });
+  }
+);
+
+router.get(
+  "/getStudentSubjectGrades",
+  authenticateRequest,
+  checkUserRole(["student"]),
+  function (req, res) {
+    const studentId = req.user.id;
+
+    StudentModel.findOne({ "userId.id": studentId }, function (err, student) {
+      if (err) {
+        console.log(err);
+        res.send({
+          success: false,
+          message: "Something went wrong",
+          error: err,
+        });
+      } else if (!student) {
+        console.log("No student found for this user");
+        res.send({
+          success: false,
+          message: "No student found for this user",
+        });
+      } else {
+        MarksModel.findOne(
+          { "student.id": student._id, isDelete: "false" },
+          function (err, marks) {
+            if (err) {
+              console.log(err);
+              res.send({
+                success: false,
+                message: "Something went wrong",
+                error: err,
+              });
+            } else if (!marks) {
+              console.log("No marks found for this student");
+              res.send({
+                success: false,
+                message: "No marks found for this student",
+              });
+            } else {
+              const subjectGrades = [];
+              for (let i = 1; i <= 5; i++) {
+                const subjectName = marks["subject" + i].name;
+                const marksObtained = marks["subject" + i].marksObtained;
+                const totalMarks = marks["subject" + i].totalMarks;
+                const percentage = ((marksObtained / totalMarks) * 100).toFixed(
+                  2
+                );
+
+                subjectGrades.push({
+                  subjectName: subjectName,
+                  percentage: percentage,
+                });
+              }
+
+              res.send({
+                success: true,
+                message: "Subject grades fetched successfully",
+                subjectGrades: subjectGrades,
+              });
+            }
+          }
+        );
+      }
+    });
+  }
+);
 
 module.exports = router;

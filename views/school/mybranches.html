@@ -6,26 +6,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css\schoolStyleSheet\mybranches.css" / >
     <title>Document</title>
+
+    <style>
+      .toast {
+        position: fixed;
+        top: 60px;
+        right: 60px;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 2s ease-out;
+      }
+
+      .toast.success {
+        background-color: green;
+      }
+
+      .toast.error {
+        background-color: red;
+      }
+
+      .toast.show {
+        opacity: 1;
+      }
+    </style>
   </head>
   <body>
-    
     <div class="wrap">
-      <div class="search">
+      <!-- <div class="search">
         <input
           type="text"
           class="searchTerm"
           placeholder="Search Your School branch"
+          ng-model-options="{debounce : 500}"
           ng-model="searchQuery"
+          ng-change="handlePagination()"
         />
         <button type="submit" class="searchButton">
           <i class="fa fa-search"></i>
         </button>
+      </div> -->
+      <div
+        class="toast"
+        ng-class="{'show': showToast, 'success': toastColor === 'green', 'error': toastColor === 'red'}"
+      >
+        {{toastMessage}}
       </div>
-
       <div>
         <div class="input_item">
-          <select ng-model="selectedLocation">
-            <option value="">City</option>
+          <select
+            ng-model="selectedLocation"
+            ng-model-options="{debounce : 500}"
+            ng-change="handlePagination()"
+          >
+            <option value="">Select a Location To Filter</option>
             <option value="Delhi">Delhi</option>
             <option value="Mumbai">Mumbai</option>
             <option value="Kolkata">Kolkata</option>
@@ -37,21 +73,11 @@
           </select>
         </div>
       </div>
-
-      <button type="button" class="resetButton" ng-click="resetFilters()">
-        Reset
-      </button>
     </div>
 
     <div class="card-container">
-      <div
-        class="card"
-        ng-repeat="branch in branches | filter:{location:selectedLocation} | filter:searchQuery"
-      >
-        <img
-        ng-src="{{branch.image}}"
-          alt="Placeholder Image"
-        />
+      <div class="card" ng-repeat="branch in branches">
+        <img ng-src="{{branch.image}}" alt="Placeholder Image" />
         <div class="card-info">
           <h2>{{ branch.location }}</h2>
           <!-- <p>{{ branch.location }}</p> -->
@@ -59,21 +85,21 @@
           <!-- <p>{{ branch.school.name }}</p> -->
 
           <div class="card-buttons">
-            <!-- <button
+            <button
               class="edit-button"
               data-toggle="modal"
               data-target="#editModal"
-              ng-click="openEditModal(school)"
+              ng-click="openEditModal(branch)"
             >
               Edit
-            </button> -->
+            </button>
 
             <button
               class="delete-button"
               data-toggle="modal"
               data-toggle="modal"
               data-target="#deleteModal"
-               ng-click="openDeleteModal(branch)"
+              ng-click="openDeleteModal(branch)"
             >
               Delete
             </button>
@@ -82,7 +108,18 @@
       </div>
     </div>
 
-    <!-- Edit Modal -->
+    <div class="paginationMain">
+      <button
+        class="page-numbers"
+        ng-repeat="page in pages"
+        ng-class="{ active: currentPage === page }"
+        ng-click="handlePagination(page)"
+      >
+        {{page}}
+      </button>
+    </div>
+
+    <!-- edit Modal -->
     <div
       class="modal fade"
       id="editModal"
@@ -107,13 +144,24 @@
           <div class="modal-body">
             <form>
               <div class="form-group">
-                <label for="schoolNameInput">Enter New School Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="schoolNameInput"
-                  ng-model="updatedSchoolName"
-                />
+                <label for="schoolNameInput">Enter New Branch location</label>
+                <select
+                  name="school_location"
+                  id="school_location"
+                  class="input"
+                  ng-model="updatedlocation"
+                  required
+                >
+                  <option value="">Select a Location</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Mumbai">Mumbai</option>
+                  <option value="Kolkata">Kolkata</option>
+                  <option value="Chennai">Chennai</option>
+                  <option value="Bangalore">Bangalore</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                  <option value="Ahmedabad">Ahmedabad</option>
+                  <option value="Pune">Pune</option>
+                </select>
               </div>
             </form>
           </div>
@@ -128,7 +176,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              ng-click="updateSchoolName(updatedSchoolName)"
+              ng-click="updateBranchLocation(updatedlocation)"
             >
               Save Changes
             </button>
@@ -173,7 +221,7 @@
             <button
               type="button"
               class="btn btn-danger"
-              ng-click="confirmDelete(branch)" 
+              ng-click="confirmDelete(branch)"
             >
               Delete
             </button>

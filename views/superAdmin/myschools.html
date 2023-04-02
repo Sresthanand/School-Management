@@ -11,40 +11,74 @@
       src="https://kit.fontawesome.com/d97b87339f.js"
       crossorigin="anonymous"
     ></script>
+
+    <style>
+      .toast {
+        position: fixed;
+        top: 60px;
+        right: 60px;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 2s ease-out;
+      }
+
+      .toast.success {
+        background-color: green;
+      }
+
+      .toast.error {
+        background-color: red;
+      }
+
+      .toast.show {
+        opacity: 1;
+      }
+    </style>
   </head>
   <body>
-
     <div class="wrap">
-        <div class="search">
-           <input type="text" class="searchTerm" placeholder="Search Your School" ng-model="searchQuery">
-           <button type="submit" class="searchButton">
-             <i class="fa fa-search"></i>
-          </button>
-        </div>
-     </div>   
+      <div class="search">
+        <input
+          type="text"
+          class="searchTerm"
+          placeholder="Search Your School"
+          ng-model-options="{debounce : 500}"
+          ng-model="searchQuery"
+          ng-change="handlePagination()"
+        />
+        <button type="submit" class="searchButton">
+          <i class="fa fa-search"></i>
+        </button>
+      </div>
+    </div>
 
-
+    <div
+      class="toast"
+      ng-class="{'show': showToast, 'success': toastColor === 'green', 'error': toastColor === 'red'}"
+    >
+      {{toastMessage}}
+    </div>
 
     <div class="card-container">
-      <div class="card" ng-repeat="school in schools | filter:searchQuery">
-        <img
-          ng-src="{{school.image}}"
-          alt="Placeholder Image"
-        />
+      <div class="card" ng-repeat="school in schools">
+        <img ng-src="{{school.image}}" alt="Placeholder Image" />
         <div class="card-info">
           <h2>{{school.name}}</h2>
           <!-- <p>{{school.name}}</p>
           <p>{{school.name}}</p>
           <p>{{school.name}}</p> -->
           <div class="card-buttons">
-            <!-- <button
+            <button
               class="edit-button"
               data-toggle="modal"
               data-target="#editModal"
               ng-click="openEditModal(school)"
             >
               Edit
-            </button> -->
+            </button>
 
             <button
               class="delete-button"
@@ -58,6 +92,16 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="paginationMain">
+      <button
+        class="page-numbers"
+        ng-repeat="page in pages"
+        ng-class="{ active: currentPage === page }"
+        ng-click="handlePagination(page)"
+      >
+        {{page}}
+      </button>
     </div>
 
     <!-- Edit Modal -->
@@ -151,7 +195,7 @@
             <button
               type="button"
               class="btn btn-danger"
-              ng-click="confirmDelete(school)" 
+              ng-click="confirmDelete(school)"
             >
               Delete
             </button>
