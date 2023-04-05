@@ -23,13 +23,13 @@ router.post(
     const user = new UserModel({
       username: req.body.username,
       password: hashSync(req.body.password, 10),
-      role: "branch", // set the user role as "branch"
+      role: "branch", 
     });
 
     user
       .save()
       .then((user) => {
-        SchoolModel.findOne({ "userId.id": req.user.id }) // find the school using the userId property
+        SchoolModel.findOne({ "userId.id": req.user.id }) 
           .then((school) => {
             const branch = new BranchModel({
               location: req.body.branch.location,
@@ -83,58 +83,6 @@ router.post(
   }
 );
 
-// router.get(
-//   "/getBranches",
-//   authenticateRequest,
-//   checkUserRole(["school"]),
-//   (req, res) => {
-//     console.log("Hi, I am from get branches!");
-
-//     const userId = req.user.id;
-
-//     SchoolModel.findOne({ "userId.id": userId }, (err, school) => {
-//       if (err) {
-//         console.log(err);
-//         res.send({
-//           success: false,
-//           message: "Something went wrong",
-//           error: err,
-//         });
-//       } else if (!school) {
-//         console.log("No school found for this user");
-//         res.send({
-//           success: false,
-//           message: "No school found for this user",
-//         });
-//       } else {
-//         const schoolId = school._id;
-//         console.log(school);
-//         console.log(schoolId);
-
-//         BranchModel.find(
-//           { "school.id": schoolId, isDelete: false },
-//           { location: 1, "school.id": 1, "school.name": 1, _id: 1, image: 1 },
-//           (err, branches) => {
-//             if (err) {
-//               console.log(err);
-//               res.send({
-//                 success: false,
-//                 message: "Something went wrong",
-//                 error: err,
-//               });
-//             } else {
-//               res.send({
-//                 success: true,
-//                 message: "Branches fetched successfully",
-//                 branches: branches,
-//               });
-//             }
-//           }
-//         );
-//       }
-//     });
-//   }
-// );
 
 router.get(
   "/getBranches",
@@ -170,8 +118,7 @@ router.get(
         });
       } else {
         const schoolId = school._id;
-        // console.log(school);
-        // console.log(schoolId);
+
 
         let filter = { "school.id": schoolId, isDelete: false };
 
@@ -237,7 +184,6 @@ router.put(
           });
         }
 
-        // Set isDelete property to true
         branch.isDelete = true;
 
         branch.updatedAt = Date.now();
@@ -481,8 +427,8 @@ router.get(
   authenticateRequest,
   checkUserRole(["school"]),
   function (req, res) {
-    var startDate = new Date("2023-02-01T00:00:00.000Z"); // start of time period
-    var endDate = new Date(); // end of time period (current date)
+    var startDate = new Date("2023-02-01T00:00:00.000Z"); 
+    var endDate = new Date(); 
 
     const userId = req.user.id;
 

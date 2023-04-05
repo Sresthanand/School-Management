@@ -20,7 +20,6 @@ router.post(
   authenticateRequest,
   checkUserRole(["super-admin"]),
   (req, res) => {
-    // Add your schoolRegister API code here
     console.log("Hi, I am from school register!");
 
     const user = new UserModel({
@@ -43,7 +42,7 @@ router.post(
           username: savedUser.username,
         };
         console.log(school);
-        return school.save(); // Return the promise from school.save() so that it can be chained in next .then() block
+        return school.save();
       })
       .then((savedSchool) => {
         res.send({
@@ -70,43 +69,6 @@ router.post(
       });
   }
 );
-
-// router.get(
-//   "/getAllSchools",
-//   authenticateRequest,
-//   checkUserRole(["super-admin"]),
-//   (req, res) => {
-//     console.log("Hi, I am from get all schools!");
-
-//     const page = parseInt(req.query.page) || 1;
-//     const limit = parseInt(req.query.limit) || 6;
-
-//     const search = req.query.search !== "undefined" ? req.query.search : "";
-
-//     console.log("search" + search);
-
-//     SchoolModel.find(
-//       { isDelete: false },
-//       { name: 1, _id: 1, image: 1 },
-//       (err, schools) => {
-//         if (err) {
-//           console.log(err);
-//           res.send({
-//             success: false,
-//             message: "Something went wrong",
-//             error: err,
-//           });
-//         } else {
-//           res.send({
-//             success: true,
-//             message: "Schools fetched successfully",
-//             schools: schools,
-//           });
-//         }
-//       }
-//     );
-//   }
-// );
 
 router.get(
   "/getAllSchools",
@@ -246,7 +208,6 @@ router.put(
           });
         }
 
-        // Set isDelete property to true
         school.isDelete = true;
 
         school.updatedAt = Date.now();
@@ -478,8 +439,8 @@ router.get(
   authenticateRequest,
   checkUserRole(["super-admin"]),
   function (req, res) {
-    var startDate = new Date("2023-02-01T00:00:00.000Z"); // start of time period
-    var endDate = new Date(); // end of time period (current date)
+    var startDate = new Date("2023-02-01T00:00:00.000Z");
+    var endDate = new Date();
 
     SchoolModel.aggregate(
       [

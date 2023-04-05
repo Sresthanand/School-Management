@@ -108,14 +108,14 @@ header .navbar{
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-left: 25px;
+    margin-left: 0px;
     /* padding: 0 3rem; */
     /* color: var(--color-info); */
 }
 header .navbar a{
     display: flex;
     margin-left: 2rem;
-    gap: 1rem;
+    /* gap: 1rem; */
     align-items: center;
     justify-content: space-between;
     position: relative;

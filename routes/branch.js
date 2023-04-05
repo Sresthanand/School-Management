@@ -20,91 +20,7 @@ const {
   checkUserRole,
 } = require("../middleware/middleware");
 
-// router.post(
-//   "/coordinatorRegister",
-//   authenticateRequest,
-//   checkUserRole(["branch"]),
-//   (req, res) => {
-//     const user = new UserModel({
-//       username: req.body.username,
-//       password: hashSync(req.body.password, 10),
-//       role: "coordinator", // set the user role as "coordinator"
-//     });
 
-//     user
-//       .save()
-//       .then((user) => {
-//         BranchModel.findOne({ "userId.id": req.user.id }) // find the branch using the userId property of the logged in user
-//           .then((branch) => {
-//             SchoolModel.findOne({ _id: branch.school.id }) // find the school using the school id of the branch
-//               .then((school) => {
-//                 const coordinator = new CoordinatorModel({
-//                   name: req.body.name.name,
-//                   image: req.body.name.image,
-//                   isDelete: false,
-//                   userId: {
-//                     id: user._id,
-//                     username: user.username,
-//                   },
-//                   school: {
-//                     id: school._id,
-//                     name: school.name,
-//                   },
-//                   branch: {
-//                     id: branch._id,
-//                     location: branch.location,
-//                   },
-//                 });
-
-//                 coordinator.save().then((coordinator) => {
-//                   res.send({
-//                     success: true,
-//                     message: "User created successfully",
-//                     user: {
-//                       id: user._id,
-//                       username: user.username,
-//                       role: user.role,
-//                     },
-//                     coordinator: {
-//                       id: coordinator._id,
-//                       name: coordinator.name,
-//                       school: {
-//                         id: school._id,
-//                         name: school.name,
-//                       },
-//                       branch: {
-//                         id: branch._id,
-//                         name: branch.name,
-//                       },
-//                     },
-//                   });
-//                 });
-//               })
-//               .catch((err) => {
-//                 res.send({
-//                   success: false,
-//                   message: "Something went wrong",
-//                   error: err,
-//                 });
-//               });
-//           })
-//           .catch((err) => {
-//             res.send({
-//               success: false,
-//               message: "Something went wrong",
-//               error: err,
-//             });
-//           });
-//       })
-//       .catch((err) => {
-//         res.send({
-//           success: false,
-//           message: "Something went wrong",
-//           error: err,
-//         });
-//       });
-//   }
-// );
 
 router.post(
   "/coordinatorRegister",
@@ -114,13 +30,13 @@ router.post(
     const user = new UserModel({
       username: req.body.username,
       password: hashSync(req.body.password, 10),
-      role: "coordinator", // set the user role as "coordinator"
+      role: "coordinator", 
     });
 
     user
       .save()
       .then((user) => {
-        BranchModel.findOne({ "userId.id": req.user.id }) // find the branch using the userId property of the logged in user
+        BranchModel.findOne({ "userId.id": req.user.id }) 
           .then((branch) => {
             const coordinator = new CoordinatorModel({
               name: req.body.name.name,
@@ -181,67 +97,6 @@ router.post(
       });
   }
 );
-
-// router.get(
-//   "/getCoordinators",
-//   authenticateRequest,
-//   checkUserRole(["branch"]),
-//   (req, res) => {
-//     console.log("Hi, I am from get coordinators!");
-
-//     const userId = req.user.id;
-
-//     BranchModel.findOne({ "userId.id": userId }, (err, branch) => {
-//       if (err) {
-//         console.log(err);
-//         res.send({
-//           success: false,
-//           message: "Something went wrong",
-//           error: err,
-//         });
-//       } else if (!branch) {
-//         console.log("No branch found for this user");
-//         res.send({
-//           success: false,
-//           message: "No branch found for this user",
-//         });
-//       } else {
-//         const branchId = branch._id;
-//         console.log(branch);
-//         console.log(branchId);
-
-//         CoordinatorModel.find(
-//           { "branch.id": branchId, isDelete: "false" }, //changed "false"
-//           {
-//             name: 1,
-//             image: 1,
-//             "branch.id": 1,
-//             "branch.location": 1,
-//             "school.id": 1,
-//             "school.name": 1,
-//             _id: 1,
-//           },
-//           (err, coordinators) => {
-//             if (err) {
-//               console.log(err);
-//               res.send({
-//                 success: false,
-//                 message: "Something went wrong",
-//                 error: err,
-//               });
-//             } else {
-//               res.send({
-//                 success: true,
-//                 message: "Coordinators fetched successfully",
-//                 coordinators: coordinators,
-//               });
-//             }
-//           }
-//         );
-//       }
-//     });
-//   }
-// );
 
 router.get(
   "/getCoordinators",
@@ -354,7 +209,7 @@ router.put(
           });
         }
 
-        // Set isDelete property to true
+    
         coordinator.isDelete = true;
 
         coordinator.updatedAt = Date.now();
@@ -461,7 +316,7 @@ router.put(
   }
 );
 
-//Stats Controller
+//Stats api
 
 router.get(
   "/coordinatorsCount",
@@ -582,8 +437,8 @@ router.get(
   checkUserRole(["branch"]),
   function (req, res) {
     const userId = req.user.id;
-    const startDate = new Date("2023-02-01T00:00:00.000Z"); // start of time period
-    const endDate = new Date(); // end of time period (current date)
+    const startDate = new Date("2023-02-01T00:00:00.000Z"); 
+    const endDate = new Date();
 
     BranchModel.findOne({ "userId.id": userId }, function (err, branch) {
       if (err) {

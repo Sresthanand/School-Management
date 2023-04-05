@@ -408,11 +408,12 @@
                     file-model="file"
                     accept=".png, .jpeg, .jpg, .svg"
                     id="file"
-                    required
+                    ng-required="true"
                   />
                 </div>
               </div>
 
+              
               <div class="loading-overlay" ng-show="loading">
                 <div class="loader"></div>
               </div>
@@ -420,7 +421,7 @@
               <button
                 type="submit"
                 ng-click="studentRegister()"
-                ng-disabled="studentForm.$invalid"
+                ng-disabled="studentForm.$invalid || !file"
                 class="submit-btn"
               >
                 Register Now

@@ -38,19 +38,20 @@ mySchoolApp.controller(
         console.log(err);
       });
 
+      
     $scope.resetFilters = function () {
       $scope.searchQuery = "";
     };
 
-    $scope.sortByTotalMarks = function (marks) {
-      return -(
-        marks.subject1.marksObtained +
-        marks.subject2.marksObtained +
-        marks.subject3.marksObtained +
-        marks.subject4.marksObtained +
-        marks.subject5.marksObtained
-      );
-    };
+    // $scope.sortByTotalMarks = function (marks) {
+    //   return -(
+    //     marks.subject1.marksObtained +
+    //     marks.subject2.marksObtained +
+    //     marks.subject3.marksObtained +
+    //     marks.subject4.marksObtained +
+    //     marks.subject5.marksObtained
+    //   );
+    // };
 
     $scope.openDeleteAlert = function (marks) {
       console.log(marks.id);
@@ -85,8 +86,18 @@ mySchoolApp.controller(
     };
 
     $scope.openMarksModal = function (marks) {
+      $scope.marksCal = marks;
+      console.log($scope.marksCal);
       $scope.MarksId = marks.id;
       console.log($scope.MarksId);
+    };
+
+    $scope.checkMarks = function () {
+      if ($scope.marksofsubject1 <= $scope.maximumMarks) {
+        $scope.marksform.marks1.$setValidity("max", true);
+      } else {
+        $scope.marksform.marks1.$setValidity("max", false);
+      }
     };
 
     $scope.editMarks = function (
@@ -114,6 +125,8 @@ mySchoolApp.controller(
       var subject5Name = nameofsubject5;
       var subject5Marks = marksofsubject5;
       var maximumMarks = maximumMarks;
+
+      var marksCalculate = $scope.marksCal;
 
       //console.log(MarksId + "Heyo bitch");
       console.log("Hi i am from edit marks function");
@@ -145,26 +158,33 @@ mySchoolApp.controller(
           }, 3000);
           console.log(response);
 
-          var index = $scope.marksList.findIndex(function (element) {
-            return element.MarksId === MarksId;
-          });
+          console.log(marksCalculate);
+
+          var index = $scope.marksList.indexOf(marksCalculate);
+
+          console.log("Index" + index);
 
           if (index !== -1) {
             $scope.marksList[index].MaximumMarks = maximumMarks;
-            $scope.marksList[index].Subject1Name = subject1Name;
-            $scope.marksList[index].Subject1Marks = subject1Marks;
-            $scope.marksList[index].Subject2Name = subject2Name;
-            $scope.marksList[index].Subject2Marks = subject2Marks;
-            $scope.marksList[index].Subject3Name = subject3Name;
-            $scope.marksList[index].Subject3Marks = subject3Marks;
-            $scope.marksList[index].Subject4Name = subject4Name;
-            $scope.marksList[index].Subject4Marks = subject4Marks;
-            $scope.marksList[index].Subject5Name = subject5Name;
-            $scope.marksList[index].Subject5Marks = subject5Marks;
+
+            $scope.marksList[index].subject1.name = subject1Name;
+            $scope.marksList[index].subject1.marksObtained = subject1Marks;
+
+            $scope.marksList[index].subject2.name = subject2Name;
+            $scope.marksList[index].subject2.marksObtained = subject2Marks;
+
+            $scope.marksList[index].subject3.name = subject3Name;
+            $scope.marksList[index].subject3.marksObtained = subject3Marks;
+
+            $scope.marksList[index].subject4.name = subject4Name;
+            $scope.marksList[index].subject4.marksObtained = subject4Marks;
+
+            $scope.marksList[index].subject5.name = subject5Name;
+            $scope.marksList[index].subject5.marksObtained = subject5Marks;
           }
 
-          $("#marksForm").modal("hide");
           $scope.showForm = false;
+          // $("#marksForm").modal("hide");
         })
         .catch(function (err) {
           //alert("there is error!");

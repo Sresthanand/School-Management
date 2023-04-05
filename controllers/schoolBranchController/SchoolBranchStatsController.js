@@ -34,7 +34,5 @@ mySchoolApp.controller(
       .catch(function (err) {
         console.log(err);
       });
-
-      
   }
 );

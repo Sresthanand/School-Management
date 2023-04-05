@@ -27,27 +27,6 @@ mySchoolApp.controller(
       $state.go("login");
     };
 
-    // function to exam register
-    // $scope.ExamRegister = function () {
-    //   var data = {
-    //     date: $scope.date,
-    //     time: $scope.time,
-    //     subject: $scope.subject,
-    //     roomnumber: $scope.roomnumber,
-    //   };
-
-    //   studentService
-    //     .examRegister(token, data)
-    //     .then(function (response) {
-    //       console.log(response);
-    //       alert("Exams has been scheduled!");
-    //     })
-    //     .catch(function (err) {
-    //       console.log(err);
-    //       alert("There is some error" + err);
-    //     });
-    // };
-
     $scope.ExamRegister = function () {
       var date = $scope.date;
       var time = $scope.time;

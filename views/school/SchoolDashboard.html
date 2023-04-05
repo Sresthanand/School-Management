@@ -259,7 +259,7 @@
                     file-model="file"
                     accept=".png, .jpeg, .jpg, .svg"
                     id="file"
-                    required
+                    ng-required="true"
                   />
                 </div>
               </div>
@@ -271,7 +271,7 @@
               <button
                 type="submit"
                 ng-click="branchRegister()"
-                ng-disabled="branchForm.$invalid"
+                ng-disabled="branchForm.$invalid || !file"
                 class="submit-btn"
               >
                 Register Now

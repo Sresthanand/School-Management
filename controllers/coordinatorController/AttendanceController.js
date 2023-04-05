@@ -30,7 +30,7 @@ mySchoolApp.controller(
     $scope.resetFilters = function () {
       $scope.searchQuery = "";
       $scope.selectedStatus = "";
-      $scope.dateQuery = ""; // Add this line to reset the date filter
+      $scope.dateQuery = ""; 
     };
 
     $scope.StatusFilter = function (attendance) {
@@ -42,7 +42,7 @@ mySchoolApp.controller(
 
     $scope.filterByDate = function (attendance) {
       if (!$scope.dateQuery) {
-        var today = new Date(); // If dateQuery is not set, set it to the current date
+        var today = new Date(); 
         $scope.dateQuery = new Date(
           today.getFullYear(),
           today.getMonth(),

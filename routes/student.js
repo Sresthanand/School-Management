@@ -36,6 +36,47 @@ const {
   checkUserRole,
 } = require("../middleware/middleware");
 
+function markAttendance() {
+  CoordinatorModel.find(function (err, coordinators) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    coordinators.forEach(function (coordinator) {
+      StudentModel.find(
+        { "coordinator.id": coordinator._id },
+        function (err, students) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+
+          students.forEach(function (student) {
+            const attendance = new AttendanceModel({
+              status: "absent",
+              coordinator: {
+                id: student.coordinator.id, //student.coordinator._id;
+                name: student.coordinator.name, //student.coordinator.name
+              },
+              student: {
+                id: student._id,
+                name: student.name,
+              },
+            });
+
+            attendance.save(function (err) {
+              if (err) {
+                console.error(err);
+              }
+            });
+          });
+        }
+      );
+    });
+  });
+}
+
 router.get(
   "/getStudentData",
   authenticateRequest,
@@ -169,7 +210,6 @@ router.get(
         MessageModel.find(
           {
             "coordinator.id": student.coordinator.id,
-            // "userId.id": studentId
           },
           (err, messages) => {
             if (err) {
@@ -226,6 +266,7 @@ router.get(
         MarksModel.findOne(
           {
             "student.id": student._id,
+            isDelete: "false",
           },
           (err, marks) => {
             if (err) {
@@ -254,9 +295,8 @@ router.get(
 
               const { name: coordinatorName } = coordinator;
               const { name: studentName } = studentData;
-              //this data is returning
+
               const data = {
-                //coordinator id and student id is not getting returned* check
                 id: marks._id,
                 coordinator: { id: coordinator._id, name: coordinatorName },
                 student: { id: studentData._id, name: studentName },
@@ -267,7 +307,6 @@ router.get(
                 subject5,
               };
               res.json({
-                //this is getting returned
                 success: true,
                 message: "Marks fetched successfully",
                 data,
@@ -286,12 +325,8 @@ router.put("/markAttendance/:id", (req, res) => {
   console.log("hi i am from mark attendance");
 
   console.log("StudentId " + studentId);
-  //const currentDate = new Date().toISOString().split("T")[0];
   const currentDate = new Date().toLocaleDateString("en-US");
   console.log(currentDate);
-
-  //const currentDate = new Date().toLocaleString("en-IN", options);
-  // console.log(currentDate);
 
   AttendanceModel.findOne(
     { "student.id": studentId, createdAt: { $gte: currentDate } },
@@ -329,90 +364,221 @@ router.put("/markAttendance/:id", (req, res) => {
   );
 });
 
-function markAttendance() {
-  CoordinatorModel.find(function (err, coordinators) {
-    if (err) {
-      console.error(err);
-      return;
+router.post(
+  "/generateReportCard",
+  authenticateRequest,
+  checkUserRole(["student"]),
+  function (req, res) {
+    const studentId = req.body.studentId;
+    const studentName = req.body.studentName;
+    const studentClass = req.body.studentClass;
+    const gender = req.body.gender;
+    const enrollmentNumber = req.body.enrollmentNumber;
+    const schoolName = req.body.schoolName;
+    const branchName = req.body.branchName;
+    const coordinatorName = req.body.coordinatorName;
+    const marks = req.body.marks;
+    const cgpa = req.body.cgpa;
+    const overallGrade = req.body.overallGrade;
+    const rank = req.body.rank;
+    const percentile = req.body.percentile;
+    const percentage = req.body.percentage;
+
+    const doc = new PDFDocument();
+    const writeStream = fs.createWriteStream("report_card.pdf");
+    doc.pipe(writeStream);
+
+    const fontBold = "Helvetica-Bold";
+    const fontRegular = "Helvetica";
+
+    const colorPrimary = "#007AFF";
+    const colorSecondary = "#000000";
+
+    const backgroundImagePath = path.join(
+      __dirname,
+      "../assets/student/reportCardbg.png"
+    );
+
+    doc.image(backgroundImagePath, {
+      fit: [doc.page.width, doc.page.height],
+      align: "center",
+      valign: "center",
+    });
+
+    doc.lineWidth(4);
+    doc
+      .lineCap("butt")
+      .strokeColor("#D3D3D3")
+      .rect(0, 0, doc.page.width, doc.page.height)
+      .stroke();
+
+    doc
+      .font(fontBold)
+      .fontSize(28)
+      .fillColor(colorPrimary)
+      .text(`${schoolName}`, { align: "center" });
+    doc
+      .font(fontRegular)
+      .fontSize(14)
+      .fillColor(colorSecondary)
+      .text(`${branchName}`, { align: "center" });
+    doc.moveDown();
+
+    doc
+      .font(fontBold)
+      .fontSize(18)
+      .fillColor(colorSecondary)
+      .text(`Student Information`);
+    doc.moveDown();
+    doc
+      .font(fontRegular)
+      .fontSize(14)
+      .fillColor(colorSecondary)
+      .text(`Name: ${studentName}`);
+    doc
+      .font(fontRegular)
+      .fontSize(14)
+      .fillColor(colorSecondary)
+      .text(`Enrollment Number: ${enrollmentNumber}`);
+    doc
+      .font(fontRegular)
+      .fontSize(14)
+      .fillColor(colorSecondary)
+      .text(`Class: ${studentClass}`);
+    doc
+      .font(fontRegular)
+      .fontSize(14)
+      .fillColor(colorSecondary)
+      .text(`Gender: ${gender}`);
+
+    const cellWidth = 120;
+    const cellHeight = 25;
+    const tableX = 50;
+    const tableY = 300;
+    const headerBackgroundColor = "#eeeeee";
+    const headerTextColor = "#333333";
+    const borderColor = "#cccccc";
+    const oddRowBackgroundColor = "#f7f7f7";
+    const evenRowBackgroundColor = "#ffffff";
+
+    doc.rect(tableX, tableY, cellWidth, cellHeight).fill(headerBackgroundColor);
+    doc
+      .rect(tableX + cellWidth, tableY, cellWidth, cellHeight)
+      .fill(headerBackgroundColor);
+    doc
+      .rect(tableX + cellWidth * 2, tableY, cellWidth, cellHeight)
+      .fill(headerBackgroundColor);
+
+    doc
+      .font(fontBold)
+      .fontSize(14)
+      .fill(headerTextColor)
+      .text("Subject", tableX, tableY);
+    doc
+      .font(fontBold)
+      .fontSize(14)
+      .fill(headerTextColor)
+      .text("Marks Obtained", tableX + cellWidth, tableY);
+    doc
+      .font(fontBold)
+      .fontSize(14)
+      .fill(headerTextColor)
+      .text("Total Marks", tableX + cellWidth * 2, tableY);
+
+    let rowY = tableY + cellHeight;
+    let i = 0;
+    while (i < 5) {
+      const rowBackgroundColor =
+        i % 2 === 0 ? evenRowBackgroundColor : oddRowBackgroundColor;
+      doc.rect(tableX, rowY, cellWidth, cellHeight).fill(rowBackgroundColor);
+      doc
+        .rect(tableX + cellWidth, rowY, cellWidth, cellHeight)
+        .fill(rowBackgroundColor);
+      doc
+        .rect(tableX + cellWidth * 2, rowY, cellWidth, cellHeight)
+        .fill(rowBackgroundColor);
+
+      doc.rect(tableX, rowY, cellWidth, cellHeight).stroke(borderColor);
+      doc
+        .rect(tableX + cellWidth, rowY, cellWidth, cellHeight)
+        .stroke(borderColor);
+      doc
+        .rect(tableX + cellWidth * 2, rowY, cellWidth, cellHeight)
+        .stroke(borderColor);
+
+      const currentSubject = marks[i];
+      doc
+        .font(fontRegular)
+        .fontSize(12)
+        .fill(colorSecondary)
+        .text(currentSubject.name, tableX, rowY + 5);
+      doc
+        .font(fontRegular)
+        .fontSize(12)
+        .fill(colorSecondary)
+        .text(currentSubject.marksObtained, tableX + cellWidth, rowY + 5);
+      doc
+        .font(fontRegular)
+        .fontSize(12)
+        .fill(colorSecondary)
+        .text(currentSubject.totalMarks, tableX + cellWidth * 2, rowY + 5);
+
+      rowY += cellHeight;
+      i++;
     }
 
-    coordinators.forEach(function (coordinator) {
-      StudentModel.find(
-        { "coordinator.id": coordinator._id },
-        function (err, students) {
-          if (err) {
-            console.error(err);
-            return;
-          }
+    doc.moveDown(5);
+    doc
+      .font(fontBold)
+      .fontSize(18)
+      .fillColor(colorSecondary)
+      .text(`Overall Result`);
 
-          students.forEach(function (student) {
-            const attendance = new AttendanceModel({
-              status: "absent",
-              coordinator: {
-                id: coordinator._id,
-                name: coordinator.name,
-              },
-              student: {
-                id: student._id,
-                name: student.name,
-              },
-            });
+    doc.moveDown();
 
-            attendance.save(function (err) {
-              if (err) {
-                console.error(err);
-              }
-            });
-          });
-        }
-      );
+    doc
+      .font(fontRegular)
+      .fontSize(14)
+      .fillColor(colorSecondary)
+      .text(`Rank: ${rank}`, { align: "left" });
+    doc
+      .font(fontRegular)
+      .fontSize(14)
+      .fillColor(colorSecondary)
+      .text(`Percentile: ${percentile}`, { align: "left" });
+    doc
+      .font(fontRegular)
+      .fontSize(14)
+      .fillColor(colorSecondary)
+      .text(`CGPA: ${cgpa}`, { align: "left" });
+    doc
+      .font(fontRegular)
+      .fontSize(14)
+      .fillColor(colorSecondary)
+      .text(`Overall Grade: ${overallGrade}`, { align: "left" });
+
+    doc
+      .font(fontRegular)
+      .fontSize(14)
+      .fillColor(colorSecondary)
+      .text(`Percentage: ${percentage}`, { align: "left" });
+
+    doc.moveDown();
+    doc
+      .fontSize(14)
+      .text(`Coordinated by: ${coordinatorName}`, { align: "right" });
+
+    doc.end();
+
+    writeStream.on("finish", () => {
+      const file = fs.createReadStream("report_card.pdf");
+      const filePath = `C:/Users/SRESTH/Downloads/${studentName}_${enrollmentNumber}_Result.pdf`;
+      const writeStream = fs.createWriteStream(filePath);
+      file.pipe(writeStream);
+      res.send("Report card generated and downloaded successfully!");
     });
-  });
-}
-
-// router.post("/generateReportCard", (req, res) => {
-//   const studentId = req.body.studentId;
-//   console.log("hi ia m from generate report card api");
-//   console.log(studentId);
-
-//   const doc = new PDFDocument();
-//   const writeStream = fs.createWriteStream("report_card.pdf");
-//   doc.pipe(writeStream);
-//   doc.fontSize(20).text("Hi I am pdf!", 100, 100);
-//   doc.end();
-
-//   writeStream.on("finish", () => {
-//     const file = fs.createReadStream("report_card.pdf");
-//     const stat = fs.statSync("report_card.pdf");
-//     res.setHeader("Content-Length", stat.size);
-//     res.setHeader("Content-Type", "application/pdf");
-//     res.setHeader(
-//       "Content-Disposition",
-//       `attachment; filename="report_card.pdf"`
-//     );
-//     file.pipe(res);
-//   });
-// });
-
-router.post("/generateReportCard", (req, res) => {
-  const studentId = req.body.studentId;
-  console.log("hi ia m from generate report card api");
-  console.log(studentId);
-
-  const doc = new PDFDocument();
-  const writeStream = fs.createWriteStream("report_card.pdf");
-  doc.pipe(writeStream);
-  doc.fontSize(20).text("Hi I am pdf!", 100, 100);
-  doc.end();
-
-  writeStream.on("finish", () => {
-    const file = fs.createReadStream("report_card.pdf");
-    const filePath = "C:/Users/SRESTH/Downloads/report_card.pdf";
-    const writeStream = fs.createWriteStream(filePath);
-    file.pipe(writeStream);
-    res.send("Report card generated and downloaded successfully!");
-  });
-});
+  }
+);
 
 //Stats api
 
@@ -665,7 +831,9 @@ router.get(
             });
           } else {
             const percentages = result.map((r) => {
-              const percent = (r.totalMarks / r.totalMaxMarks) * 100;
+              const percent = ((r.totalMarks / r.totalMaxMarks) * 100).toFixed(
+                2
+              );
               return { studentId: r._id, percentage: percent };
             });
             const studentPercentage = percentages.find(

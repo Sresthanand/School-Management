@@ -61,7 +61,23 @@ mySchoolApp.service("studentDashboardService", function ($http) {
   };
 
   //download ReportCard
-  this.reportCardGeneration = function (token,studentId) {
+  this.reportCardGeneration = function (
+    token,
+    studentId,
+    studentName,
+    studentClass,
+    gender,
+    enrollmentNumber,
+    schoolName,
+    branchName,
+    coordinatorName,
+    marks,
+    cgpa,
+    overallGrade,
+    rank,
+    percentile,
+    percentage
+  ) {
     return $http({
       method: "POST",
       url: baseUrl + "api/student/generateReportCard",
@@ -69,7 +85,22 @@ mySchoolApp.service("studentDashboardService", function ($http) {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
       },
-      data: { studentId: studentId },
+      data: {
+        studentId: studentId,
+        studentName: studentName,
+        studentClass: studentClass,
+        gender: gender,
+        enrollmentNumber: enrollmentNumber,
+        schoolName: schoolName,
+        branchName: branchName,
+        coordinatorName: coordinatorName,
+        marks: marks,
+        cgpa: cgpa,
+        overallGrade: overallGrade,
+        rank: rank,
+        percentile : percentile,
+        percentage: percentage,
+      },
     });
   };
 });

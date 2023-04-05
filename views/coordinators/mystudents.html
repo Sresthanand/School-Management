@@ -41,6 +41,10 @@
       .toast.show {
         opacity: 1;
       }
+
+      .close{
+        width: 112px;
+      }
     </style>
   </head>
   <body>
@@ -282,6 +286,7 @@
               class="close"
               data-dismiss="modal"
               aria-label="Close"
+              ng-click="handleClose()"
             >
               <span aria-hidden="true">&times;</span>
             </button>
@@ -302,6 +307,7 @@
                   required
                   ng-pattern="/^[1-9][0-9]*$/"
                   min="1"
+                  ng-change="checkMarks1()"
                 />
                 <div
                   ng-show="marksform.totalMarks.$error.required && marksform.totalMarks.$dirty"
@@ -353,8 +359,8 @@
                   ng-model="marksofsubject1"
                   required
                   ng-pattern="/^[0-9]*$/"
-                  ng-max="{{maximumMarks}}"
                   ng-min="0"
+                  ng-change="checkMarks1()"
                 />
                 <div
                   ng-show="marksform.marks1.$error.required && marksform.marks1.$touched"
@@ -366,11 +372,11 @@
                 >
                   Only integers are allowed.
                 </div>
-                <!-- <div
-                  ng-show="marksform.marks1.$error.max && marksform.marks1.$touched"
+                <div
+                  ng-show="marksform.marks1.$error.max && marksform.marks1.$dirty"
                 >
                   Marks should be less than or equal to maximum marks.
-                </div> -->
+                </div>
                 <div
                   ng-show="marksform.marks1.$error.min && marksform.marks1.$touched"
                 >
@@ -411,8 +417,8 @@
                   ng-model="marksofsubject2"
                   required
                   ng-pattern="/^[0-9]*$/"
-                  ng-max="{{maximumMarks}}"
                   ng-min="0"
+                  ng-change="checkMarks2()"
                 />
                 <div
                   ng-show="marksform.marks2.$error.required && marksform.marks2.$touched"
@@ -424,11 +430,11 @@
                 >
                   Only integers are allowed.
                 </div>
-                <!-- <div
-                  ng-show="marksform.marks1.$error.max && marksform.marks1.$touched"
+                <div
+                  ng-show="marksform.marks2.$error.max && marksform.marks2.$dirty"
                 >
                   Marks should be less than or equal to maximum marks.
-                </div> -->
+                </div>
                 <div
                   ng-show="marksform.marks2.$error.min && marksform.marks2.$touched"
                 >
@@ -469,8 +475,8 @@
                   ng-model="marksofsubject3"
                   required
                   ng-pattern="/^[0-9]*$/"
-                  ng-max="{{maximumMarks}}"
                   ng-min="0"
+                  ng-change="checkMarks3()"
                 />
                 <div
                   ng-show="marksform.marks3.$error.required && marksform.marks3.$touched"
@@ -482,11 +488,11 @@
                 >
                   Only integers are allowed.
                 </div>
-                <!-- <div
-                  ng-show="marksform.marks1.$error.max && marksform.marks1.$touched"
+                <div
+                  ng-show="marksform.marks3.$error.max && marksform.marks3.$dirty"
                 >
                   Marks should be less than or equal to maximum marks.
-                </div> -->
+                </div>
                 <div
                   ng-show="marksform.marks3.$error.min && marksform.marks3.$touched"
                 >
@@ -527,8 +533,8 @@
                   ng-model="marksofsubject4"
                   required
                   ng-pattern="/^[0-9]*$/"
-                  ng-max="{{maximumMarks}}"
                   ng-min="0"
+                  ng-change="checkMarks4()"
                 />
 
                 <div
@@ -541,11 +547,11 @@
                 >
                   Only integers are allowed.
                 </div>
-                <!-- <div
-                  ng-show="marksform.marks1.$error.max && marksform.marks1.$touched"
+                <div
+                  ng-show="marksform.marks4.$error.max && marksform.marks4.$dirty"
                 >
                   Marks should be less than or equal to maximum marks.
-                </div> -->
+                </div>
                 <div
                   ng-show="marksform.marks4.$error.min && marksform.marks4.$touched"
                 >
@@ -586,8 +592,8 @@
                   ng-model="marksofsubject5"
                   required
                   ng-pattern="/^[0-9]*$/"
-                  ng-max="{{maximumMarks}}"
                   ng-min="0"
+                  ng-change="checkMarks5()"
                 />
 
                 <div
@@ -600,11 +606,11 @@
                 >
                   Only integers are allowed.
                 </div>
-                <!-- <div
-                  ng-show="marksform.marks1.$error.max && marksform.marks1.$touched"
+                <div
+                  ng-show="marksform.marks5.$error.max && marksform.marks5.$dirty"
                 >
                   Marks should be less than or equal to maximum marks.
-                </div> -->
+                </div>
                 <div
                   ng-show="marksform.marks5.$error.min && marksform.marks5.$touched"
                 >
@@ -630,5 +636,11 @@
         </div>
       </div>
     </div>
+
+
+
+
+
+
   </body>
 </html>

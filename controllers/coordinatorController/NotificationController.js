@@ -27,25 +27,6 @@ mySchoolApp.controller(
       $state.go("login");
     };
 
-    // send message
-    // $scope.sendMessage = function () {
-    //   var message = {
-    //     messageTitle: $scope.messagetitle,
-    //     messageContent: $scope.messagecontent,
-    //   };
-
-    //   studentService
-    //     .saveMessage(token, message)
-    //     .then(function (response) {
-    //       console.log(response);
-    //       alert("Message sent successfully!");
-    //     })
-    //     .catch(function (err) {
-    //       console.log(err);
-    //       alert("Error sending message. Please try again later.");
-    //     });
-    // };
-
     $scope.sendMessage = function () {
       var messageTitle = $scope.messagetitle;
       var messageContent = $scope.messagecontent;

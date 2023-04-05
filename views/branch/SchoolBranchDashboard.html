@@ -255,7 +255,7 @@
                     file-model="file"
                     accept=".png, .jpeg, .jpg, .svg"
                     id="file"
-                    required
+                    ng-required="true"
                   />
                 </div>
               </div>
@@ -267,7 +267,7 @@
               <button
                 type="submit"
                 ng-click="coordinatorRegister()"
-                ng-disabled="myForm.$invalid"
+                ng-disabled="myForm.$invalid || !file"
                 class="submit-btn"
               >
                 Register Now

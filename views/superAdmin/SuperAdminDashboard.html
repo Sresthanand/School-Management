@@ -8,6 +8,10 @@
       href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp"
+      rel="stylesheet"
+    />
     <link rel="stylesheet"
     href="css\superAdminStyleSheet\SchoolRegisterForm.css" / > <link
     rel="stylesheet" href="css\superAdminStyleSheet\SuperAdminDashBoard.css" / >
@@ -260,7 +264,7 @@
                     file-model="file"
                     accept=".png, .jpeg, .jpg, .svg"
                     id="file"
-                    required
+                    ng-required="true"
                   />
                 </div>
               </div>
@@ -272,7 +276,7 @@
               <button
                 type="submit"
                 ng-click="registerSchool()"
-                ng-disabled="schoolForm.$invalid"
+                ng-disabled="schoolForm.$invalid || !file"
                 class="submit-btn"
               >
                 Register Now

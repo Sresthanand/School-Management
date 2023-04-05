@@ -69,19 +69,6 @@ mySchoolApp.service("studentService", function ($http) {
     });
   };
 
-  //save marks
-  // this.saveMarks = function (token, data) {
-  //   return $http({
-  //     method: "POST",
-  //     url: baseUrl + "api/coordinator/registerMarks",
-  //     headers: {
-  //       Authorization: "Bearer " + token,
-  //       "Content-Type": "application/json",
-  //     },
-  //     data: data,
-  //   });
-  // };
-
   this.saveMarks = function (
     token,
     studentId,
@@ -139,18 +126,6 @@ mySchoolApp.service("studentService", function ($http) {
 
   //exam register
 
-  // this.examRegister = function (token, data) {
-  //   return $http({
-  //     method: "POST",
-  //     url: "http://localhost:5000/api/coordinator/examRegistration",
-  //     headers: {
-  //       Authorization: "Bearer " + token,
-  //       "Content-Type": "application/json",
-  //     },
-  //     data: data,
-  //   });
-  // };
-
   this.examRegister = function (token, date, time, subject, roomnumber) {
     var data = {
       date: date,
@@ -169,19 +144,6 @@ mySchoolApp.service("studentService", function ($http) {
       data: data,
     });
   };
-
-  //message
-  // this.saveMessage = function (token, message) {
-  //   return $http({
-  //     method: "POST",
-  //     url: baseUrl + "api/coordinator/saveMessage",
-  //     headers: {
-  //       Authorization: "Bearer " + token,
-  //       "Content-Type": "application/json",
-  //     },
-  //     data: message,
-  //   });
-  // };
 
   this.saveMessage = function (token, messageTitle, messageContent) {
     var message = {
@@ -279,7 +241,6 @@ mySchoolApp.service("studentService", function ($http) {
         maximumMarks: maximumMarks,
       },
     };
-
 
     console.log(data);
 

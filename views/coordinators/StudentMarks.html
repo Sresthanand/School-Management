@@ -71,6 +71,10 @@
       .modal-dialog {
         width: 600px;
       }
+
+      .close {
+        width: 112px;
+      }
     </style>
 
     <title>marks</title>
@@ -105,12 +109,13 @@
     <div class="marks-container">
       <div class="marks-row marks-header">
         <div class="marks-cell">Student Name</div>
-        <div class="marks-cell">Subject 1</div>
-        <div class="marks-cell">Subject 2</div>
-        <div class="marks-cell">Subject 3</div>
-        <div class="marks-cell">Subject 4</div>
-        <div class="marks-cell">Subject 5</div>
+        <div class="marks-cell">Subject</div>
+        <div class="marks-cell">Subject</div>
+        <div class="marks-cell">Subject</div>
+        <div class="marks-cell">Subject</div>
+        <div class="marks-cell">Subject</div>
         <div class="marks-cell">Total Marks</div>
+        <div class="marks-cell">Maximum Marks</div>
         <div class="marks-cell">Actions</div>
       </div>
 
@@ -119,15 +124,33 @@
         class="marks-row"
       >
         <div class="marks-cell">{{ marks.student.name }}</div>
-        <div class="marks-cell">{{ marks.subject1.marksObtained }}</div>
-        <div class="marks-cell">{{ marks.subject2.marksObtained }}</div>
-        <div class="marks-cell">{{ marks.subject3.marksObtained }}</div>
-        <div class="marks-cell">{{ marks.subject4.marksObtained }}</div>
-        <div class="marks-cell">{{ marks.subject5.marksObtained }}</div>
+
+        <div class="marks-cell">
+          {{ marks.subject1.name }}: {{ marks.subject1.marksObtained }}
+        </div>
+        <div class="marks-cell">
+          {{ marks.subject2.name}}: {{ marks.subject2.marksObtained }}
+        </div>
+        <div class="marks-cell">
+          {{ marks.subject3.name }}: {{ marks.subject3.marksObtained }}
+        </div>
+        <div class="marks-cell">
+          {{ marks.subject4.name }}: {{ marks.subject4.marksObtained }}
+        </div>
+        <div class="marks-cell">
+          {{ marks.subject5.name }}: {{ marks.subject5.marksObtained }}
+        </div>
+
         <div class="marks-cell">
           {{ marks.subject1.marksObtained + marks.subject2.marksObtained +
           marks.subject3.marksObtained + marks.subject4.marksObtained +
           marks.subject5.marksObtained }}
+        </div>
+
+        <div class="marks-cell">
+          {{ marks.subject1.totalMarks + marks.subject2.totalMarks +
+          marks.subject3.totalMarks + marks.subject4.totalMarks +
+          marks.subject5.totalMarks }}
         </div>
 
         <div class="marks-cell">

@@ -13,123 +13,10 @@ const { MessageModel } = require("../models/message");
 const { MarksModel } = require("../models/marks");
 const { AttendanceModel } = require("../models/attendance");
 
-
-
-
 const {
   authenticateRequest,
   checkUserRole,
 } = require("../middleware/middleware");
-
-// router.post(
-//   "/studentRegister",
-//   authenticateRequest,
-//   checkUserRole(["coordinator"]),
-//   (req, res) => {
-//     const user = new UserModel({
-//       username: req.body.username,
-//       password: hashSync(req.body.password, 10),
-//       role: "student",
-//     });
-
-//     user
-//       .save()
-//       .then((user) => {
-//         CoordinatorModel.findOne({ "userId.id": req.user.id })
-//           .then((coordinator) => {
-//             BranchModel.findOne({ _id: coordinator.branch.id })
-//               .then((branch) => {
-//                 console.log("Hellooo school");
-//                 console.log(branch);
-//                 SchoolModel.findOne({ _id: branch.school.id })
-//                   .then((school) => {
-//                     console.log("Hellooo school");
-//                     console.log(school);
-//                     const student = new StudentModel({
-//                       name: req.body.information.name,
-//                       class: req.body.information.classofstudent,
-//                       gender: req.body.information.gender,
-//                       enrollmentNumber: req.body.information.enrollmentNumber,
-//                       image: req.body.information.image,
-//                       isDelete: false,
-//                       userId: {
-//                         id: user._id,
-//                         username: user.username,
-//                       },
-//                       school: {
-//                         id: school._id,
-//                         name: school.name,
-//                       },
-//                       branch: {
-//                         id: branch._id,
-//                         location: branch.location, //location
-//                       },
-//                       coordinator: {
-//                         id: coordinator._id,
-//                         name: coordinator.name,
-//                       },
-//                     });
-//                     student.save().then((student) => {
-//                       res.send({
-//                         success: true,
-//                         message: "User created successfully",
-//                         user: {
-//                           id: user._id,
-//                           username: user.username,
-//                           role: user.role,
-//                         },
-//                         student: {
-//                           id: student._id,
-//                           name: student.name,
-//                           school: {
-//                             id: school._id,
-//                             name: school.name,
-//                           },
-//                           branch: {
-//                             id: branch._id,
-//                             name: branch.name,
-//                           },
-//                           coordinator: {
-//                             id: coordinator._id,
-//                             name: coordinator.name,
-//                           },
-//                         },
-//                       });
-//                     });
-//                   })
-//                   .catch((err) => {
-//                     res.send({
-//                       success: false,
-//                       message: "Something went wrong",
-//                       error: err,
-//                     });
-//                   });
-//               })
-//               .catch((err) => {
-//                 res.send({
-//                   success: false,
-//                   message: "Something went wrong",
-//                   error: err,
-//                 });
-//               });
-//           })
-//           .catch((err) => {
-//             res.send({
-//               success: false,
-//               message: "Something went wrong",
-//               error: err,
-//             });
-//           });
-//       })
-//       .catch((err) => {
-//         res.send({
-//           success: false,
-//           message: "Something went wrong",
-//           error: err,
-//         });
-//       });
-//   }
-// );
 
 router.post(
   "/studentRegister",
@@ -166,7 +53,7 @@ router.post(
               },
               branch: {
                 id: coordinator.branch.id,
-                location: coordinator.branch.location, //location
+                location: coordinator.branch.location,
               },
               coordinator: {
                 id: coordinator._id,
@@ -228,93 +115,6 @@ router.post(
       });
   }
 );
-
-// router.get(
-//   "/getStudents",
-//   authenticateRequest,
-//   checkUserRole(["coordinator"]),
-//   (req, res) => {
-//     const coordinatorId = req.user.id;
-
-//     CoordinatorModel.findOne(
-//       { "userId.id": coordinatorId },
-//       (err, coordinator) => {
-//         if (err) {
-//           console.log(err);
-//           res.send({
-//             success: false,
-//             message: "Something went wrong",
-//             error: err,
-//           });
-//         } else if (!coordinator) {
-//           console.log("No coordinator found for this user");
-//           res.send({
-//             success: false,
-//             message: "No coordinator found for this user",
-//           });
-//         } else {
-//           const coordinatorName = coordinator.name;
-//           const coordinatorId = coordinator._id;
-//           const schoolName = coordinator.school.name;
-//           const schoolId = coordinator.school.id;
-//           const branchName = coordinator.branch.location;
-//           const branchId = coordinator.branch.id;
-
-//           StudentModel.find(
-//             { "coordinator.id": coordinatorId, isDelete: false },
-//             (err, students) => {
-//               if (err) {
-//                 console.log(err);
-//                 res.send({
-//                   success: false,
-//                   message: "Something went wrong",
-//                   error: err,
-//                 });
-//               } else {
-//                 const formattedStudents = students.map((student) => {
-//                   return {
-//                     id: student._id,
-//                     name: student.name,
-//                     class: student.class,
-//                     gender: student.gender,
-//                     enrollmentNumber: student.enrollmentNumber,
-//                     image: student.image,
-//                     coordinator: {
-//                       name: coordinatorName,
-//                       id: coordinatorId,
-//                     },
-//                     school: {
-//                       name: schoolName,
-//                       id: schoolId,
-//                     },
-//                     branch: {
-//                       location: branchName,
-//                       id: branchId,
-//                     },
-//                   };
-//                 });
-
-//                 res.send({
-//                   success: true,
-//                   message: "Students fetched successfully",
-//                   coordinator: {
-//                     name: coordinatorName,
-//                     id: coordinatorId,
-//                     schoolName: schoolName,
-//                     schoolId: schoolId,
-//                     branchName: branchName,
-//                     branchId: branchId,
-//                   },
-//                   students: formattedStudents,
-//                 });
-//               }
-//             }
-//           );
-//         }
-//       }
-//     );
-//   }
-// );
 
 router.get(
   "/getStudents",
@@ -510,7 +310,6 @@ router.put(
           });
         }
 
-        // Set isDelete property to true
         student.isDelete = true;
 
         student.updatedAt = Date.now();
@@ -547,18 +346,14 @@ router.post(
   authenticateRequest,
   checkUserRole(["coordinator"]),
   (req, res) => {
-    // Get the coordinator's user ID and username from the request
     const { id, username } = req.user;
 
-    // Find the coordinator in the CoordinatorModel using their user ID
     CoordinatorModel.findOne({ "userId.id": id })
       .then((coordinator) => {
         if (!coordinator) {
-          // If the coordinator is not found, return an error
           return res.status(404).json({ message: "Coordinator not found" });
         }
 
-        // Create a new examination document using the request body
         const examination = new ExaminationModel({
           coordinator: {
             id: coordinator._id,
@@ -589,18 +384,14 @@ router.post(
   authenticateRequest,
   checkUserRole(["coordinator"]),
   (req, res) => {
-    // Get the coordinator's user ID and username from the request
     const { id, username } = req.user;
 
-    // Find the coordinator in the CoordinatorModel using their user ID
     CoordinatorModel.findOne({ "userId.id": id })
       .then((coordinator) => {
         if (!coordinator) {
-          // If the coordinator is not found, return an error
           return res.status(404).json({ message: "Coordinator not found" });
         }
 
-        // Create a new message document using the request body
         const message = new MessageModel({
           coordinator: {
             id: coordinator._id,
@@ -614,9 +405,7 @@ router.post(
           messageContent: req.body.messageContent,
         });
 
-        // Save the message document to the database
         message.save().then((savedMessage) => {
-          // Return a success response with the newly created message document
           res.status(201).json({ success: true, message: savedMessage });
         });
       })
@@ -636,7 +425,6 @@ router.post(
     console.log("Hiii i am from regsiter marks");
     console.log(req.body);
 
-    // Find the coordinator based on the authenticated user id
     CoordinatorModel.findOne(
       { "userId.id": coordinatorId },
       (err, coordinator) => {
@@ -654,16 +442,16 @@ router.post(
             message: "No coordinator found for this user",
           });
         } else {
-          // Get the coordinator's id and name
+      
           const coordinatorId = coordinator._id;
           const coordinatorName = coordinator.name;
 
-          // Get the student's id and name from the request body
+    
           const studentId = req.body.studentId;
           const studentName = req.body.studentName;
           const studentClass = req.body.studentClass;
 
-          // Create a new marks object using the request body
+    
           const newMarks = new MarksModel({
             coordinator: {
               id: coordinatorId,
@@ -702,7 +490,6 @@ router.post(
             },
           });
 
-          // Save the new marks object to the database
           newMarks.save((err, savedMarks) => {
             if (err) {
               console.log(err);
@@ -785,7 +572,6 @@ router.get(
 
                   const { name: coordinatorName } = coordinator;
                   const { name: studentName } = student;
-                  // Return this data
                   return {
                     id: mark._id,
                     coordinator: { id: coordinator._id, name: coordinatorName },
@@ -895,7 +681,6 @@ router.put(
           });
         }
 
-        // Set isDelete property to true
         marks.isDelete = "true";
 
         marks.updatedAt = Date.now();
@@ -940,7 +725,6 @@ router.put(
 
     MarksModel.findById(id)
       .then((marks) => {
-       // console.log(marks + "marks");
         if (!marks) {
           return res.status(404).json({
             success: false,
@@ -1281,6 +1065,7 @@ router.get(
               });
             } else {
               const countOfStudents = new Array(12).fill(0);
+              
               students.forEach((student) => {
                 countOfStudents[student._id - 1] = student.count;
               });
@@ -1368,8 +1153,8 @@ router.get(
   authenticateRequest,
   checkUserRole(["coordinator"]),
   function (req, res) {
-    var startDate = new Date("2023-02-01T00:00:00.000Z"); // start of time period
-    var endDate = new Date(); // end of time period (current date)
+    var startDate = new Date("2023-02-01T00:00:00.000Z"); 
+    var endDate = new Date();
 
     const coordinatorId = req.user.id;
 

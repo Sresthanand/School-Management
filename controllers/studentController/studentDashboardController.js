@@ -9,7 +9,9 @@ mySchoolApp.controller(
     AuthService,
     RouteChangeService,
     $timeout,
-    studentDashboardService
+    studentDashboardService,
+    studentDashboardStatsServices,
+    StudentDashboardStatsFactory
   ) {
     console.log("Hi i am student controller!!!!!!!!!!!!!!");
 
@@ -30,7 +32,7 @@ mySchoolApp.controller(
     $scope.toastColor = "green";
     $timeout(function () {
       $scope.showToast = false;
-    }, 2000);
+    }, 500);
 
     // API call to get student data
 
@@ -94,39 +96,6 @@ mySchoolApp.controller(
         console.log(err);
       });
 
-    // $scope.handleAttendance = function (studentId) {
-    //   $http({
-    //     method: "PUT",
-    //     url: "http://localhost:5000/api/student/markAttendance/" + studentId,
-    //     headers: {
-    //       Authorization: "Bearer " + token,
-    //       "Content-Type": "application/json",
-    //     },
-    //   })
-    //     .then(function (response) {
-    //       if (
-    //         response.data &&
-    //         response.data.message === "Attendance already marked for today"
-    //       ) {
-    //         alert("Your attendance has already been marked for today");
-    //       } else {
-    //         alert("Your attendance has been marked!");
-    //         console.log(response);
-    //       }
-    //     })
-    //     .catch(function (err) {
-    //       if (
-    //         err.status === 400 &&
-    //         err.data === "Attendance already marked for today"
-    //       ) {
-    //         alert("Your attendance has already been marked for today");
-    //       } else {
-    //         alert("There was an error while marking your attendance");
-    //         console.log(err);
-    //       }
-    //     });
-    // };
-
     $scope.handleAttendance = function (studentId) {
       studentDashboardService
         .markAttendance(token, studentId)
@@ -183,18 +152,113 @@ mySchoolApp.controller(
         });
     };
 
+    studentDashboardStatsServices
+      .getStudentPercentage(token)
+      .then(function (response) {
+        console.log(response);
+
+        $scope.percentage = response.data.percentage;
+
+        $scope.cgpa = StudentDashboardStatsFactory.calculateCGPA(
+          $scope.percentage
+        );
+        $scope.overallGrade =
+          StudentDashboardStatsFactory.calculateOverallGrade($scope.percentage);
+
+        console.log($scope.cgpa + " " + $scope.overallGrade);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+
+    studentDashboardStatsServices
+      .getStudenRank(token)
+      .then(function (response) {
+        console.log(response);
+
+        $scope.rank = response.data.rank;
+        $scope.percentile = response.data.percentile;
+
+        console.log($scope.rank + " " + $scope.percentile);
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+
     //handleStudentReportCard
     $scope.handleStudentReportCard = function (studentId) {
       studentDashboardService
-        .reportCardGeneration(token, studentId)
+        .reportCardGeneration(
+          token,
+          studentId,
+          $scope.name,
+          $scope.studentClass,
+          $scope.gender,
+          $scope.enrollmentNumber,
+          $scope.schoolName,
+          $scope.branchName,
+          $scope.coordinatorName,
+          $scope.marks,
+          $scope.cgpa,
+          $scope.overallGrade,
+          $scope.rank,
+          $scope.percentile,
+          $scope.percentage
+        )
         .then(function (response) {
           console.log(response);
+
+          $scope.showToast = true;
+          $scope.toastMessage = "Your Results has been Succesfully Downloaded! Check Downloads Folder!";
+          $scope.toastColor = "green";
+          $timeout(function () {
+            $scope.showToast = false;
+          }, 3000);
+
         })
         .catch(function (err) {
-          console.log(err);
+          //console.log(err);
+          $scope.showToast = true;
+          $scope.toastMessage =
+            "There was some error while downloading result! Please try again later!";
+          $scope.toastColor = "red";
+          $timeout(function () {
+            $scope.showToast = false;
+          }, 3000);
         });
     };
-
-
   }
 );
+
+// $scope.handleAttendance = function (studentId) {
+//   $http({
+//     method: "PUT",
+//     url: "http://localhost:5000/api/student/markAttendance/" + studentId,
+//     headers: {
+//       Authorization: "Bearer " + token,
+//       "Content-Type": "application/json",
+//     },
+//   })
+//     .then(function (response) {
+//       if (
+//         response.data &&
+//         response.data.message === "Attendance already marked for today"
+//       ) {
+//         alert("Your attendance has already been marked for today");
+//       } else {
+//         alert("Your attendance has been marked!");
+//         console.log(response);
+//       }
+//     })
+//     .catch(function (err) {
+//       if (
+//         err.status === 400 &&
+//         err.data === "Attendance already marked for today"
+//       ) {
+//         alert("Your attendance has already been marked for today");
+//       } else {
+//         alert("There was an error while marking your attendance");
+//         console.log(err);
+//       }
+//     });
+// };

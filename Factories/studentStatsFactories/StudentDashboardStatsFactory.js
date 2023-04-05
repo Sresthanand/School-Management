@@ -6,6 +6,7 @@ mySchoolApp.factory("StudentDashboardStatsFactory", function () {
   };
 
   factory.calculateOverallGrade = function (percentage) {
+    console.log(percentage + "perecentage")
     var overallGrade = "";
     if (percentage >= 90 && percentage <= 100) {
       overallGrade = "A+";
@@ -19,7 +20,7 @@ mySchoolApp.factory("StudentDashboardStatsFactory", function () {
       overallGrade = "C";
     } else if (percentage >= 40 && percentage < 50) {
       overallGrade = "D";
-    } else if (percentage < 30) {
+    } else if (percentage < 40) {
       overallGrade = "F";
     }
     return overallGrade;

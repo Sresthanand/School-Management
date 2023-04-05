@@ -345,30 +345,5 @@ router.post(
 );
 
 
-// app.put("/resetpassword", authenticateRequest, async (req, res) => {
-//     const username = req.body.username;
-//     const newPassword = req.body.newPassword;
-//     console.log("hi0");
-//     try {
-//       console.log("hi1");
-//       const user = await UserModel.findOne({ username: username });
-//       console.log(user);
-//       if (!user) {
-//         return res.status(404).send("User not found");
-//       }
-  
-//       const hashedPassword = hashSync(newPassword, 10);
-  
-//       user.password = hashedPassword;
-//       await user.save();
-  
-//       res.send("Password reset successfully");
-  
-//       console.log("hi2");
-//     } catch (error) {
-//       console.log("hi3");
-//       res.status(500).send(error);
-//     }
-// });
 
 module.exports = router;

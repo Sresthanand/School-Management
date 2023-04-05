@@ -30,37 +30,45 @@ mySchoolApp.controller(
       $state.go("login");
     };
 
-    $scope.resetFilters = function () {
-      $scope.searchQuery = "";
-      $scope.selectedClass = "";
-      $scope.selectedGender = "";
+    $scope.checkMarks1 = function () {
+      if ($scope.marksofsubject1 <= $scope.maximumMarks) {
+        $scope.marksform.marks1.$setValidity("max", true);
+      } else {
+        $scope.marksform.marks1.$setValidity("max", false);
+      }
     };
 
-    $scope.genderFilter = function (student) {
-      return (
-        $scope.selectedGender === "" || student.gender === $scope.selectedGender
-      );
+    $scope.checkMarks2 = function () {
+      if ($scope.marksofsubject2 <= $scope.maximumMarks) {
+        $scope.marksform.marks2.$setValidity("max", true);
+      } else {
+        $scope.marksform.marks2.$setValidity("max", false);
+      }
     };
 
-    $scope.classFilter = function (student) {
-      return (
-        $scope.selectedClass === "" || student.class === $scope.selectedClass
-      );
+    $scope.checkMarks3 = function () {
+      if ($scope.marksofsubject3 <= $scope.maximumMarks) {
+        $scope.marksform.marks3.$setValidity("max", true);
+      } else {
+        $scope.marksform.marks3.$setValidity("max", false);
+      }
     };
 
-    //GET Request for getting students
-    // studentService
-    //   .getStudents(token)
-    //   .then(function (response) {
-    //     console.log("Hi!!!!!!!!!!");
-    //     console.log(response);
-    //     $scope.students = response.data.students;
-    //     const totalPages = response.data.totalPages;
-    //     $scope.pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-    //   })
-    //   .catch(function (err) {
-    //     console.log(err);
-    //   });
+    $scope.checkMarks4 = function () {
+      if ($scope.marksofsubject4 <= $scope.maximumMarks) {
+        $scope.marksform.marks4.$setValidity("max", true);
+      } else {
+        $scope.marksform.marks4.$setValidity("max", false);
+      }
+    };
+
+    $scope.checkMarks5 = function () {
+      if ($scope.marksofsubject5 <= $scope.maximumMarks) {
+        $scope.marksform.marks5.$setValidity("max", true);
+      } else {
+        $scope.marksform.marks5.$setValidity("max", false);
+      }
+    };
 
     $scope.currentPage = 1;
 
@@ -85,7 +93,6 @@ mySchoolApp.controller(
         });
     };
 
-    // Initial call to load the first page of students
     studentService
       .getStudents(token, $scope.currentPage)
       .then(function (response) {
@@ -105,54 +112,25 @@ mySchoolApp.controller(
       $("#marksModal").modal("show");
     };
 
-    // $scope.saveMarks = function () {
-    //   var data = {
-    //     studentId: $scope.selectedStudent.id,
-    //     studentName: $scope.selectedStudent.name,
-    //     subject1: {
-    //       name: $scope.nameofsubject1,
-    //       marks: $scope.marksofsubject1,
-    //     },
-    //     subject2: {
-    //       name: $scope.nameofsubject2,
-    //       marks: $scope.marksofsubject2,
-    //     },
-    //     subject3: {
-    //       name: $scope.nameofsubject3,
-    //       marks: $scope.marksofsubject3,
-    //     },
-    //     subject4: {
-    //       name: $scope.nameofsubject4,
-    //       marks: $scope.marksofsubject4,
-    //     },
-    //     subject5: {
-    //       name: $scope.nameofsubject5,
-    //       marks: $scope.marksofsubject5,
-    //     },
-    //     maximumMarks: $scope.maximumMarks,
-    //   };
-
-    //   console.log("Hi i am from save marks function");
-    //   console.log(data);
-
-    //   studentService
-    //     .saveMarks(token, data)
-    //     .then(function (response) {
-    //       alert("Marks have been saved!");
-    //       console.log(response);
-    //       $("#marksForm").modal("hide");
-    //     })
-    //     .catch(function (err) {
-    //       alert("there is error!");
-    //       console.log(err);
-    //     });
-    // };
+    $scope.handleClose = function () {
+      $scope.nameofsubject = "";
+      $scope.marksofsubject1 = "";
+      $scope.nameofsubject2 = "";
+      $scope.marksofsubject2 = "";
+      $scope.nameofsubject3 = "";
+      $scope.marksofsubject3 = "";
+      $scope.nameofsubject4 = "";
+      $scope.marksofsubject4 = "";
+      $scope.nameofsubject5 = "";
+      $scope.marksofsubject5 = "";
+      $scope.maximumMarks = "";
+    };
 
     $scope.saveMarks = function () {
       var studentId = $scope.selectedStudent.id;
       var studentName = $scope.selectedStudent.name;
       var studentClass = $scope.selectedStudent.class;
-      
+
       var subject1Name = $scope.nameofsubject1;
       var subject1Marks = $scope.marksofsubject1;
       var subject2Name = $scope.nameofsubject2;
@@ -186,7 +164,6 @@ mySchoolApp.controller(
           maximumMarks
         )
         .then(function (response) {
-          // alert("Marks have been saved!");
           $scope.showToast = true;
           $scope.toastMessage = "Marks have been saved!";
           $scope.toastColor = "green";
